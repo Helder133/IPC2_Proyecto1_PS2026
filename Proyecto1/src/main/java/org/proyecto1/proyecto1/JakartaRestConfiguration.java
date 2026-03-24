@@ -12,6 +12,5 @@ import org.glassfish.jersey.server.ResourceConfig;
 public class JakartaRestConfiguration extends ResourceConfig {
     public JakartaRestConfiguration() {
         packages("org.proyecto1.proyecto1.resources").register(MultiPartFeature.class);
-
     }
 }
