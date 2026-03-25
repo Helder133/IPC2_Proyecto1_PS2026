@@ -1,4 +1,4 @@
-package org.proyecto1.proyecto1.services;
+package org.proyecto1.proyecto1.services.usuario;
 
 import org.proyecto1.proyecto1.db.UsuarioDAO;
 import org.proyecto1.proyecto1.dtos.usuario.LoginRequest;
@@ -26,7 +26,7 @@ public class UsuarioService {
         if (!usuario.isValid()) throw new UserDataInvalidException("Los datos del usuario son inválidos");
         UsuarioDAO usuarioDAO = new UsuarioDAO();
         int usuario_id = usuarioDAO.existsUser(usuario.getNombre());
-        if (usuario_id != -1) throw new EntityAlreadyExistsException("El usuario ya existe");
+        if (usuario_id != -1) throw new EntityAlreadyExistsException("El nombre que desea registrar, ya esta registrado en otro usuario.");
         usuarioDAO.insert(usuario);
     }
 

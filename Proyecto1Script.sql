@@ -19,6 +19,9 @@ CREATE TABLE IF NOT EXISTS usuario (
 	rol ENUM('Atencion_al_Cliente', 'Operaciones', 'Administrador') DEFAULT 'Atencion_al_Cliente' NOT NULL
 );
 
+-- password = 123
+INSERT INTO usuario (nombre, password, rol) VALUES ('admin', 'MTIz','Administrador');
+
 CREATE TABLE IF NOT EXISTS destino (
 	destino_id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
 	nombre VARCHAR(250) UNIQUE NOT NULL,

@@ -1,4 +1,4 @@
-package org.proyecto1.proyecto1.db;
+package org.proyecto1.proyecto1.db.config;
 
 import java.sql.SQLException;
 import java.util.List;

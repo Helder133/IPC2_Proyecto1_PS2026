@@ -1,6 +1,8 @@
 package org.proyecto1.proyecto1.db;
 
 import org.apache.commons.lang3.StringUtils;
+import org.proyecto1.proyecto1.db.config.CRUD;
+import org.proyecto1.proyecto1.db.config.DBConnection;
 import org.proyecto1.proyecto1.models.usuario.EnumUsuario;
 import org.proyecto1.proyecto1.models.usuario.Usuario;
 
@@ -13,20 +15,20 @@ import java.util.List;
 import java.util.Optional;
 
 public class UsuarioDAO implements CRUD<Usuario> {
-    private static final String login = "SELECT * FROM usuario WHERE nombre = ? AND password = ?";
-    private static final String insertUser = "INSERT INTO usuario (nombre, password, rol) VALUES (?, ?, ?)";
-    private static final String updateUserWithPassword = "UPDATE usuario SET nombre = ?, password = ?, rol = ? WHERE usuario_id = ?";
-    private static final String updateUserWithoutPassword = "UPDATE usuario SET nombre = ?, rol = ? WHERE usuario_id = ?";
-    private static final String deleteUser = "DELETE FROM usuario WHERE usuario_id = ?";
-    private static final String getUserById = "SELECT * FROM usuario WHERE usuario_id = ?";
-    private static final String getAllUsers = "SELECT * FROM usuario";
-    private static final String existsUser = "SELECT usuario_id FROM usuario WHERE nombre = ?";
-    private static final String getByCoincidence = "SELECT * FROM usuario WHERE nombre LIKE ?";
-    private static final String validUpdate = "SELECT usuario_id FROM usuario WHERE usuario_id <> ? AND nombre = ?";
+    private static final String LOGIN = "SELECT * FROM usuario WHERE nombre = ? AND password = ?";
+    private static final String INSERT_USER = "INSERT INTO usuario (nombre, password, rol) VALUES (?, ?, ?)";
+    private static final String UPDATE_USER_WITH_PASSWORD = "UPDATE usuario SET nombre = ?, password = ?, rol = ? WHERE usuario_id = ?";
+    private static final String UPDATE_USER_WITHOUT_PASSWORD = "UPDATE usuario SET nombre = ?, rol = ? WHERE usuario_id = ?";
+    private static final String DELETE_USER = "DELETE FROM usuario WHERE usuario_id = ?";
+    private static final String GET_USER_BY_ID = "SELECT * FROM usuario WHERE usuario_id = ?";
+    private static final String GET_ALL_USERS = "SELECT * FROM usuario";
+    private static final String EXISTS_USER = "SELECT usuario_id FROM usuario WHERE nombre = ?";
+    private static final String GET_BY_COINCIDENCE = "SELECT * FROM usuario WHERE nombre LIKE ?";
+    private static final String VALID_UPDATE = "SELECT usuario_id FROM usuario WHERE usuario_id <> ? AND nombre = ?";
 
     public Optional<Usuario> login(Usuario usuario) throws SQLException {
         Connection connection = DBConnection.getInstance().getConnection();
-        try (PreparedStatement login1 = connection.prepareStatement(login)) {
+        try (PreparedStatement login1 = connection.prepareStatement(LOGIN)) {
             login1.setString(1, usuario.getNombre());
             login1.setString(2, usuario.getPassword());
             try (ResultSet resultSet = login1.executeQuery()) {
@@ -38,7 +40,7 @@ public class UsuarioDAO implements CRUD<Usuario> {
 
     public int existsUser(String nombre) throws SQLException {
         Connection connection = DBConnection.getInstance().getConnection();
-        try (PreparedStatement exists = connection.prepareStatement(existsUser)) {
+        try (PreparedStatement exists = connection.prepareStatement(EXISTS_USER)) {
             exists.setString(1, nombre);
             try (ResultSet resultSet = exists.executeQuery()) {
                 if (resultSet.next()) return resultSet.getInt("usuario_id");
@@ -50,7 +52,7 @@ public class UsuarioDAO implements CRUD<Usuario> {
     public List<Usuario> getByCoincidence(String nombre) throws SQLException {
         List<Usuario> get = new ArrayList<>();
         Connection connection = DBConnection.getInstance().getConnection();
-        try (PreparedStatement getByCoincidence_ = connection.prepareStatement(getByCoincidence)){
+        try (PreparedStatement getByCoincidence_ = connection.prepareStatement(GET_BY_COINCIDENCE)){
             getByCoincidence_.setString(1, "%" + nombre + "%");
             try (ResultSet resultSet = getByCoincidence_.executeQuery()) {
                 while (resultSet.next()) {
@@ -63,7 +65,7 @@ public class UsuarioDAO implements CRUD<Usuario> {
 
     public boolean validUpdate(int usuario_id, String nombre) throws SQLException {
         Connection connection = DBConnection.getInstance().getConnection();
-        try (PreparedStatement validUpdate_ = connection.prepareStatement(validUpdate)) {
+        try (PreparedStatement validUpdate_ = connection.prepareStatement(VALID_UPDATE)) {
             validUpdate_.setInt(1, usuario_id);
             validUpdate_.setString(2, nombre);
             try (ResultSet resultSet = validUpdate_.executeQuery()) {
@@ -75,7 +77,7 @@ public class UsuarioDAO implements CRUD<Usuario> {
     @Override
     public void insert(Usuario usuario) throws SQLException {
         Connection connection = DBConnection.getInstance().getConnection();
-        try (PreparedStatement insert = connection.prepareStatement(insertUser)) {
+        try (PreparedStatement insert = connection.prepareStatement(INSERT_USER)) {
             insert.setString(1, usuario.getNombre());
             insert.setString(2, usuario.getPassword());
             insert.setString(3, usuario.getRol().name());
@@ -87,14 +89,14 @@ public class UsuarioDAO implements CRUD<Usuario> {
     public void update(Usuario usuario) throws SQLException {
         Connection connection = DBConnection.getInstance().getConnection();
         if (StringUtils.isBlank(usuario.getPassword())) {
-            try (PreparedStatement update = connection.prepareStatement(updateUserWithoutPassword)) {
+            try (PreparedStatement update = connection.prepareStatement(UPDATE_USER_WITHOUT_PASSWORD)) {
                 update.setString(1, usuario.getNombre());
                 update.setString(2, usuario.getRol().name());
                 update.setInt(3, usuario.getUsuario_id());
                 update.executeUpdate();
             }
         } else {
-            try (PreparedStatement update = connection.prepareStatement(updateUserWithPassword)) {
+            try (PreparedStatement update = connection.prepareStatement(UPDATE_USER_WITH_PASSWORD)) {
                 update.setString(1, usuario.getNombre());
                 update.setString(2, usuario.getPassword());
                 update.setString(3, usuario.getRol().name());
@@ -107,7 +109,7 @@ public class UsuarioDAO implements CRUD<Usuario> {
     @Override
     public void delete(int id) throws SQLException {
         Connection connection = DBConnection.getInstance().getConnection();
-        try (PreparedStatement delete = connection.prepareStatement(deleteUser)) {
+        try (PreparedStatement delete = connection.prepareStatement(DELETE_USER)) {
             delete.setInt(1, id);
             delete.executeUpdate();
         }
@@ -116,7 +118,7 @@ public class UsuarioDAO implements CRUD<Usuario> {
     @Override
     public Optional<Usuario> getById(int id) throws SQLException {
         Connection connection = DBConnection.getInstance().getConnection();
-        try (PreparedStatement getUser = connection.prepareStatement(getUserById)) {
+        try (PreparedStatement getUser = connection.prepareStatement(GET_USER_BY_ID)) {
             getUser.setInt(1, id);
             try (ResultSet resultSet = getUser.executeQuery()) {
                 if (resultSet.next()) return Optional.of(getUser(resultSet));
@@ -129,7 +131,7 @@ public class UsuarioDAO implements CRUD<Usuario> {
     public List<Usuario> getAll() throws SQLException {
         List<Usuario> get = new ArrayList<>();
         Connection connection = DBConnection.getInstance().getConnection();
-        try (PreparedStatement getAll = connection.prepareStatement(getAllUsers);
+        try (PreparedStatement getAll = connection.prepareStatement(GET_ALL_USERS);
              ResultSet resultSet = getAll.executeQuery()) {
             while (resultSet.next()) {
                 get.add(getUser(resultSet));

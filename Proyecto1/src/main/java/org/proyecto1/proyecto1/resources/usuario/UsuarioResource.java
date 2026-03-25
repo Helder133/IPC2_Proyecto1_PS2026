@@ -1,4 +1,4 @@
-package org.proyecto1.proyecto1.resources;
+package org.proyecto1.proyecto1.resources.usuario;
 
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -8,7 +8,7 @@ import org.proyecto1.proyecto1.dtos.usuario.UsuarioResponse;
 import org.proyecto1.proyecto1.dtos.usuario.UsuarioUpdate;
 import org.proyecto1.proyecto1.exceptions.EntityAlreadyExistsException;
 import org.proyecto1.proyecto1.exceptions.UserDataInvalidException;
-import org.proyecto1.proyecto1.services.UsuarioService;
+import org.proyecto1.proyecto1.services.usuario.UsuarioService;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -26,7 +26,9 @@ public class UsuarioResource {
             return Response.ok().build();
         } catch (UserDataInvalidException e) {
             return errorEjecucion(e.getMessage(),1);
-        } catch (SQLException e) {
+        } catch (EntityAlreadyExistsException e) {
+            return errorEjecucion(e.getMessage(),2);
+        }catch (SQLException e) {
             return errorEjecucion(e.getMessage(),3);
         }
     }

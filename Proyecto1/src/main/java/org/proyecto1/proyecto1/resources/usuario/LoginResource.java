@@ -1,6 +1,5 @@
-package org.proyecto1.proyecto1.resources;
+package org.proyecto1.proyecto1.resources.usuario;
 
-import jakarta.annotation.Nullable;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -8,7 +7,7 @@ import org.proyecto1.proyecto1.dtos.usuario.LoginRequest;
 import org.proyecto1.proyecto1.dtos.usuario.UsuarioResponse;
 import org.proyecto1.proyecto1.exceptions.UserDataInvalidException;
 import org.proyecto1.proyecto1.models.usuario.Usuario;
-import org.proyecto1.proyecto1.services.UsuarioService;
+import org.proyecto1.proyecto1.services.usuario.UsuarioService;
 
 import java.sql.SQLException;
 

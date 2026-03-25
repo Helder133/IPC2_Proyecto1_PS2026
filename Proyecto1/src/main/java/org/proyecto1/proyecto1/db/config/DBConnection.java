@@ -1,4 +1,4 @@
-package org.proyecto1.proyecto1.db;
+package org.proyecto1.proyecto1.db.config;
 
 import org.apache.tomcat.jdbc.pool.DataSource;
 import org.apache.tomcat.jdbc.pool.PoolProperties;
