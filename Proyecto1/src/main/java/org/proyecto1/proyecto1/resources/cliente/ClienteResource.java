@@ -83,13 +83,10 @@ public class ClienteResource {
     @GET
     @Path("{parameter}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getByParameter(@PathParam("parameter") String parameter) {
+    public Response getByParameter(@PathParam("parameter") int parameter) {
         ClienteService clienteService = new ClienteService();
         try {
-            int id = Integer.parseInt(parameter);
-            return Response.ok(new ClienteResponse(clienteService.getClientById(id))).build();
-        } catch (NumberFormatException e) {
-            return getByCoincidence(parameter, clienteService);
+            return Response.ok(new ClienteResponse(clienteService.getClientById(parameter))).build();
         } catch (UserDataInvalidException e) {
             return errorEjecucion(e.getMessage(), 1);
         } catch (SQLException e) {
@@ -97,8 +94,12 @@ public class ClienteResource {
         }
     }
 
-    private Response getByCoincidence(String parameter, ClienteService clienteService) {
+    @GET
+    @Path("/coincidencia/{parameter}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getByCoincidence(@PathParam("parameter") String parameter) {
         try {
+            ClienteService clienteService = new ClienteService();
             List<ClienteResponse> getByCoincidence = clienteService.getClientsByCoincidence(parameter)
                     .stream()
                     .map(ClienteResponse::new)

@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS cliente (
 	fecha DATE NOT NULL,
 	telefono VARCHAR(20) NOT NULL,
 	email VARCHAR(100) UNIQUE,
-	nacionalidad VARCHAR(100)
+	nacionalidad VARCHAR(100) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS usuario (

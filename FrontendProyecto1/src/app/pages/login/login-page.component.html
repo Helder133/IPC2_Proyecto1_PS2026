@@ -1,0 +1,59 @@
+<div class="bg-dark text-light vh-100 d-flex align-items-center justify-content-center">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-sm-10 col-md-8 col-lg-5">
+                <div class="card bg-secondary text-light shadow-lg border-0">
+                    <div class="card-body p-5">
+                        <div class="text-center mb-4">
+                            <i class="bi bi-airplane-engines-fill fs-1 text-info"></i>
+                            <h2 class="mt-2 fw-bold">Agencia de Viajes</h2>
+                            <p class="text-light opacity-75">Ingresa tus credenciales para continuar</p>
+                        </div>
+                        @if (mensajeError()) {
+                        <div class="alert alert-danger d-flex align-items-center py-2 shadow-sm" role="alert">
+                            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                            <div>{{ mensajeError() }}</div>
+                        </div>
+                        }
+                        <form [formGroup]="loginFormGroup" (ngSubmit)="login()">
+                            <div class="mb-3">
+                                <label for="nombre" class="form-label">Usuario</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-dark text-light border-secondary">
+                                        <i class="bi bi-person-fill"></i>
+                                    </span>
+                                    <input type="text" id="nombre"
+                                        class="form-control bg-dark text-light border-secondary"
+                                        formControlName="nombre" placeholder="Ej. jperez"
+                                        [ngClass]="{'is-invalid': loginFormGroup.get('nombre')?.invalid && loginFormGroup.get('nombre')?.touched}">
+                                    <div class="invalid-feedback">El nombre de usuario es obligatorio.</div>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                <label for="password" class="form-label">Contraseña</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-dark text-light border-secondary">
+                                        <i class="bi bi-lock-fill"></i>
+                                    </span>
+                                    <input type="password" id="password"
+                                        class="form-control bg-dark text-light border-secondary"
+                                        formControlName="password" placeholder="********"
+                                        [ngClass]="{'is-invalid': loginFormGroup.get('password')?.invalid && loginFormGroup.get('password')?.touched}">
+                                    <div class="invalid-feedback">La contraseña es obligatoria.</div>
+                                </div>
+                            </div>
+                            <div class="d-grid mt-4">
+                                <button type="submit" class="btn btn-info text-dark fw-bold btn-lg"
+                                    [disabled]="isLoading()">
+                                    <span *ngIf="isLoading()" class="spinner-border spinner-border-sm me-2" role="status"
+                                        aria-hidden="true"></span>
+                                    {{ isLoading() ? 'Validando...' : 'Iniciar Sesión' }}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
