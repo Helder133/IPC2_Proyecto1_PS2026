@@ -1,0 +1,50 @@
+<div class="container py-5">
+    <div class="row mb-4">
+        <div class="col">
+            <h1 class="display-5 fw-bold text-dark">¡Hola, {{ nombreUsuario() }}!</h1>
+            <p class="lead text-secondary">Bienvenido al panel de control. Tu rol actual es: <span
+                    class="badge bg-info text-dark">{{ rolUsuario() }}</span></p>
+        </div>
+    </div>
+
+    @if (rolUsuario() === enumUsuario.Administrador) {
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm border-0 border-start border-primary border-4">
+                <div class="card-body">
+                    <h5 class="card-title fw-bold"><i class="bi bi-cloud-upload text-primary me-2"></i>Carga Masiva</h5>
+                    <p class="card-text text-muted">Sube el archivo de texto inicial de la agencia.</p>
+                    <a routerLink="/admin/carga" class="btn btn-outline-primary btn-sm">Ir a Carga Masiva</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm border-0 border-start border-success border-4">
+                <div class="card-body">
+                    <h5 class="card-title fw-bold"><i class="bi bi-people text-success me-2"></i>Usuarios</h5>
+                    <p class="card-text text-muted">Crea, edita o desactiva trabajadores del sistema.</p>
+                    <a routerLink="/admin/usuarios" class="btn btn-outline-success btn-sm">Gestionar Usuarios</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm border-0 border-start border-warning border-4 bg-light">
+                <div class="card-body">
+                    <h5 class="card-title fw-bold text-muted"><i class="bi bi-bar-chart text-warning me-2"></i>Reportes
+                        (Próximamente)</h5>
+                    <p class="card-text text-muted">Módulo en construcción. Se habilitará cuando existan datos.</p>
+                    <button class="btn btn-secondary btn-sm" disabled>Ver Reportes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    }
+
+    @if (rolUsuario() === enumUsuario.Atencion_al_Cliente) {
+    }
+
+    @if (rolUsuario() === enumUsuario.Operaciones) {
+    }
+</div>

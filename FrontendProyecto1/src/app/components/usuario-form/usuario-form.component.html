@@ -1,0 +1,43 @@
+<form [formGroup]="usuarioForm" (ngSubmit)="guardar()" class="p-3 bg-white rounded shadow-sm">
+
+    <div class="row g-3">
+        <div class="col-md-6">
+            <label for="nombre" class="form-label fw-bold">Nombre de Usuario</label>
+            <input type="text" id="nombre" class="form-control" formControlName="nombre" placeholder="Ej. jperez"
+                [ngClass]="{'is-invalid': usuarioForm.get('nombre')?.invalid && usuarioForm.get('nombre')?.touched}">
+            <div class="invalid-feedback">El nombre es obligatorio.</div>
+        </div>
+
+        <div class="col-md-6">
+            <label for="rol" class="form-label fw-bold">Rol en el Sistema</label>
+            <select id="rol" class="form-select" formControlName="rol"
+                [ngClass]="{'is-invalid': usuarioForm.get('rol')?.invalid && usuarioForm.get('rol')?.touched}">
+                <option value="{{ enumUsuario.Administrador }}">Administrador</option>
+                <option value="{{ enumUsuario.Operaciones }}">Operaciones</option>
+                <option value="{{ enumUsuario.Atencion_al_Cliente }}">Atención al Cliente</option>
+            </select>
+            <div class="invalid-feedback">Debe seleccionar un rol.</div>
+        </div>
+
+        <div class="col-12">
+            <label for="password" class="form-label fw-bold">
+                Contraseña
+                @if( usuarioEditar() ){
+                <span class="text-muted fw-normal">(Dejar en blanco para mantener la
+                    actual)</span>
+                }
+            </label>
+            <input type="password" id="password" class="form-control" formControlName="password" placeholder="********"
+                [ngClass]="{'is-invalid': usuarioForm.get('password')?.invalid && usuarioForm.get('password')?.touched}">
+            <div class="invalid-feedback">La contraseña es obligatoria.</div>
+        </div>
+
+        <div class="col-12 text-end mt-4">
+            <button type="submit" class="btn btn-primary px-4 fw-bold">
+                <i class="bi" [ngClass]="usuarioEditar() ? 'bi-pencil-square' : 'bi-plus-circle'"></i>
+                {{ usuarioEditar() ? 'Actualizar Usuario' : 'Crear Usuario' }}
+            </button>
+        </div>
+    </div>
+
+</form>

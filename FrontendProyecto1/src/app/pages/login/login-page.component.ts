@@ -49,7 +49,7 @@ export class LoginPageComponent implements OnInit {
         localStorage.setItem('nombre', usuarioResponse.nombre);
         localStorage.setItem('rol', usuarioResponse.rol);
 
-        console.log('Usuario logueado:', usuarioResponse);
+        this.router.navigate(['/home']);
       },
       error: (error: any) => {
         this.isLoading.set(false);

@@ -1,0 +1,69 @@
+<form [formGroup]="clienteForm" (ngSubmit)="guardar()" class="p-4 bg-white rounded shadow-sm border border-light">
+
+    <div class="row g-3">
+        <div class="col-md-5">
+            <label for="dpi_o_pasaporte" class="form-label fw-bold">DPI o Pasaporte</label>
+            <div class="input-group">
+                <span class="input-group-text bg-light border-secondary"><i class="bi bi-person-badge"></i></span>
+                <input type="text" id="dpi_o_pasaporte" class="form-control" formControlName="dpi_o_pasaporte"
+                    placeholder="Ej. 1234 56789 0101"
+                    [ngClass]="{'is-invalid': clienteForm.get('dpi_o_pasaporte')?.invalid && clienteForm.get('dpi_o_pasaporte')?.touched}">
+                <div class="invalid-feedback">El documento de identidad es obligatorio.</div>
+            </div>
+        </div>
+
+        <div class="col-md-7">
+            <label for="nombre" class="form-label fw-bold">Nombre Completo</label>
+            <input type="text" id="nombre" class="form-control bg-light" formControlName="nombre"
+                placeholder="Ej. Juan Pérez"
+                [ngClass]="{'is-invalid': clienteForm.get('nombre')?.invalid && clienteForm.get('nombre')?.touched}">
+            <div class="invalid-feedback">El nombre es obligatorio.</div>
+        </div>
+
+        <div class="col-md-4">
+            <label for="fecha" class="form-label fw-bold">Fecha</label>
+            <input type="date" id="fecha" class="form-control bg-light" formControlName="fecha"
+                [ngClass]="{'is-invalid': clienteForm.get('fecha')?.invalid && clienteForm.get('fecha')?.touched}">
+            <div class="invalid-feedback">La fecha es obligatoria.</div>
+        </div>
+
+        <div class="col-md-4">
+            <label for="nacionalidad" class="form-label fw-bold">Nacionalidad</label>
+            <input type="text" id="nacionalidad" class="form-control bg-light" formControlName="nacionalidad"
+                placeholder="Ej. Guatemalteca"
+                [ngClass]="{'is-invalid': clienteForm.get('nacionalidad')?.invalid && clienteForm.get('nacionalidad')?.touched}">
+            <div class="invalid-feedback">La nacionalidad es obligatoria.</div>
+        </div>
+
+        <div class="col-md-4">
+            <label for="telefono" class="form-label fw-bold">Teléfono</label>
+            <div class="input-group">
+                <span class="input-group-text bg-light border-secondary"><i class="bi bi-telephone"></i></span>
+                <input type="text" id="telefono" class="form-control bg-light" formControlName="telefono"
+                    placeholder="Ej. 5555-4444"
+                    [ngClass]="{'is-invalid': clienteForm.get('telefono')?.invalid && clienteForm.get('telefono')?.touched}">
+                <div class="invalid-feedback">El teléfono es obligatorio.</div>
+            </div>
+        </div>
+
+        <div class="col-12">
+            <label for="email" class="form-label fw-bold">Correo Electrónico</label>
+            <div class="input-group">
+                <span class="input-group-text bg-light border-secondary"><i class="bi bi-envelope"></i></span>
+                <input type="email" id="email" class="form-control bg-light" formControlName="email"
+                    placeholder="ejemplo@correo.com"
+                    [ngClass]="{'is-invalid': clienteForm.get('email')?.invalid && clienteForm.get('email')?.touched}">
+                <div class="invalid-feedback">Ingrese un correo válido.</div>
+            </div>
+        </div>
+
+        <div class="col-12 text-end mt-4 pt-3 border-top">
+            <button type="submit" class="btn px-4 fw-bold" [ngClass]="clienteEditar() ? 'btn-success' : 'btn-primary'"
+                [disabled]="clienteForm.invalid">
+                <i class="bi me-2" [ngClass]="clienteEditar() ? 'bi-save-fill' : 'bi-person-plus-fill'"></i>
+                {{ clienteEditar() ? 'Actualizar Cliente' : 'Registrar Cliente' }}
+            </button>
+        </div>
+    </div>
+
+</form>
