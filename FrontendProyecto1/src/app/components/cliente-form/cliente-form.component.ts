@@ -29,4 +29,14 @@ export class ClienteFormComponent implements OnInit {
     })
   }
 
+  guardar(): void {
+    if (this.clienteForm.invalid) {
+      this.clienteForm.markAllAsTouched();
+      return;
+    }
+
+    const clienteRequest = signal<ClienteRequest>(this.clienteForm.value);
+    this.clienteNuevo().emit(clienteRequest());
+  }
+
 }

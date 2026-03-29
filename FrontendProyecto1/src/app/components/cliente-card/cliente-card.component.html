@@ -1,0 +1,42 @@
+<div class="card h-100 shadow-sm border-0 bg-white">
+    <div class="card-header bg-white border-0 pt-4 pb-0 d-flex align-items-center">
+
+        <div class="me-3">
+            <div class="bg-info text-dark rounded d-flex align-items-center justify-content-center"
+                style="width: 50px; height: 50px;">
+                <i class="bi fs-3"
+                    [ngClass]="cliente.nacionalidad.toLowerCase().includes('guatemalteca') ? 'bi-person-badge-fill' : 'bi-globe-americas'">
+                </i>
+            </div>
+        </div>
+
+        <div>
+            <h6 class="card-title fw-bold text-dark mb-0 text-truncate" style="max-width: 200px;">{{ cliente.nombre }}
+            </h6>
+            <small class="text-muted">{{ cliente.dpi_o_pasaporte }}</small>
+        </div>
+    </div>
+
+    <div class="card-body px-4 py-3">
+        <ul class="list-unstyled mb-0 small text-secondary">
+            <li class="mb-2 d-flex align-items-center">
+                <i class="bi bi-telephone-fill text-primary me-2"></i> {{ cliente.telefono }}
+            </li>
+            <li class="mb-2 d-flex align-items-center text-truncate">
+                <i class="bi bi-envelope-at-fill text-primary me-2"></i> {{ cliente.email }}
+            </li>
+            <li class="d-flex align-items-center">
+                <i class="bi bi-flag-fill text-primary me-2"></i> {{ cliente.nacionalidad }}
+            </li>
+        </ul>
+    </div>
+
+    <div class="card-footer bg-light border-0 py-3 d-flex justify-content-end gap-2">
+        <button class="btn btn-outline-dark btn-sm rounded-pill" (click)="onEdit.emit(cliente)">
+            <i class="bi bi-pencil-square"></i>
+        </button>
+        <button class="btn btn-outline-danger btn-sm rounded-pill" (click)="onDelete.emit(cliente.cliente_id)">
+            <i class="bi bi-trash-fill"></i>
+        </button>
+    </div>
+</div>

@@ -1,9 +1,10 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { EnumUsuario } from '../../models/usuario/EnumUsuario';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-home-page.component',
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './home-page.component.html'
 })
 export class HomePageComponent implements OnInit {

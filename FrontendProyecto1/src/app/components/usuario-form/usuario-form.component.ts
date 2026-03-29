@@ -12,20 +12,19 @@ import { EnumUsuario } from '../../models/usuario/EnumUsuario';
 })
 export class UsuarioFormComponent implements OnInit{
   
-  @Input() usuarioEditar = signal<UsuarioResponse>(null!);
+  @Input() usuarioEditar!: UsuarioResponse
 
-  @Output() usuarioNuevo = signal<EventEmitter<UsuarioRequest>>(new EventEmitter<UsuarioRequest>());
-  
+  @Output() usuario = new EventEmitter<UsuarioRequest>();
+
   usuarioForm!: FormGroup;
   private formBuilder = inject(FormBuilder);
-
   enumUsuario = EnumUsuario;
 
   ngOnInit(): void {
     this.usuarioForm = this.formBuilder.group({
-      nombre: [this.usuarioEditar()?.nombre || '', [Validators.required, Validators.maxLength(250)]],
-      password: ['', this.usuarioEditar() ? [] : [Validators.required]],
-      rol: [this.usuarioEditar()?.rol || EnumUsuario.Atencion_al_Cliente, [Validators.required]]
+      nombre: [this.usuarioEditar?.nombre || '', [Validators.required, Validators.maxLength(250)]],
+      password: ['', this.usuarioEditar ? [] : [Validators.required]],
+      rol: [this.usuarioEditar?.rol || EnumUsuario.Atencion_al_Cliente, [Validators.required]]
     })
   }
 
@@ -35,8 +34,8 @@ export class UsuarioFormComponent implements OnInit{
       return;
     }
 
-    const usuarioRequest = signal<UsuarioRequest>(this.usuarioForm.value);
-    this.usuarioNuevo().emit(usuarioRequest());
+    const usuarioRequest = this.usuarioForm.value;
+    this.usuario.emit(usuarioRequest);
   }
 
 }

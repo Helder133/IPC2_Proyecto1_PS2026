@@ -1,0 +1,39 @@
+<div class="container mt-4">
+
+    <div class="row mb-3">
+        <div class="col-md-6 offset-md-3 d-flex justify-content-end">
+            <button class="btn btn-success shadow-sm" routerLink="/usuario/crear">
+                <i class="bi bi-person-plus-fill me-2"></i> Nuevo Usuario
+            </button>
+        </div>
+    </div>
+
+    <div class="row mb-5">
+        <div class="col-md-6 offset-md-3 d-flex shadow-sm rounded">
+            <input type="text" class="form-control me-2 border-0 bg-light"
+                placeholder="Ingrese un nombre para buscar..." [(ngModel)]="concidencia" (keyup.enter)="buscar()">
+            <button class="btn btn-primary px-4" (click)="buscar()">
+                <i class="bi bi-search"></i> Buscar
+            </button>
+        </div>
+    </div>
+    @if (mensajeError()) {
+    <div class="alert alert-danger" role="alert">
+        {{ mensajeError() }}
+    </div>
+    }
+    <div class="row">
+        @for (usuario of usuarios(); track $index) {
+        <div class="col-md-4 col-sm-6 mb-4">
+            <app-usuario-card-component [usuario]="usuario" (onEdit)="editarUsuario($event)"
+                (onDelete)="seleccionarUsuario($event)">
+            </app-usuario-card-component>
+
+        </div>
+        }
+    </div>
+
+</div>
+
+<confirmation-modal-usuario-component [usuario]="usuarioSeleccionado()" (onConfirm)="eliminarUsuario()">
+</confirmation-modal-usuario-component>
