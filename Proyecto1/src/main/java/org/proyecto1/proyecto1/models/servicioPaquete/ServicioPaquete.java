@@ -1,0 +1,56 @@
+package org.proyecto1.proyecto1.models.servicioPaquete;
+
+public class ServicioPaquete {
+    private int servicioId;
+    private int proveedorId;
+    private int paqueteId;
+    private String descripcion;
+    private double costo;
+
+    public ServicioPaquete(int proveedorId, int paqueteId, String descripcion, double costo) {
+        this.proveedorId = proveedorId;
+        this.paqueteId = paqueteId;
+        this.descripcion = descripcion;
+        this.costo = costo;
+    }
+
+    public int getServicioId() {
+        return servicioId;
+    }
+
+    public void setServicioId(int servicioId) {
+        this.servicioId = servicioId;
+    }
+
+    public int getProveedorId() {
+        return proveedorId;
+    }
+
+    public void setProveedorId(int proveedorId) {
+        this.proveedorId = proveedorId;
+    }
+
+    public int getPaqueteId() {
+        return paqueteId;
+    }
+
+    public void setPaqueteId(int paqueteId) {
+        this.paqueteId = paqueteId;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+
+    public double getCosto() {
+        return costo;
+    }
+
+    public void setCosto(double costo) {
+        this.costo = costo;
+    }
+}

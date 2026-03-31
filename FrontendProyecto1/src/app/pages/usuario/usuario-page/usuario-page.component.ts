@@ -40,7 +40,7 @@ export class UsuarioPageComponent implements OnInit {
       this.getUsuarios();
       return;
     }
-    
+
     this.usuarioService.getUsuarioByCoincidence(this.concidencia()).subscribe({
       next: (usuarios: UsuarioResponse[]) => {
         this.usuarios.set(this.descartarUsuarioLogeado(usuarios));
@@ -61,12 +61,19 @@ export class UsuarioPageComponent implements OnInit {
     this.eliminar.set(true);
   }
 
-  editarUsuario(usuario: UsuarioResponse): void {
-    console.log('Editar usuario:', usuario);
-  }
-
   eliminarUsuario(): void {
-    console.log('Eliminar usuario con ID:', this.usuarioSeleccionado().usuario_id);
+    if (!this.eliminar()) return;
+    
+    this.usuarioService.deleteUsuario(this.usuarioSeleccionado().usuario_id).subscribe({
+      next: () => {
+        this.getUsuarios();
+        this.eliminar.set(false);
+      },
+      error: (error) => {
+        this.mensajeError.set(error.error?.error || "Error de conexión con el servidor.");
+        this.eliminar.set(false);
+      }
+    });
   }
 
 }

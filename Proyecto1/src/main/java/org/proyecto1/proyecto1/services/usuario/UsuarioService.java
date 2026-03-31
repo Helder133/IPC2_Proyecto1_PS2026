@@ -30,6 +30,14 @@ public class UsuarioService {
         usuarioDAO.insert(usuario);
     }
 
+    public void insertDesdeArchivo(Usuario usuario) throws UserDataInvalidException, EntityAlreadyExistsException, SQLException {
+        if (!usuario.isValid()) throw new UserDataInvalidException("Los datos del usuario son inválidos");
+        UsuarioDAO usuarioDAO = new UsuarioDAO();
+        int usuario_id = usuarioDAO.existsUser(usuario.getNombre());
+        if (usuario_id != -1) throw new EntityAlreadyExistsException("El nombre que desea registrar, ya esta registrado en otro usuario.");
+        usuarioDAO.insert(usuario);
+    }
+
     public void update(UsuarioUpdate usuarioUpdate) throws SQLException, UserDataInvalidException, EntityAlreadyExistsException {
         Usuario usuario = new Usuario(usuarioUpdate.getNombre(), usuarioUpdate.getPassword(), usuarioUpdate.getRol());
         usuario.setUsuario_id(usuarioUpdate.getUsuario_id());

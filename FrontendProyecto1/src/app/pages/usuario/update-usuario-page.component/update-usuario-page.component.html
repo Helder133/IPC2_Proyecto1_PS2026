@@ -1,1 +1,20 @@
-<p>update-usuario-page.component works!</p>
+<div class="container mt-4">
+    @if (mensajeError()) {
+    <div class="alert alert-danger shadow-lg border-0 d-flex align-items-center fade show" role="alert">
+        <i class="bi bi-exclamation-triangle-fill fs-4 me-3"></i>
+        <div>
+            {{ mensajeError() }}
+        </div>
+    </div>
+    }
+    <h2 class="mb-4">Actualizar Usuario</h2>
+    @if (usuarioOriginal()) {
+    <app-usuario-form-component [usuarioEditar]="usuarioOriginal()" (usuario)="actualizarUsuario($event)">
+    </app-usuario-form-component>
+    } @else {
+    <div class="text-center mt-5">
+        <div class="spinner-border text-primary" role="status"></div>
+        <p class="mt-2">Cargando datos del usuario...</p>
+    </div>
+    }
+</div>
