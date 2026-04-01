@@ -1,10 +1,10 @@
 package org.proyecto1.proyecto1.models.reservacion;
 
-public class reservacionCliente {
+public class ReservacionCliente {
     private int reservacionId;
     private int clienteId;
 
-    public reservacionCliente(int reservacionId, int clienteId) {
+    public ReservacionCliente(int reservacionId, int clienteId) {
         this.reservacionId = reservacionId;
         this.clienteId = clienteId;
     }

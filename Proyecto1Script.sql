@@ -52,14 +52,15 @@ CREATE TABLE IF NOT EXISTS paquete_turistico (
 );
 
 CREATE TABLE IF NOT EXISTS servicio_paquete (
-	servicio_id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
 	proveedor_id INT NOT NULL,
 	paquete_id INT NOT NULL,
 	descripcion VARCHAR(250) NOT NULL, 
 	costo DECIMAL(10,2) NOT NULL,
+	CONSTRAINT pk_service PRIMARY KEY (proveedor_id, paquete_id),
 	CONSTRAINT fk_proveedor FOREIGN KEY (proveedor_id) REFERENCES proveedor (proveedor_id),
 	CONSTRAINT fk_paquete FOREIGN KEY (paquete_id) REFERENCES paquete_turistico (paquete_id)
 );
+
 
 CREATE TABLE IF NOT EXISTS reservacion (
 	reservacion_id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
@@ -71,6 +72,8 @@ CREATE TABLE IF NOT EXISTS reservacion (
 	costo_total DECIMAL(10,2),
 	costo_agencia DECIMAL(10,2),
 	estado ENUM('Pendiente','Confirmada','Cancelada','Completada') DEFAULT 'Pendiente',
+	reembolso DECIMAL(10,2),
+	fecha_cancelacion DATE,
 	CONSTRAINT fk_paquete2 FOREIGN KEY (paquete_id) REFERENCES paquete_turistico (paquete_id),
 	CONSTRAINT fk_usuario FOREIGN KEY (usuario_id) REFERENCES usuario (usuario_id)
 );

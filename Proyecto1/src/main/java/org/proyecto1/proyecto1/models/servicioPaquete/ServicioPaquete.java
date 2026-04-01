@@ -1,7 +1,6 @@
 package org.proyecto1.proyecto1.models.servicioPaquete;
 
 public class ServicioPaquete {
-    private int servicioId;
     private int proveedorId;
     private int paqueteId;
     private String descripcion;
@@ -12,14 +11,6 @@ public class ServicioPaquete {
         this.paqueteId = paqueteId;
         this.descripcion = descripcion;
         this.costo = costo;
-    }
-
-    public int getServicioId() {
-        return servicioId;
-    }
-
-    public void setServicioId(int servicioId) {
-        this.servicioId = servicioId;
     }
 
     public int getProveedorId() {

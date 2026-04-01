@@ -2,14 +2,14 @@ package org.proyecto1.proyecto1.models.pago;
 
 import java.time.LocalDate;
 
-public class historialPago {
+public class HistorialPago {
     private int historialId;
     private int reservacionId;
     private double monto;
     private EnumPago metodo;
     private LocalDate fecha;
 
-    public historialPago(int reservacionId, double monto, EnumPago metodo, LocalDate fecha) {
+    public HistorialPago(int reservacionId, double monto, EnumPago metodo, LocalDate fecha) {
         this.reservacionId = reservacionId;
         this.monto = monto;
         this.metodo = metodo;

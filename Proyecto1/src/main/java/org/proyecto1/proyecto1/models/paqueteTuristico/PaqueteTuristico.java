@@ -1,5 +1,7 @@
 package org.proyecto1.proyecto1.models.paqueteTuristico;
 
+import org.apache.commons.lang3.StringUtils;
+
 public class PaqueteTuristico {
     private int paqueteId;
     private int destinoId;
@@ -81,4 +83,12 @@ public class PaqueteTuristico {
     public void setEstado(boolean estado) {
         this.estado = estado;
     }
+
+    public boolean isValid() {
+        return StringUtils.isNotBlank(nombre) &&
+                duracion > 0 &&
+                precioPublico > 0 &&
+                capacidadMaxima > 0;
+    }
+
 }

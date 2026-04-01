@@ -1,5 +1,7 @@
 package org.proyecto1.proyecto1.models.destino;
 
+import org.apache.commons.lang3.StringUtils;
+
 public class Destino {
     private int destino_id;
     private String nombre;
@@ -60,5 +62,11 @@ public class Destino {
 
     public void setImagen(String imagen) {
         this.imagen = imagen;
+    }
+
+    public boolean isValid () {
+        return StringUtils.isNotBlank(nombre) &&
+                StringUtils.isNotBlank(pais) &&
+                StringUtils.isNotBlank(descripcion);
     }
 }

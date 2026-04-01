@@ -12,20 +12,32 @@ import java.util.List;
 import java.util.Optional;
 
 public class DestinoDAO implements CRUD<Destino> {
-    public static final String INSERT = "INSERT INTO destino (nombre, pais, descripcion, clima_mejor_epoca, imagen) VALUES (?, ?, ?, ?, ?)";
-    public static final String UPDATE = "UPDATE destino SET nombre = ?, pais = ?, descripcion = ?, clima_mejor_epoca = ?, imagen = ? WHERE destino_id = ?";
-    public static final String DELETE = "DELETE FROM destino WHERE destino_id = ?";
-    public static final String GET_BY_ID = "SELECT * FROM destino WHERE destino_id = ?";
-    public static final String GET_ALL = "SELECT * FROM destino";
-    public static final String EXISTS_NAME = "SELECT cliente_id FROM destino WHERE nombre = ?";
+    private static final String INSERT = "INSERT INTO destino (nombre, pais, descripcion, clima_mejor_epoca, imagen) VALUES (?, ?, ?, ?, ?)";
+    private static final String UPDATE = "UPDATE destino SET nombre = ?, pais = ?, descripcion = ?, clima_mejor_epoca = ?, imagen = ? WHERE destino_id = ?";
+    private static final String DELETE = "DELETE FROM destino WHERE destino_id = ?";
+    private static final String GET_BY_ID = "SELECT * FROM destino WHERE destino_id = ?";
+    private static final String GET_ALL = "SELECT * FROM destino";
+    private static final String EXISTS_NAME = "SELECT cliente_id FROM destino WHERE nombre = ?";
+    private static final String VALIDAR_UPDATE = "SELECT destino_id FROM destino WHERE destino_id <> ? AND nombre = ?";
 
-    public int existName(String name) throws SQLException {
+    public int existsName(String name) throws SQLException {
         Connection connection = DBConnection.getInstance().getConnection();
         try (PreparedStatement existName = connection.prepareStatement(EXISTS_NAME)) {
             existName.setString(1, name);
             try (ResultSet resultSet = existName.executeQuery();){
                 if (resultSet.next()) return resultSet.getInt("destino_id");
                 return -1;
+            }
+        }
+    }
+
+    public boolean validUpdate(int destino_id, String nombre) throws SQLException {
+        Connection connection = DBConnection.getInstance().getConnection();
+        try (PreparedStatement validUpdate = connection.prepareStatement(VALIDAR_UPDATE)) {
+            validUpdate.setInt(1, destino_id);
+            validUpdate.setString(2, nombre);
+            try (ResultSet resultSet = validUpdate.executeQuery()) {
+                return resultSet.next();
             }
         }
     }

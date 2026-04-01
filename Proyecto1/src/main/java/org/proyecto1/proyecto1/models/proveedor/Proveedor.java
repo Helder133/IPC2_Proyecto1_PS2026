@@ -1,5 +1,7 @@
 package org.proyecto1.proyecto1.models.proveedor;
 
+import org.apache.commons.lang3.StringUtils;
+
 public class Proveedor {
     private int proveedor_id;
     private String nombre;
@@ -51,5 +53,11 @@ public class Proveedor {
 
     public void setProveedor_id(int proveedor_id) {
         this.proveedor_id = proveedor_id;
+    }
+
+    public boolean idValid() {
+        return StringUtils.isNotBlank(nombre) &&
+                StringUtils.isNotBlank(pais) &&
+                tipo != null;
     }
 }

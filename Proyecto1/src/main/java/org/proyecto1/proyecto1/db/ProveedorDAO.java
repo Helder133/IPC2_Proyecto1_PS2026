@@ -14,12 +14,24 @@ import java.util.List;
 import java.util.Optional;
 
 public class ProveedorDAO implements CRUD<Proveedor> {
-    public static final String INSERT = "INSERT INTO proveedor (nombre, pais, tipo, contacto) VALUES (?, ?, ?, ?)";
-    public static final String UPDATE = "UPDATE proveedor SET nombre = ?, pais = ?, tipo = ?, contacto = ? WHERE proveedor_id = ?";
-    public static final String DELETE = "DELETE FROM proveedor WHERE proveedor_id = ?";
-    public static final String GET_BY_ID = "SELECT * FROM proveedor WHERE proveedor_id = ?";
-    public static final String GET_ALL = "SELECT * FROM proveedor";
-    public static final String EXISTS_NAME = "SELECT proveedor_id FROM proveedor WHERE nombre = ?";
+    private static final String INSERT = "INSERT INTO proveedor (nombre, pais, tipo, contacto) VALUES (?, ?, ?, ?)";
+    private static final String UPDATE = "UPDATE proveedor SET nombre = ?, pais = ?, tipo = ?, contacto = ? WHERE proveedor_id = ?";
+    private static final String DELETE = "DELETE FROM proveedor WHERE proveedor_id = ?";
+    private static final String GET_BY_ID = "SELECT * FROM proveedor WHERE proveedor_id = ?";
+    private static final String GET_ALL = "SELECT * FROM proveedor";
+    private static final String EXISTS_NAME = "SELECT proveedor_id FROM proveedor WHERE nombre = ?";
+    private static final String VALIDAR_UPDATE = "SELECT proveedor_id FROM proveedor WHERE proveedor_id <> ? AND nombre = ?";
+
+    public boolean validUpdate(int proveedor_id, String nombre) throws SQLException {
+        Connection connection = DBConnection.getInstance().getConnection();
+        try (PreparedStatement validUpdate = connection.prepareStatement(VALIDAR_UPDATE)) {
+            validUpdate.setInt(1, proveedor_id);
+            validUpdate.setString(2, nombre);
+            try (ResultSet resultSet = validUpdate.executeQuery()) {
+                return resultSet.next();
+            }
+        }
+    }
 
     public int existsName(String name) throws SQLException {
         Connection connection = DBConnection.getInstance().getConnection();

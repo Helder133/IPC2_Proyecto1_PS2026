@@ -2,7 +2,7 @@ package org.proyecto1.proyecto1.models.reservacion;
 
 import java.time.LocalDate;
 
-public class reservacion {
+public class Reservacion {
     private int reservacionId;
     private int paqueteId;
     private int usuarioId;
@@ -12,8 +12,10 @@ public class reservacion {
     private double costoTotal;
     private double costoAgencia;
     private EnumReservacion estado;
+    private double reembolso;
+    private LocalDate fechaCancelacion;
 
-    public reservacion(int paqueteId, int usuarioId, LocalDate fechaViaje) {
+    public Reservacion(int paqueteId, int usuarioId, LocalDate fechaViaje) {
         this.paqueteId = paqueteId;
         this.usuarioId = usuarioId;
         this.fechaViaje = fechaViaje;
@@ -89,5 +91,21 @@ public class reservacion {
 
     public void setEstado(EnumReservacion estado) {
         this.estado = estado;
+    }
+
+    public double getReembolso() {
+        return reembolso;
+    }
+
+    public void setReembolso(double reembolso) {
+        this.reembolso = reembolso;
+    }
+
+    public LocalDate getFechaCancelacion() {
+        return fechaCancelacion;
+    }
+
+    public void setFechaCancelacion(LocalDate fechaCancelacion) {
+        this.fechaCancelacion = fechaCancelacion;
     }
 }
