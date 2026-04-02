@@ -17,6 +17,19 @@ public class ReservacionDAO implements CRUD<Reservacion> {
     private static final String GET_BY_ID = "SELECT * FROM reservacion WHERE reservacion_id = ?";
     private static final String GET_ALL = "SELECT * FROM reservacion";
     private static final String UPDATE_ESTADO = "UPDATE reservacion SET estado = ? WHERE reservacion_id = ?";
+    private static final String GET_BY_USER_ID = "SELECT r.* FROM reservacion AS r JOIN reservacion_cliente AS rc ON r.reservacion_id = rc.reservacion_id WHERE rc.cliente_id = ?";
+
+    public List<Reservacion> getByUserId(int cliente_id) throws SQLException {
+        Connection connection = DBConnection.getInstance().getConnection();
+        List<Reservacion> reservaciones = new ArrayList<>();
+        try (PreparedStatement getByUserId = connection.prepareStatement(GET_BY_USER_ID)) {
+            getByUserId.setInt(1, cliente_id);
+            try (ResultSet resultSet = getByUserId.executeQuery()) {
+                while (resultSet.next()) reservaciones.add(extraerDatos(resultSet));
+                return reservaciones;
+            }
+        }
+    }
 
     public void updateEstado(int reservacionId, EnumReservacion estado, Connection connection) throws SQLException {
         try (PreparedStatement updateEstado = connection.prepareStatement(UPDATE_ESTADO)){
@@ -35,6 +48,21 @@ public class ReservacionDAO implements CRUD<Reservacion> {
             insert.setDate(3, Date.valueOf(reservacion.getFechaCreacion()));
             insert.setDate(4, Date.valueOf(reservacion.getFechaViaje()));
             insert.executeUpdate();
+        }
+    }
+
+    public int insert(Reservacion reservacion, Connection connection) throws SQLException {
+        try (PreparedStatement insert = connection.prepareStatement(INSERT, Statement.RETURN_GENERATED_KEYS)){
+            insert.setInt(1, reservacion.getPaqueteId());
+            insert.setInt(2, reservacion.getUsuarioId());
+            insert.setDate(3, Date.valueOf(reservacion.getFechaCreacion()));
+            insert.setDate(4, Date.valueOf(reservacion.getFechaViaje()));
+            insert.executeUpdate();
+
+            try (ResultSet generatedKeys = insert.getGeneratedKeys()){
+                if (generatedKeys.next()) return generatedKeys.getInt(1);
+                else throw new SQLException("No se pudo obtener el ID de la reservación.");
+            }
         }
     }
 
@@ -62,6 +90,16 @@ public class ReservacionDAO implements CRUD<Reservacion> {
     @Override
     public Optional<Reservacion> getById(int id) throws SQLException {
         Connection connection = DBConnection.getInstance().getConnection();
+        try (PreparedStatement getById = connection.prepareStatement(GET_BY_ID)){
+            getById.setInt(1, id);
+            try (ResultSet resultSet = getById.executeQuery()){
+                if (resultSet.next()) return Optional.of(extraerDatos(resultSet));
+                return Optional.empty();
+            }
+        }
+    }
+
+    public Optional<Reservacion> getById(int id, Connection connection) throws SQLException {
         try (PreparedStatement getById = connection.prepareStatement(GET_BY_ID)){
             getById.setInt(1, id);
             try (ResultSet resultSet = getById.executeQuery()){

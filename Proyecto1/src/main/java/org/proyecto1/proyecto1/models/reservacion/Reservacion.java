@@ -19,6 +19,7 @@ public class Reservacion {
         this.paqueteId = paqueteId;
         this.usuarioId = usuarioId;
         this.fechaViaje = fechaViaje;
+        this.fechaCreacion = LocalDate.now();
     }
 
     public int getReservacionId() {
@@ -107,5 +108,11 @@ public class Reservacion {
 
     public void setFechaCancelacion(LocalDate fechaCancelacion) {
         this.fechaCancelacion = fechaCancelacion;
+    }
+
+    public boolean isValid() {
+        return paqueteId > 0
+                && usuarioId > 0
+                && fechaViaje != null;
     }
 }

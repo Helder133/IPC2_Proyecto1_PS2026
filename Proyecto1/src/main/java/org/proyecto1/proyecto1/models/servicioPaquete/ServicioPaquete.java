@@ -1,5 +1,7 @@
 package org.proyecto1.proyecto1.models.servicioPaquete;
 
+import org.apache.commons.lang3.StringUtils;
+
 public class ServicioPaquete {
     private int proveedorId;
     private int paqueteId;
@@ -43,5 +45,12 @@ public class ServicioPaquete {
 
     public void setCosto(double costo) {
         this.costo = costo;
+    }
+
+    public boolean isValid() {
+        return StringUtils.isNotBlank(descripcion)
+                && costo > 0
+                && proveedorId > 0
+                && paqueteId > 0;
     }
 }

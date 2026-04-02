@@ -7,7 +7,7 @@ import java.sql.*;
 import java.util.List;
 import java.util.Optional;
 
-public class historialPagoDAO implements CRUD<HistorialPago> {
+public class HistorialPagoDAO implements CRUD<HistorialPago> {
     private static final String INSERT = "INSERT INTO historial_pago (reservacion_id, monto, metodo, fecha) VALUES (?, ?, ?, ?)";
     private static final String GET_ANTICIPO = "SELECT SUM(monto) AS anticipo FROM historial_pago WHERE reservacion_id = ?";
 

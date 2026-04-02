@@ -18,6 +18,28 @@ public class ReservacionClienteDAO implements CRUD<ReservacionCliente> {
     private static final String DELETE = "DELETE FROM reservacion_cliente WHERE reservacion_id = ? AND cliente_id = ?";
     private static final String GET_BY_ID = "SELECT * FROM reservacion_cliente WHERE reservacion_id = ?";
     private static final String GET_ALL = "SELECT * FROM reservacion_cliente";
+    private static final String EXISTS = "SELECT * FROM reservacion_cliente WHERE reservacion_id = ? AND cliente_id = ?";
+
+    public boolean exists(ReservacionCliente reservacionCliente) throws SQLException {
+        Connection connection = DBConnection.getInstance().getConnection();
+        try (PreparedStatement exists = connection.prepareStatement(EXISTS)){
+            exists.setInt(1, reservacionCliente.getReservacionId());
+            exists.setInt(2, reservacionCliente.getClienteId());
+            try (ResultSet resultSet = exists.executeQuery()){
+                return resultSet.next();
+            }
+        }
+    }
+
+    public boolean exists(ReservacionCliente reservacionCliente, Connection connection) throws SQLException {
+        try (PreparedStatement exists = connection.prepareStatement(EXISTS)){
+            exists.setInt(1, reservacionCliente.getReservacionId());
+            exists.setInt(2, reservacionCliente.getClienteId());
+            try (ResultSet resultSet = exists.executeQuery()){
+                return resultSet.next();
+            }
+        }
+    }
 
     public List<ReservacionCliente> getByReservacionId(int reservacionId) throws SQLException {
         Connection connection = DBConnection.getInstance().getConnection();
@@ -34,6 +56,14 @@ public class ReservacionClienteDAO implements CRUD<ReservacionCliente> {
     @Override
     public void insert(ReservacionCliente reservacionCliente) throws SQLException {
         Connection connection = DBConnection.getInstance().getConnection();
+        try (PreparedStatement insert = connection.prepareStatement(INSERT)){
+            insert.setInt(1, reservacionCliente.getReservacionId());
+            insert.setInt(2, reservacionCliente.getClienteId());
+            insert.executeUpdate();
+        }
+    }
+
+    public void insert(ReservacionCliente reservacionCliente, Connection connection) throws SQLException {
         try (PreparedStatement insert = connection.prepareStatement(INSERT)){
             insert.setInt(1, reservacionCliente.getReservacionId());
             insert.setInt(2, reservacionCliente.getClienteId());

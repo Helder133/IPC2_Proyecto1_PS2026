@@ -18,6 +18,18 @@ public class ServicioPaqueteDAO implements CRUD<ServicioPaquete> {
     private static final String DELETE = "DELETE FROM servicio_paquete WHERE paquete_id = ? AND proveedor_id = ?";
     private static final String GET_BY_ID = "SELECT * FROM servicio_paquete WHERE paquete_id = ?";
     private static final String GET_ALL = "SELECT * FROM servicio_paquete";
+    private static final String EXISTS_SERVICE = "SELECT * FROM servicio_paquete WHERE paquete_id = ? AND proveedor_id = ?";
+
+    public boolean exists(int paquete_id, int proveedor_id) throws SQLException {
+        Connection connection = DBConnection.getInstance().getConnection();
+        try (PreparedStatement existsService = connection.prepareStatement(EXISTS_SERVICE)) {
+            existsService.setInt(1, paquete_id);
+            existsService.setInt(2, proveedor_id);
+            try (ResultSet resultSet = existsService.executeQuery()) {
+                return resultSet.next();
+            }
+        }
+    }
 
     public List<ServicioPaquete> getByPaqueteId(int paquete_id) throws SQLException {
         Connection connection = DBConnection.getInstance().getConnection();

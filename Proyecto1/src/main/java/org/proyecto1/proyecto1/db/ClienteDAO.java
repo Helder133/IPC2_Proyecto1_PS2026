@@ -41,6 +41,16 @@ public class ClienteDAO implements CRUD<Cliente> {
         }
     }
 
+    public Optional<Cliente> existsClient(String dpi_o_pasaporte, Connection connection) throws SQLException {
+        try (PreparedStatement exists = connection.prepareStatement(EXISTS_CLIENT)) {
+            exists.setString(1, dpi_o_pasaporte);
+            try (ResultSet resultSet = exists.executeQuery()) {
+                if (resultSet.next()) return Optional.of(getClient(resultSet));
+                return Optional.empty();
+            }
+        }
+    }
+
     public List<Cliente> getByCoincidence(String parameter) throws SQLException {
         List<Cliente> get = new ArrayList<>();
         Connection connection = DBConnection.getInstance().getConnection();

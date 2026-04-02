@@ -24,4 +24,9 @@ public class ReservacionCliente {
     public void setClienteId(int clienteId) {
         this.clienteId = clienteId;
     }
+
+    public boolean isValid() {
+        return reservacionId > 0 && clienteId > 0;
+    }
+
 }

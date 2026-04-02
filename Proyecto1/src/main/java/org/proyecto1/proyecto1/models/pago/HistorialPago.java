@@ -16,6 +16,13 @@ public class HistorialPago {
         this.fecha = fecha;
     }
 
+    public HistorialPago(int reservacionId, double monto, EnumPago metodo) {
+        this.reservacionId = reservacionId;
+        this.monto = monto;
+        this.metodo = metodo;
+        this.fecha = LocalDate.now();
+    }
+
     public int getHistorialId() {
         return historialId;
     }
@@ -54,5 +61,13 @@ public class HistorialPago {
 
     public void setFecha(LocalDate fecha) {
         this.fecha = fecha;
+    }
+
+    public boolean isValid() {
+        return reservacionId > 0
+                && monto > 0
+                && metodo != null
+                && fecha != null;
+
     }
 }
