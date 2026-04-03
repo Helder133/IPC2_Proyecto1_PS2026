@@ -71,4 +71,9 @@ public class UsuarioService {
         usuarioDAO.delete(id);
     }
 
+    public int existsName(String name) throws SQLException {
+        UsuarioDAO usuarioDAO = new UsuarioDAO();
+        return usuarioDAO.existsUser(name);
+    }
+
 }

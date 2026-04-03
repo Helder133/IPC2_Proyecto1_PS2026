@@ -22,6 +22,8 @@ public class ReservacionService {
         Connection connection = DBConnection.getInstance().getConnection();
         connection.setAutoCommit(false);
         try {
+            String nuevoCodigo = generarNuevoCodigoArchivo(connection, reservacionDAO);
+            reservacion.setCodigoArchivo(nuevoCodigo);
             int reservacionId = reservacionDAO.insert(reservacion, connection);
             reservacion.setReservacionId(reservacionId);
             ReservacionClienteService reservacionClienteService = new ReservacionClienteService();
@@ -41,6 +43,25 @@ public class ReservacionService {
         } finally {
             connection.setAutoCommit(true);
         }
+    }
+
+    private String generarNuevoCodigoArchivo(Connection connection, ReservacionDAO reservacionDAO) throws SQLException {
+        String ultimoCodigo = reservacionDAO.getUltimoCodigoArchivo(connection);
+        int siguienteNumero = 1;
+        if (ultimoCodigo.startsWith("RES-")) {
+            String numeroStr = ultimoCodigo.substring(4);
+            try {
+                siguienteNumero = Integer.parseInt(numeroStr) + 1;
+            } catch (NumberFormatException e) {
+                System.err.printf(e.getMessage());
+            }
+        }
+        return String.format("RES-%05d", siguienteNumero);
+    }
+
+    public int getByCodigoArchivo(String codigo) throws SQLException {
+        ReservacionDAO reservacionDAO = new ReservacionDAO();
+        return reservacionDAO.getByCodigoArchivo(codigo);
     }
 
     public List<Reservacion> getAllReservacion() throws SQLException {

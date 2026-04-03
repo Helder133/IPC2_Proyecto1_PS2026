@@ -13,7 +13,7 @@ import java.sql.SQLException;
 import java.util.Optional;
 
 public class HistorialPagoService {
-    public void insertarDesdeArchivo(HistorialPago historialPago) throws SQLException, UserDataInvalidException {
+    public void insertDesdeArchivo(HistorialPago historialPago) throws SQLException, UserDataInvalidException {
         if (!historialPago.isValid()) throw new UserDataInvalidException("Los datos del pago son inválidos");
         Connection connection = DBConnection.getInstance().getConnection();
         connection.setAutoCommit(false);

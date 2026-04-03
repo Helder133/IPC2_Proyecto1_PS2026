@@ -14,6 +14,8 @@ public class Reservacion {
     private EnumReservacion estado;
     private double reembolso;
     private LocalDate fechaCancelacion;
+    private String codigoArchivo;
+
 
     public Reservacion(int paqueteId, int usuarioId, LocalDate fechaViaje) {
         this.paqueteId = paqueteId;
@@ -108,6 +110,14 @@ public class Reservacion {
 
     public void setFechaCancelacion(LocalDate fechaCancelacion) {
         this.fechaCancelacion = fechaCancelacion;
+    }
+
+    public String getCodigoArchivo() {
+        return codigoArchivo;
+    }
+
+    public void setCodigoArchivo(String codigoArchivo) {
+        this.codigoArchivo = codigoArchivo;
     }
 
     public boolean isValid() {

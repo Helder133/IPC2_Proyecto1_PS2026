@@ -18,6 +18,30 @@ public class ReservacionDAO implements CRUD<Reservacion> {
     private static final String GET_ALL = "SELECT * FROM reservacion";
     private static final String UPDATE_ESTADO = "UPDATE reservacion SET estado = ? WHERE reservacion_id = ?";
     private static final String GET_BY_USER_ID = "SELECT r.* FROM reservacion AS r JOIN reservacion_cliente AS rc ON r.reservacion_id = rc.reservacion_id WHERE rc.cliente_id = ?";
+    private static final String GET_ULTIMO_CODIGO_ARCHIVO = "SELECT codigo_archivo FROM reservacion WHERE codigo_archivo IS NOT NULL ORDER BY reservacion_id DESC LIMIT 1";
+    private static final String GET_BY_CODIGO_ARCHIVO = "SELECT reservacion_id FROM reservacion WHERE codigo_archivo = ?";
+
+    public String getUltimoCodigoArchivo(Connection connection) throws SQLException {
+        try (PreparedStatement getUltimoCodigoArchivo = connection.prepareStatement(GET_ULTIMO_CODIGO_ARCHIVO);
+        ResultSet resultSet = getUltimoCodigoArchivo.executeQuery()) {
+            if (resultSet.next()) {
+                return resultSet.getString("codigo_archivo");
+            } else {
+                return "RES-00000";
+            }
+        }
+    }
+
+    public int getByCodigoArchivo(String codigoArchivo) throws SQLException {
+        Connection connection = DBConnection.getInstance().getConnection();
+        try (PreparedStatement getByCodigoArchivo = connection.prepareStatement(GET_BY_CODIGO_ARCHIVO)){
+            getByCodigoArchivo.setString(1, codigoArchivo);
+            try (ResultSet resultSet = getByCodigoArchivo.executeQuery()) {
+                if (resultSet.next()) return resultSet.getInt("reservacion_id");
+                return -1;
+            }
+        }
+    }
 
     public List<Reservacion> getByUserId(int cliente_id) throws SQLException {
         Connection connection = DBConnection.getInstance().getConnection();

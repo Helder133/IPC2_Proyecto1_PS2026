@@ -74,6 +74,7 @@ CREATE TABLE IF NOT EXISTS reservacion (
 	estado ENUM('Pendiente','Confirmada','Cancelada','Completada') DEFAULT 'Pendiente',
 	reembolso DECIMAL(10,2),
 	fecha_cancelacion DATE,
+	codigo_archivo CHAR(9),
 	CONSTRAINT fk_paquete2 FOREIGN KEY (paquete_id) REFERENCES paquete_turistico (paquete_id),
 	CONSTRAINT fk_usuario FOREIGN KEY (usuario_id) REFERENCES usuario (usuario_id)
 );

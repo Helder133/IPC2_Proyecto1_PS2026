@@ -21,6 +21,14 @@ public class ClienteService {
         clienteDAO.insert(cliente);
     }
 
+    public void insertDesdeArchivo(Cliente cliente) throws SQLException, UserDataInvalidException, EntityAlreadyExistsException {
+        if (!cliente.isValid()) throw new UserDataInvalidException("Los datos del cliente son inválidos");
+        ClienteDAO clienteDAO = new ClienteDAO();
+        Optional<Cliente> clienteOptional = clienteDAO.existsClient(cliente.getDpi_o_pasaporte());
+        if (clienteOptional.isPresent()) throw new EntityAlreadyExistsException("El dpi o pasaporte que desea registrar, ya esta registrado en otro cliente.");
+        clienteDAO.insert(cliente);
+    }
+
     public void updateClient(ClienteUpdate clienteUpdate) throws SQLException, UserDataInvalidException, EntityAlreadyExistsException {
         Cliente cliente = new Cliente(clienteUpdate.getDpi_o_pasaporte(), clienteUpdate.getNombre(), clienteUpdate.getFecha(), clienteUpdate.getEmail(), clienteUpdate.getTelefono(), clienteUpdate.getNacionalidad());
         cliente.setCliente_id(clienteUpdate.getCliente_id());

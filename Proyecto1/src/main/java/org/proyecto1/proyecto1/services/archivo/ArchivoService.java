@@ -2,16 +2,23 @@ package org.proyecto1.proyecto1.services.archivo;
 
 import org.apache.commons.lang3.StringUtils;
 import org.proyecto1.proyecto1.exceptions.UserDataInvalidException;
+import org.proyecto1.proyecto1.models.cliente.Cliente;
 import org.proyecto1.proyecto1.models.destino.Destino;
+import org.proyecto1.proyecto1.models.pago.EnumPago;
+import org.proyecto1.proyecto1.models.pago.HistorialPago;
 import org.proyecto1.proyecto1.models.paqueteTuristico.PaqueteTuristico;
 import org.proyecto1.proyecto1.models.proveedor.EnumProveedor;
 import org.proyecto1.proyecto1.models.proveedor.Proveedor;
+import org.proyecto1.proyecto1.models.reservacion.Reservacion;
 import org.proyecto1.proyecto1.models.servicioPaquete.ServicioPaquete;
 import org.proyecto1.proyecto1.models.usuario.EnumUsuario;
 import org.proyecto1.proyecto1.models.usuario.Usuario;
+import org.proyecto1.proyecto1.services.cliente.ClienteService;
 import org.proyecto1.proyecto1.services.destino.DestinoService;
+import org.proyecto1.proyecto1.services.pago.HistorialPagoService;
 import org.proyecto1.proyecto1.services.paqueteTuristico.PaqueteTuristicoService;
 import org.proyecto1.proyecto1.services.proveedor.ProveedorService;
+import org.proyecto1.proyecto1.services.reservacion.ReservacionService;
 import org.proyecto1.proyecto1.services.servicioPaquete.ServicioPaqueteService;
 import org.proyecto1.proyecto1.services.usuario.UsuarioService;
 
@@ -21,7 +28,11 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class ArchivoService {
@@ -45,38 +56,53 @@ public class ArchivoService {
                                 Usuario usuario = crearUsuario(datos);
                                 UsuarioService usuarioService = new UsuarioService();
                                 usuarioService.insertDesdeArchivo(usuario);
-                            } case "DESTINO" -> {
+                            }
+                            case "DESTINO" -> {
                                 String datos = extraerDatos(line);
                                 Destino destino = crearDestino(datos);
                                 DestinoService destinoService = new DestinoService();
                                 destinoService.insertDesdeArchivo(destino);
-                            } case "PROVEEDOR" -> {
+                            }
+                            case "PROVEEDOR" -> {
                                 String datos = extraerDatos(line);
                                 Proveedor proveedor = crearProveedor(datos);
                                 ProveedorService proveedorService = new ProveedorService();
                                 proveedorService.insertDesdeArchivo(proveedor);
-                            } case "PAQUETE" -> {
+                            }
+                            case "PAQUETE" -> {
                                 String datos = extraerDatos(line);
                                 PaqueteTuristico paquete = crearPaqueteTuristico(datos);
                                 PaqueteTuristicoService paqueteService = new PaqueteTuristicoService();
                                 paqueteService.insertDesdeArchivo(paquete);
-                            } case "SERVICIO_PAQUETE" -> {
+                            }
+                            case "SERVICIO_PAQUETE" -> {
                                 String datos = extraerDatos(line);
                                 ServicioPaquete servicioPaquete = crearServicioPaquete(datos);
                                 ServicioPaqueteService servicioPaqueteService = new ServicioPaqueteService();
                                 servicioPaqueteService.insertDesdeArchivo(servicioPaquete);
-                            } case "CLIENTE" -> {
-                                System.out.println(subline);
-                                subline = extraerDatos(line);
-                                System.out.println(subline);
-                            } case "RESERVACION" -> {
-                                System.out.println(subline);
-                                subline = extraerDatos(line);
-                                System.out.println(subline);
-                            } case "PAGO" -> {
-                                System.out.println(subline);
-                                subline = extraerDatos(line);
-                                System.out.println(subline);
+                            }
+                            case "CLIENTE" -> {
+                                String datos = extraerDatos(line);
+                                Cliente cliente = crearCliente(datos);
+                                ClienteService clienteService = new ClienteService();
+                                clienteService.insertDesdeArchivo(cliente);
+                            }
+                            case "RESERVACION" -> {
+                                String datos = extraerDatos(line);
+                                Reservacion reservacion = crearReservacion(datos);
+                                List<String> clienteReservacion = extraerClienteParaReservacion(datos);
+                                ReservacionService reservacionService = new ReservacionService();
+                                reservacionService.insertDesdeArchivo(reservacion, clienteReservacion);
+                            }
+                            case "PAGO" -> {
+                                String datos = extraerDatos(line);
+                                HistorialPago historialPago = extraerHistorialPago(datos);
+                                HistorialPagoService historialPagoService = new HistorialPagoService();
+                                historialPagoService.insertDesdeArchivo(historialPago);
+                            }
+                            default -> {
+                                    String errorMsg = String.format("Error en línea %d: Tipo de entidad desconocida [%s]", numeroLinea, subline);
+                                    resumenErrores.add(errorMsg);
                             }
                         }
                     }
@@ -89,7 +115,7 @@ public class ArchivoService {
         return resumenErrores;
     }
 
-    private Usuario crearUsuario(String subline) {
+    private Usuario crearUsuario(String subline) throws IllegalArgumentException {
         String[] datos = subline.split(",");
 
         if (datos.length < 3) {
@@ -110,7 +136,7 @@ public class ArchivoService {
         return new Usuario(nombre, password, rol);
     }
 
-    private Destino crearDestino(String subline) {
+    private Destino crearDestino(String subline) throws IllegalArgumentException {
         String[] datos = subline.split(",");
 
         if (datos.length < 3) {
@@ -124,7 +150,7 @@ public class ArchivoService {
 
     }
 
-    private Proveedor crearProveedor(String subline) {
+    private Proveedor crearProveedor(String subline) throws IllegalArgumentException {
         String[] datos = subline.split(",");
 
         if (datos.length < 3) {
@@ -146,7 +172,7 @@ public class ArchivoService {
 
     }
 
-    private PaqueteTuristico crearPaqueteTuristico(String subline) throws SQLException, UserDataInvalidException {
+    private PaqueteTuristico crearPaqueteTuristico(String subline) throws SQLException, IllegalArgumentException, UserDataInvalidException {
         String[] datos = subline.split(",");
 
         if (datos.length < 5) {
@@ -168,7 +194,7 @@ public class ArchivoService {
         return new PaqueteTuristico(destinoId, nombre, duracion, precioPublico, capacidadMaxima);
     }
 
-    private ServicioPaquete crearServicioPaquete(String subline) throws SQLException, UserDataInvalidException {
+    private ServicioPaquete crearServicioPaquete(String subline) throws SQLException, UserDataInvalidException, IllegalArgumentException {
         String[] datos = subline.split(",");
 
         if (datos.length < 4) {
@@ -195,6 +221,85 @@ public class ArchivoService {
 
     }
 
+    private Cliente crearCliente(String subline) throws IllegalArgumentException {
+        String[] datos = subline.split(",");
+        if (datos.length < 6) {
+            throw new IllegalArgumentException("Faltan parámetros para crear CLIENTE. Se esperaban 6.");
+        }
+        String dpiOPasaporte = datos[0];
+        String nombre = datos[1];
+        LocalDate fechaNacimiento;
+        try {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            fechaNacimiento = LocalDate.parse(datos[2], formatter);
+        } catch (DateTimeParseException e) {
+            throw new IllegalArgumentException("Fecha de nacimiento inválida: " + datos[2] + ". El formato debe ser dd/MM/yyyy.");
+        }
+        String telefono = datos[3];
+        String email = datos[4];
+        String nacionalidad = datos[5];
+
+        return new Cliente(dpiOPasaporte, nombre, fechaNacimiento, email, telefono, nacionalidad);
+    }
+
+    private Reservacion crearReservacion(String subline) throws IllegalArgumentException, SQLException {
+        String[] datos = subline.split(",");
+        if (datos.length < 4) {
+            throw new IllegalArgumentException("Faltan parámetros para crear RESERVACION. Se esperaban 4.");
+        }
+        PaqueteTuristicoService paqueteTuristicoService = new PaqueteTuristicoService();
+        String paquete = datos[0].trim();
+        int paqueteId = paqueteTuristicoService.existsName(paquete);
+        UsuarioService usuarioService = new UsuarioService();
+        String usuario = datos[1].trim();
+        int usuarioId = usuarioService.existsName(usuario);
+        LocalDate fechaViaje;
+        try {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            fechaViaje = LocalDate.parse(datos[2], formatter);
+        } catch (DateTimeParseException e) {
+            throw new IllegalArgumentException("Fecha de reservación inválida: " + datos[2] + ". El formato debe ser dd/MM/yyyy.");
+        }
+
+
+        return new Reservacion(paqueteId, usuarioId, fechaViaje);
+    }
+
+    private List<String> extraerClienteParaReservacion(String subline) {
+        String[] datos = subline.split(",");
+        return Arrays.stream(datos[3].trim().split("\\|"))
+                .map(String::trim)
+                .toList();
+    }
+
+    private HistorialPago extraerHistorialPago(String subline) throws IllegalArgumentException, SQLException {
+        String[] datos = subline.split(",");
+        if (datos.length < 4) {
+            throw new IllegalArgumentException("Faltan parámetros para crear PAGO. Se esperaban 4.");
+        }
+        ReservacionService reservacionService = new ReservacionService();
+        String codigoArchivo = datos[0].trim();
+        int reservacionId = reservacionService.getByCodigoArchivo(codigoArchivo);
+        double monto = Double.parseDouble(datos[1].trim());
+        EnumPago metodoPago;
+        switch (datos[2].trim()) {
+            case "1" -> metodoPago = EnumPago.Efectivo;
+            case "2" -> metodoPago = EnumPago.Tarjeta;
+            case "3" -> metodoPago = EnumPago.Transferencia;
+            default -> throw new IllegalArgumentException("Método de pago inválido: " + datos[2] + ". Debe ser 1, 2 o 3.");
+        }
+        LocalDate fechaPago;
+        try {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            fechaPago = LocalDate.parse(datos[3], formatter);
+        } catch (DateTimeParseException e) {
+            throw new IllegalArgumentException("Fecha de pago inválida: " + datos[2] + ". El formato debe ser dd/MM/yyyy.");
+        }
+
+
+        return new HistorialPago(reservacionId, monto, metodoPago, fechaPago);
+
+    }
     private String extraerDatos(String line) {
         int inicio = line.indexOf('(');
         int fin = line.lastIndexOf(')');
