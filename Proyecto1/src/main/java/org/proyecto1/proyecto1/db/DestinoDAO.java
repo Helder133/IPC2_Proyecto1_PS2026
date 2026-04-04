@@ -17,7 +17,7 @@ public class DestinoDAO implements CRUD<Destino> {
     private static final String DELETE = "DELETE FROM destino WHERE destino_id = ?";
     private static final String GET_BY_ID = "SELECT * FROM destino WHERE destino_id = ?";
     private static final String GET_ALL = "SELECT * FROM destino";
-    private static final String EXISTS_NAME = "SELECT cliente_id FROM destino WHERE nombre = ?";
+    private static final String EXISTS_NAME = "SELECT destino_id FROM destino WHERE nombre = ?";
     private static final String VALIDAR_UPDATE = "SELECT destino_id FROM destino WHERE destino_id <> ? AND nombre = ?";
 
     public int existsName(String name) throws SQLException {

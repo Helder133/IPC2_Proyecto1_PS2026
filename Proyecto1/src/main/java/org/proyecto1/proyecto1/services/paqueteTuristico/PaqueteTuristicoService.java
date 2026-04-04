@@ -5,13 +5,16 @@ import org.proyecto1.proyecto1.exceptions.EntityAlreadyExistsException;
 import org.proyecto1.proyecto1.exceptions.UserDataInvalidException;
 import org.proyecto1.proyecto1.models.paqueteTuristico.PaqueteTuristico;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 public class PaqueteTuristicoService {
     public void insertDesdeArchivo(PaqueteTuristico paqueteTuristico) throws SQLException, UserDataInvalidException, EntityAlreadyExistsException {
         if (!paqueteTuristico.isValid())
-            throw new UserDataInvalidException("Los datos del paquete turístico son inválidos.");
+            throw new UserDataInvalidException("Los datos del paquete turístico son inválidos, por favor verifique.");
         PaqueteTuristicoDAO paqueteTuristicoDAO = new PaqueteTuristicoDAO();
         if (paqueteTuristicoDAO.existsName(paqueteTuristico.getNombre()) != -1)
             throw new EntityAlreadyExistsException("El nombre que desea registrar, ya esta registrado en otro paquete turístico.");
@@ -37,9 +40,23 @@ public class PaqueteTuristicoService {
 
     public PaqueteTuristico getById(int id) throws SQLException, UserDataInvalidException {
         PaqueteTuristicoDAO paqueteTuristicoDAO = new PaqueteTuristicoDAO();
-        if (paqueteTuristicoDAO.getById(id).isEmpty())
+        Optional<PaqueteTuristico>  paqueteTuristico = paqueteTuristicoDAO.getById(id);
+        if (paqueteTuristico.isEmpty())
             throw new UserDataInvalidException("El paquete turístico no existe.");
-        return paqueteTuristicoDAO.getById(id).get();
+        return paqueteTuristico.get();
+    }
+
+    public PaqueteTuristico getById(int id, Connection connection) throws SQLException, UserDataInvalidException {
+        PaqueteTuristicoDAO paqueteTuristicoDAO = new PaqueteTuristicoDAO();
+        Optional<PaqueteTuristico>  paqueteTuristico = paqueteTuristicoDAO.getById(id, connection);
+        if (paqueteTuristico.isEmpty())
+            throw new UserDataInvalidException("El paquete turístico no existe.");
+        return paqueteTuristico.get();
+    }
+
+    public Map<String, Double> getPrecios(int paqueteId, Connection connection) throws SQLException {
+        PaqueteTuristicoDAO paqueteTuristicoDAO = new PaqueteTuristicoDAO();
+        return paqueteTuristicoDAO.getPrecios(paqueteId, connection);
     }
 
 }

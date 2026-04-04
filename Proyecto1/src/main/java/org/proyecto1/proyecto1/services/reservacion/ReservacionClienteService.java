@@ -13,6 +13,7 @@ public class ReservacionClienteService {
         if (!reservacionCliente.isValid())
             throw new UserDataInvalidException("Los datos de la reservación del cliente son inválidos");
         ReservacionClienteDAO reservacionClienteDAO = new ReservacionClienteDAO();
+
         if (reservacionClienteDAO.exists(new ReservacionCliente(reservacionCliente.getReservacionId(), reservacionCliente.getClienteId()), connection))
             throw new EntityAlreadyExistsException("El cliente ya está asociado a la reservación");
         reservacionClienteDAO.insert(reservacionCliente, connection);
@@ -25,4 +26,8 @@ public class ReservacionClienteService {
         reservacionClienteDAO.delete(reservacionId, clienteId);
     }
 
+    public int getNumberClientesRegistrados(int reservacionId, Connection connection) throws SQLException {
+        ReservacionClienteDAO reservacionClienteDAO = new ReservacionClienteDAO();
+        return reservacionClienteDAO.getNumberClientesRegistrados(reservacionId, connection);
+    }
 }

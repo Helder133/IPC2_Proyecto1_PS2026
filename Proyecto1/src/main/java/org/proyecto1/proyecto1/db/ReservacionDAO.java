@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class ReservacionDAO implements CRUD<Reservacion> {
-    private static final String INSERT = "INSERT INTO reservacion (paquete_id, usuario_id, fecha_creacion, fecha_viaje) VALUES (?,?,?,?)";
+    private static final String INSERT = "INSERT INTO reservacion (paquete_id, usuario_id, fecha_creacion, fecha_viaje, cantidad_persona, costo_total, costo_agencia, codigo_archivo) VALUES (?,?,?,?,?,?,?,?)";
     private static final String UPDATE = "UPDATE reservacion SET paquete_id = ?, fecha_viaje = ?, estado = ? WHERE reservacion_id = ?";
     private static final String DELETE = "DELETE FROM reservacion WHERE reservacion_id = ?";
     private static final String GET_BY_ID = "SELECT * FROM reservacion WHERE reservacion_id = ?";
@@ -23,7 +23,7 @@ public class ReservacionDAO implements CRUD<Reservacion> {
 
     public String getUltimoCodigoArchivo(Connection connection) throws SQLException {
         try (PreparedStatement getUltimoCodigoArchivo = connection.prepareStatement(GET_ULTIMO_CODIGO_ARCHIVO);
-        ResultSet resultSet = getUltimoCodigoArchivo.executeQuery()) {
+             ResultSet resultSet = getUltimoCodigoArchivo.executeQuery()) {
             if (resultSet.next()) {
                 return resultSet.getString("codigo_archivo");
             } else {
@@ -34,7 +34,7 @@ public class ReservacionDAO implements CRUD<Reservacion> {
 
     public int getByCodigoArchivo(String codigoArchivo) throws SQLException {
         Connection connection = DBConnection.getInstance().getConnection();
-        try (PreparedStatement getByCodigoArchivo = connection.prepareStatement(GET_BY_CODIGO_ARCHIVO)){
+        try (PreparedStatement getByCodigoArchivo = connection.prepareStatement(GET_BY_CODIGO_ARCHIVO)) {
             getByCodigoArchivo.setString(1, codigoArchivo);
             try (ResultSet resultSet = getByCodigoArchivo.executeQuery()) {
                 if (resultSet.next()) return resultSet.getInt("reservacion_id");
@@ -56,7 +56,7 @@ public class ReservacionDAO implements CRUD<Reservacion> {
     }
 
     public void updateEstado(int reservacionId, EnumReservacion estado, Connection connection) throws SQLException {
-        try (PreparedStatement updateEstado = connection.prepareStatement(UPDATE_ESTADO)){
+        try (PreparedStatement updateEstado = connection.prepareStatement(UPDATE_ESTADO)) {
             updateEstado.setString(1, estado.name());
             updateEstado.setInt(2, reservacionId);
             updateEstado.executeUpdate();
@@ -66,24 +66,32 @@ public class ReservacionDAO implements CRUD<Reservacion> {
     @Override
     public void insert(Reservacion reservacion) throws SQLException {
         Connection connection = DBConnection.getInstance().getConnection();
-        try (PreparedStatement insert = connection.prepareStatement(INSERT)){
+        try (PreparedStatement insert = connection.prepareStatement(INSERT)) {
             insert.setInt(1, reservacion.getPaqueteId());
             insert.setInt(2, reservacion.getUsuarioId());
             insert.setDate(3, Date.valueOf(reservacion.getFechaCreacion()));
             insert.setDate(4, Date.valueOf(reservacion.getFechaViaje()));
+            insert.setInt(5, reservacion.getCantidadPersona());
+            insert.setDouble(6, reservacion.getCostoTotal());
+            insert.setDouble(7, reservacion.getCostoAgencia());
+            insert.setString(8, reservacion.getCodigoArchivo());
             insert.executeUpdate();
         }
     }
 
     public int insert(Reservacion reservacion, Connection connection) throws SQLException {
-        try (PreparedStatement insert = connection.prepareStatement(INSERT, Statement.RETURN_GENERATED_KEYS)){
+        try (PreparedStatement insert = connection.prepareStatement(INSERT, Statement.RETURN_GENERATED_KEYS)) {
             insert.setInt(1, reservacion.getPaqueteId());
             insert.setInt(2, reservacion.getUsuarioId());
             insert.setDate(3, Date.valueOf(reservacion.getFechaCreacion()));
             insert.setDate(4, Date.valueOf(reservacion.getFechaViaje()));
+            insert.setInt(5, reservacion.getCantidadPersona());
+            insert.setDouble(6, reservacion.getCostoTotal());
+            insert.setDouble(7, reservacion.getCostoAgencia());
+            insert.setString(8, reservacion.getCodigoArchivo());
             insert.executeUpdate();
 
-            try (ResultSet generatedKeys = insert.getGeneratedKeys()){
+            try (ResultSet generatedKeys = insert.getGeneratedKeys()) {
                 if (generatedKeys.next()) return generatedKeys.getInt(1);
                 else throw new SQLException("No se pudo obtener el ID de la reservación.");
             }
@@ -93,7 +101,7 @@ public class ReservacionDAO implements CRUD<Reservacion> {
     @Override
     public void update(Reservacion reservacion) throws SQLException {
         Connection connection = DBConnection.getInstance().getConnection();
-        try (PreparedStatement update = connection.prepareStatement(UPDATE)){
+        try (PreparedStatement update = connection.prepareStatement(UPDATE)) {
             update.setInt(1, reservacion.getPaqueteId());
             update.setDate(2, Date.valueOf(reservacion.getFechaViaje()));
             update.setString(3, reservacion.getEstado().name());
@@ -105,7 +113,7 @@ public class ReservacionDAO implements CRUD<Reservacion> {
     @Override
     public void delete(int id) throws SQLException {
         Connection connection = DBConnection.getInstance().getConnection();
-        try (PreparedStatement delete = connection.prepareStatement(DELETE)){
+        try (PreparedStatement delete = connection.prepareStatement(DELETE)) {
             delete.setInt(1, id);
             delete.executeUpdate();
         }
@@ -114,9 +122,9 @@ public class ReservacionDAO implements CRUD<Reservacion> {
     @Override
     public Optional<Reservacion> getById(int id) throws SQLException {
         Connection connection = DBConnection.getInstance().getConnection();
-        try (PreparedStatement getById = connection.prepareStatement(GET_BY_ID)){
+        try (PreparedStatement getById = connection.prepareStatement(GET_BY_ID)) {
             getById.setInt(1, id);
-            try (ResultSet resultSet = getById.executeQuery()){
+            try (ResultSet resultSet = getById.executeQuery()) {
                 if (resultSet.next()) return Optional.of(extraerDatos(resultSet));
                 return Optional.empty();
             }
@@ -124,9 +132,9 @@ public class ReservacionDAO implements CRUD<Reservacion> {
     }
 
     public Optional<Reservacion> getById(int id, Connection connection) throws SQLException {
-        try (PreparedStatement getById = connection.prepareStatement(GET_BY_ID)){
+        try (PreparedStatement getById = connection.prepareStatement(GET_BY_ID)) {
             getById.setInt(1, id);
-            try (ResultSet resultSet = getById.executeQuery()){
+            try (ResultSet resultSet = getById.executeQuery()) {
                 if (resultSet.next()) return Optional.of(extraerDatos(resultSet));
                 return Optional.empty();
             }
@@ -138,7 +146,7 @@ public class ReservacionDAO implements CRUD<Reservacion> {
         Connection connection = DBConnection.getInstance().getConnection();
         List<Reservacion> reservaciones = new ArrayList<>();
         try (PreparedStatement getAll = connection.prepareStatement(GET_ALL);
-             ResultSet resultSet = getAll.executeQuery()){
+             ResultSet resultSet = getAll.executeQuery()) {
             while (resultSet.next()) reservaciones.add(extraerDatos(resultSet));
             return reservaciones;
         }
@@ -154,8 +162,13 @@ public class ReservacionDAO implements CRUD<Reservacion> {
         reservacion.setCantidadPersona(resultSet.getInt("cantidad_persona"));
         reservacion.setCostoTotal(resultSet.getDouble("costo_total"));
         reservacion.setCostoAgencia(resultSet.getDouble("costo_agencia"));
-        reservacion.setReembolso(resultSet.getDouble("reembolso"));
-        reservacion.setFechaCancelacion(resultSet.getDate("fecha_cancelacion").toLocalDate());
+        double reembolso = resultSet.getDouble("reembolso");
+        if (resultSet.wasNull()) {
+            reservacion.setReembolso(0.0);
+        } else {
+            reservacion.setReembolso(reembolso);
+        }
+        reservacion.setFechaCancelacion(resultSet.getDate("fecha_cancelacion") != null ? resultSet.getDate("fecha_cancelacion").toLocalDate() : null);
         return reservacion;
     }
 }

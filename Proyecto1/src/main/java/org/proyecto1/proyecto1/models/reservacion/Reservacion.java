@@ -24,6 +24,13 @@ public class Reservacion {
         this.fechaCreacion = LocalDate.now();
     }
 
+    public Reservacion(int paqueteId, int usuarioId, LocalDate fechaViaje, LocalDate fechaCreacion) {
+        this.paqueteId = paqueteId;
+        this.usuarioId = usuarioId;
+        this.fechaViaje = fechaViaje;
+        this.fechaCreacion = fechaCreacion;
+    }
+
     public int getReservacionId() {
         return reservacionId;
     }

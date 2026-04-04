@@ -8,6 +8,7 @@ import jakarta.ws.rs.core.Response;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.proyecto1.proyecto1.services.archivo.ArchivoService;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
@@ -20,10 +21,15 @@ public class ArchivoResource {
         List<String> resumenErrores = List.of();
         try {
             resumenErrores = archivoService.leerArchivo(fileInputStream);
-            return Response.ok().build();
-        } catch (Exception e) {
+            if (resumenErrores.isEmpty()) {
+                return Response.ok().build();
+            }  else {
+                return Response.status(Response.Status.BAD_REQUEST).entity(resumenErrores).build();
+            }
+
+        } catch (IOException e) {
             return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("{\"error\": \"" + resumenErrores + "\"}")
+                    .entity("{\"error\": \"" + e.getMessage() + "\"}")
                     .type(MediaType.APPLICATION_JSON)
                     .build();
         }

@@ -6,10 +6,3 @@ SERVICIO_PAQUETE("Caribe Magico 7 noches", "TACA Airlines", "Vuelo redondo GUA-C
 CLIENTE("1234567890101", "Maria Lopez", "15/03/1990", "55551234", "mlopez@mail.com", "Guatemalteca")
 RESERVACION("Caribe Magicoñ 7 noches", jperez, "10/07/2025", "1234567890101|9876543210101")
 PAGO("RES-00001", 18500.00, 1, "05/06/2025")
-
-
-
-
-
-
-

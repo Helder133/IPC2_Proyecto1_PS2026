@@ -19,6 +19,17 @@ public class ReservacionClienteDAO implements CRUD<ReservacionCliente> {
     private static final String GET_BY_ID = "SELECT * FROM reservacion_cliente WHERE reservacion_id = ?";
     private static final String GET_ALL = "SELECT * FROM reservacion_cliente";
     private static final String EXISTS = "SELECT * FROM reservacion_cliente WHERE reservacion_id = ? AND cliente_id = ?";
+    private static final String GET_NUMBER_CLIENTES_REGISTRADOS = "SELECT COUNT(*) AS total_clientes FROM reservacion_cliente WHERE reservacion_id = ?";
+
+    public int getNumberClientesRegistrados(int reservacionId, Connection connection) throws SQLException {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(GET_NUMBER_CLIENTES_REGISTRADOS)) {
+            preparedStatement.setInt(1, reservacionId);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next())  return resultSet.getInt("total_clientes");
+                return 0;
+            }
+        }
+    }
 
     public boolean exists(ReservacionCliente reservacionCliente) throws SQLException {
         Connection connection = DBConnection.getInstance().getConnection();

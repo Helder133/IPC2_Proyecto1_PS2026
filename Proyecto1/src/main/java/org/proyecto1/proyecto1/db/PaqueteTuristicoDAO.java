@@ -2,15 +2,14 @@ package org.proyecto1.proyecto1.db;
 
 import org.proyecto1.proyecto1.db.config.CRUD;
 import org.proyecto1.proyecto1.db.config.DBConnection;
+import org.proyecto1.proyecto1.exceptions.UserDataInvalidException;
 import org.proyecto1.proyecto1.models.paqueteTuristico.PaqueteTuristico;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public class PaqueteTuristicoDAO implements CRUD<PaqueteTuristico> {
     private static final String INSERT = "INSERT INTO paquete_turistico (nombre, destino_id, duracion, precio_publico, capacidad_maxima, descripcion) VALUES (?, ?, ?, ?, ?, ?)";
@@ -22,6 +21,21 @@ public class PaqueteTuristicoDAO implements CRUD<PaqueteTuristico> {
     private static final String GET_BY_COINCIDENCE = "SELECT * FROM paquete_turistico WHERE nombre LIKE ?";
     private static final String VALID_UPDATE = "SELECT paquete_id FROM paquete_turistico WHERE paquete_id <> ? AND nombre = ?";
     private static final String UPDATE_ESTADO = "UPDATE paquete_turistico SET estado = NOT estado WHERE paquete_id = ?";
+    private static final String GET_PRECIOS = "SELECT pt.precio_publico, COALESCE(SUM(sp.costo), 0) AS precio_agencia FROM paquete_turistico pt LEFT JOIN servicio_paquete sp ON pt.paquete_id = sp.paquete_id WHERE pt.paquete_id = ? GROUP BY pt.paquete_id, pt.precio_publico";
+
+    public Map<String, Double> getPrecios(int paqueteId, Connection connection) throws SQLException, UserDataInvalidException {
+        Map<String, Double> precios = new HashMap<String, Double>();
+        try (PreparedStatement getPrecios = connection.prepareStatement(GET_PRECIOS)) {
+            getPrecios.setInt(1, paqueteId);
+            try (ResultSet resultSet = getPrecios.executeQuery()){
+                if (resultSet.next()) {
+                    precios.put("precio_publico", resultSet.getDouble("precio_publico"));
+                    precios.put("precio_agencia", resultSet.getDouble("precio_agencia"));
+                }
+                return precios;
+            }
+        }
+    }
 
     public int existsName(String name) throws SQLException {
         Connection connection = DBConnection.getInstance().getConnection();
@@ -106,6 +120,16 @@ public class PaqueteTuristicoDAO implements CRUD<PaqueteTuristico> {
     @Override
     public Optional<PaqueteTuristico> getById(int id) throws SQLException {
         Connection connection = DBConnection.getInstance().getConnection();
+        try (PreparedStatement getById = connection.prepareStatement(GET_BY_ID)) {
+            getById.setInt(1, id);
+            try (ResultSet resultSet = getById.executeQuery()) {
+                if (resultSet.next()) return Optional.of(extraerDatos(resultSet));
+                return Optional.empty();
+            }
+        }
+    }
+
+    public Optional<PaqueteTuristico> getById(int id, Connection connection) throws SQLException {
         try (PreparedStatement getById = connection.prepareStatement(GET_BY_ID)) {
             getById.setInt(1, id);
             try (ResultSet resultSet = getById.executeQuery()) {

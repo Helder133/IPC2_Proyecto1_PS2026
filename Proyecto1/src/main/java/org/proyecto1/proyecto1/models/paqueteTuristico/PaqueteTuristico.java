@@ -18,6 +18,7 @@ public class PaqueteTuristico {
         this.duracion = duracion;
         this.precioPublico = precioPublico;
         this.capacidadMaxima = capacidadMaxima;
+        this.estado = true;
     }
 
     public int getPaqueteId() {

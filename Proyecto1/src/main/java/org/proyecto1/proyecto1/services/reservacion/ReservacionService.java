@@ -6,13 +6,16 @@ import org.proyecto1.proyecto1.db.config.DBConnection;
 import org.proyecto1.proyecto1.exceptions.EntityAlreadyExistsException;
 import org.proyecto1.proyecto1.exceptions.UserDataInvalidException;
 import org.proyecto1.proyecto1.models.cliente.Cliente;
+import org.proyecto1.proyecto1.models.paqueteTuristico.PaqueteTuristico;
 import org.proyecto1.proyecto1.models.reservacion.EnumReservacion;
 import org.proyecto1.proyecto1.models.reservacion.Reservacion;
 import org.proyecto1.proyecto1.models.reservacion.ReservacionCliente;
+import org.proyecto1.proyecto1.services.paqueteTuristico.PaqueteTuristicoService;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public class ReservacionService {
@@ -23,12 +26,28 @@ public class ReservacionService {
         connection.setAutoCommit(false);
         try {
             String nuevoCodigo = generarNuevoCodigoArchivo(connection, reservacionDAO);
+            PaqueteTuristicoService paqueteTuristicoService = new PaqueteTuristicoService();
+            Map<String, Double> precios = paqueteTuristicoService.getPrecios(reservacion.getPaqueteId(), connection);
+            if (!precios.isEmpty()) {
+                if (precios.get("precio_publico") == null) {
+                    reservacion.setCostoTotal(0);
+                } else {
+                    reservacion.setCostoTotal(precios.get("precio_publico"));
+                }
+                reservacion.setCostoAgencia(precios.get("precio_agencia"));
+            }
+            reservacion.setCantidadPersona(dpiOPasaporte.size());
             reservacion.setCodigoArchivo(nuevoCodigo);
             int reservacionId = reservacionDAO.insert(reservacion, connection);
             reservacion.setReservacionId(reservacionId);
             ReservacionClienteService reservacionClienteService = new ReservacionClienteService();
+            int getNumberClientesRegistrados = reservacionClienteService.getNumberClientesRegistrados(reservacionId, connection);
+            PaqueteTuristico paqueteTuristico = paqueteTuristicoService.getById(reservacion.getPaqueteId(), connection);
             ClienteDAO clienteDAO = new ClienteDAO();
             for (String dpi : dpiOPasaporte) {
+                if (getNumberClientesRegistrados >= paqueteTuristico.getCapacidadMaxima()) {
+                    throw new UserDataInvalidException("El máximo de clientes en un mismo paquete, ya fue alcanzado =");
+                }
                 Optional<Cliente> clienteOptional = clienteDAO.existsClient(dpi, connection);
                 if (clienteOptional.isEmpty())
                     throw new UserDataInvalidException("El cliente con dpi o pasaporte " + dpi + " no existe");
@@ -36,7 +55,6 @@ public class ReservacionService {
                 reservacionClienteService.insertDesdeArchivo(new ReservacionCliente(reservacionId, clienteId), connection);
             }
             connection.commit();
-
         } catch (SQLException | UserDataInvalidException | EntityAlreadyExistsException e) {
             connection.rollback();
             throw e;
