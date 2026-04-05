@@ -8,6 +8,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,6 +20,19 @@ public class DestinoDAO implements CRUD<Destino> {
     private static final String GET_ALL = "SELECT * FROM destino";
     private static final String EXISTS_NAME = "SELECT destino_id FROM destino WHERE nombre = ?";
     private static final String VALIDAR_UPDATE = "SELECT destino_id FROM destino WHERE destino_id <> ? AND nombre = ?";
+    private static final String GET_BY_COINCIDENCE = "SELECT * FROM destino WHERE nombre LIKE ?";
+
+    public List<Destino> getByCoincidence(String parameter) throws SQLException {
+        List<Destino> get = new ArrayList<>();
+        Connection connection = DBConnection.getInstance().getConnection();
+        try (PreparedStatement getByCoincidence = connection.prepareStatement(GET_BY_COINCIDENCE)) {
+            getByCoincidence.setString(1, "%" + parameter + "%");
+            try (ResultSet resultSet = getByCoincidence.executeQuery()) {
+                while (resultSet.next()) get.add(extraerDatos(resultSet));
+                return get;
+            }
+        }
+    }
 
     public int existsName(String name) throws SQLException {
         Connection connection = DBConnection.getInstance().getConnection();
@@ -65,6 +79,7 @@ public class DestinoDAO implements CRUD<Destino> {
             update.setString(4, destino.getClima_mejor_epoca());
             update.setString(5, destino.getImagen());
             update.setInt(6, destino.getDestino_id());
+            update.executeUpdate();
         }
     }
 
@@ -92,7 +107,7 @@ public class DestinoDAO implements CRUD<Destino> {
     @Override
     public List<Destino> getAll() throws SQLException {
         Connection connection = DBConnection.getInstance().getConnection();
-        List<Destino> destinos = new java.util.ArrayList<>();
+        List<Destino> destinos = new ArrayList<>();
         try (PreparedStatement getAll = connection.prepareStatement(GET_ALL);
              ResultSet resultSet = getAll.executeQuery()){
             while (resultSet.next()) destinos.add(extraerDatos(resultSet));

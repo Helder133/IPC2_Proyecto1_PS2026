@@ -21,6 +21,19 @@ public class ProveedorDAO implements CRUD<Proveedor> {
     private static final String GET_ALL = "SELECT * FROM proveedor";
     private static final String EXISTS_NAME = "SELECT proveedor_id FROM proveedor WHERE nombre = ?";
     private static final String VALIDAR_UPDATE = "SELECT proveedor_id FROM proveedor WHERE proveedor_id <> ? AND nombre = ?";
+    private static final String GET_BY_COINCIDENCE = "SELECT * FROM proveedor WHERE nombre LIKE ?";
+
+    public List<Proveedor> getByCoincidence(String parameter) throws SQLException {
+        List<Proveedor> get = new ArrayList<>();
+        Connection connection = DBConnection.getInstance().getConnection();
+        try (PreparedStatement getByCoincidence = connection.prepareStatement(GET_BY_COINCIDENCE)) {
+            getByCoincidence.setString(1, "%" + parameter + "%");
+            try (ResultSet resultSet = getByCoincidence.executeQuery()) {
+                while (resultSet.next()) get.add(extraerDatos(resultSet));
+                return get;
+            }
+        }
+    }
 
     public boolean validUpdate(int proveedor_id, String nombre) throws SQLException {
         Connection connection = DBConnection.getInstance().getConnection();
@@ -65,6 +78,7 @@ public class ProveedorDAO implements CRUD<Proveedor> {
             update.setString(3, proveedor.getTipo().name());
             update.setString(4, proveedor.getContacto());
             update.setInt(5, proveedor.getProveedor_id());
+            update.executeUpdate();
         }
     }
 

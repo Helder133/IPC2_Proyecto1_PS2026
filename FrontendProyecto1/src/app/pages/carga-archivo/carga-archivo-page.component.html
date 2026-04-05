@@ -1,0 +1,82 @@
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-primary text-white p-3">
+                    <h5 class="mb-0"><i class="bi bi-file-earmark-arrow-up-fill me-2"></i> Carga de Datos por Archivo
+                    </h5>
+                </div>
+
+                <div class="card-body p-4 text-center">
+                    <p class="text-muted mb-4">
+                        Selecciona un archivo de texto plano (.txt) con las instrucciones para procesar en el sistema.
+                    </p>
+
+                    <div class="mb-4">
+                        <input type="file" class="form-control form-control-lg" accept=".txt"
+                            (change)="seleccionarArchivo($event)">
+                    </div>
+
+                    <button class="btn btn-success btn-lg px-5 shadow-sm"
+                        [disabled]="!archivoSeleccionado() || cargando()" (click)="subirArchivo()">
+
+                        @if (cargando()) {
+                        <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
+                        Procesando archivo...
+                        } @else {
+                        <i class="bi bi-cloud-upload-fill me-2"></i> Iniciar Carga
+                        }
+                    </button>
+                </div>
+            </div>
+
+            <div class="mt-4">
+
+                @if (mensajeExito()) {
+                <div class="alert alert-success d-flex align-items-center shadow-sm border-0" role="alert">
+                    <i class="bi bi-check-circle-fill fs-3 me-3"></i>
+                    <div class="fs-5">
+                        {{ mensajeExito() }}
+                    </div>
+                </div>
+                }
+
+                @if (mensajeErrorGeneral()) {
+                <div class="alert alert-danger d-flex align-items-center shadow-sm border-0" role="alert">
+                    <i class="bi bi-exclamation-triangle-fill fs-3 me-3"></i>
+                    <div>
+                        {{ mensajeErrorGeneral() }}
+                    </div>
+                </div>
+                }
+
+                @if (resumenErrores().length > 0) {
+                <div class="card border-danger shadow-sm mb-5">
+                    <div
+                        class="card-header bg-danger text-white fw-bold d-flex justify-content-between align-items-center">
+                        <span><i class="bi bi-bug-fill me-2"></i> Resumen de Errores Encontrados</span>
+                        <span class="badge bg-light text-danger rounded-pill fs-6">{{ resumenErrores().length }}
+                            errores</span>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        @for (error of resumenErrores(); track $index) {
+                        <li class="list-group-item list-group-item-danger d-flex align-items-start">
+                            <i class="bi bi-x-circle-fill me-2 mt-1 text-danger"></i>
+                            <span>{{ error }}</span>
+                        </li>
+                        }
+                    </ul>
+                    <div class="card-footer bg-light text-muted small">
+                        Corrige los errores en el archivo original y vuelve a intentarlo. 
+                        Todos los errores que se marcaron, no se cargaron en el sistema, pero los datos correctos sí se procesaron.
+                        Corriguendo los errores y volviendo a subir el archivo, se cargarán los datos que antes no se pudieron procesar.
+                    </div>
+                </div>
+                }
+
+            </div>
+
+        </div>
+    </div>
+</div>

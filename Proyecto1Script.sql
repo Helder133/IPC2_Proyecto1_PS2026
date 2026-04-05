@@ -61,6 +61,8 @@ CREATE TABLE IF NOT EXISTS servicio_paquete (
 	CONSTRAINT fk_paquete FOREIGN KEY (paquete_id) REFERENCES paquete_turistico (paquete_id)
 );
 
+SELECT pt.precio_publico, COALESCE(SUM(sp.costo), 0) AS precio_agencia FROM paquete_turistico pt LEFT JOIN servicio_paquete sp ON pt.paquete_id = sp.paquete_id WHERE pt.paquete_id = 1 GROUP BY pt.paquete_id, pt.precio_publico;
+
 
 CREATE TABLE IF NOT EXISTS reservacion (
 	reservacion_id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
@@ -87,6 +89,8 @@ CREATE TABLE IF NOT EXISTS reservacion_cliente (
 	CONSTRAINT fk_cliente FOREIGN KEY (cliente_id) REFERENCES cliente (cliente_id)
 );
 
+SELECT COUNT(*) AS total_clientes FROM reservacion_cliente WHERE reservacion_id = ?;
+
 CREATE TABLE IF NOT EXISTS historial_pago (
 	historial_id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
 	reservacion_id INT NOT NULL,
@@ -97,4 +101,17 @@ CREATE TABLE IF NOT EXISTS historial_pago (
 );
 
 
+-- Para eliminar los datos basuras
+SET FOREIGN_KEY_CHECKS = 0; 
 
+TRUNCATE TABLE cliente;
+TRUNCATE TABLE usuario;
+TRUNCATE TABLE destino;
+TRUNCATE TABLE proveedor;
+TRUNCATE TABLE paquete_turistico;
+TRUNCATE TABLE servicio_paquete;
+TRUNCATE TABLE reservacion;
+TRUNCATE TABLE reservacion_cliente;
+TRUNCATE TABLE historial_pago;
+
+SET FOREIGN_KEY_CHECKS = 1;

@@ -107,7 +107,7 @@ public class ArchivoService {
                         }
                     }
                 } catch (Exception e) {
-                    String errorMsg = String.format("Error en línea %d %s: %s", numeroLinea, line, e.getMessage());
+                    String errorMsg = String.format("Error en línea %d %s: %s", numeroLinea, line.trim().replace("\"", ""), e.getMessage().trim().replace("\"", ""));
                     resumenErrores.add(errorMsg);
                 }
             }

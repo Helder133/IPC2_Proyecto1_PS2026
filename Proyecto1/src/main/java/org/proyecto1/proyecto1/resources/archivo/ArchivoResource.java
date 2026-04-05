@@ -3,6 +3,7 @@ package org.proyecto1.proyecto1.resources.archivo;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.glassfish.jersey.media.multipart.FormDataParam;
@@ -14,8 +15,10 @@ import java.util.List;
 
 @Path("/archivo")
 public class ArchivoResource {
+
     @POST
     @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Produces(MediaType.APPLICATION_JSON)
     public Response cargaDeArchivo(@FormDataParam("file") InputStream fileInputStream) {
         ArchivoService archivoService = new ArchivoService();
         List<String> resumenErrores = List.of();
@@ -24,16 +27,16 @@ public class ArchivoResource {
             if (resumenErrores.isEmpty()) {
                 return Response.ok().build();
             }  else {
-                return Response.status(Response.Status.BAD_REQUEST).entity(resumenErrores).build();
+                return Response.status(Response.Status.BAD_REQUEST)
+                        .entity(resumenErrores)
+                        .type(MediaType.APPLICATION_JSON)
+                        .build();
             }
-
         } catch (IOException e) {
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity("{\"error\": \"" + e.getMessage() + "\"}")
                     .type(MediaType.APPLICATION_JSON)
                     .build();
         }
-
-
     }
 }

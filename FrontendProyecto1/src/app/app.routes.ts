@@ -5,6 +5,7 @@ import { MainLayoutComponent } from './layouts/main-layout/main-layout.component
 import { UsuarioPageComponent } from './pages/usuario/usuario-page/usuario-page.component';
 import { CreateUsuarioPageComponent } from './pages/usuario/create-usuario-page.component/create-usuario-page.component';
 import { UpdateUsuarioPageComponent } from './pages/usuario/update-usuario-page.component/update-usuario-page.component';
+import { CargaArchivoPageComponent } from './pages/carga-archivo/carga-archivo-page.component';
 
 export const routes: Routes = [
     {
@@ -35,6 +36,10 @@ export const routes: Routes = [
             {
                 path: 'usuario/actualizar/:id',
                 component: UpdateUsuarioPageComponent
+            }, 
+            {
+                path: 'carga-archivo',
+                component: CargaArchivoPageComponent
             }
         ]
 
