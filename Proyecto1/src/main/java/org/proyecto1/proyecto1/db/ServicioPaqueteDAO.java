@@ -2,6 +2,8 @@ package org.proyecto1.proyecto1.db;
 
 import org.proyecto1.proyecto1.db.config.CRUD;
 import org.proyecto1.proyecto1.db.config.DBConnection;
+import org.proyecto1.proyecto1.models.proveedor.EnumProveedor;
+import org.proyecto1.proyecto1.models.proveedor.Proveedor;
 import org.proyecto1.proyecto1.models.servicioPaquete.ServicioPaquete;
 
 import java.sql.Connection;
@@ -16,8 +18,8 @@ public class ServicioPaqueteDAO implements CRUD<ServicioPaquete> {
     private static final String INSERT = "INSERT INTO servicio_paquete (proveedor_id, paquete_id, descripcion, costo) VALUES (?, ?, ?, ?)";
     private static final String UPDATE = "UPDATE servicio_paquete SET proveedor_id = ?, descripcion = ?, costo = ? WHERE paquete_id = ?";
     private static final String DELETE = "DELETE FROM servicio_paquete WHERE paquete_id = ? AND proveedor_id = ?";
-    private static final String GET_BY_ID = "SELECT * FROM servicio_paquete WHERE paquete_id = ?";
-    private static final String GET_ALL = "SELECT * FROM servicio_paquete";
+    private static final String GET_BY_ID = "SELECT sp.proveedor_id, sp.paquete_id, sp.descripcion, sp.costo, p.nombre AS nombre_proveedor, p.pais, p.tipo, p.contacto FROM servicio_paquete sp JOIN proveedor p  ON sp.proveedor_id = p.proveedor_id  WHERE sp.paquete_id = ?";
+    private static final String GET_ALL = "SELECT sp.proveedor_id, sp.paquete_id, sp.descripcion, sp.costo, p.nombre AS nombre_proveedor, p.pais, p.tipo, p.contacto FROM servicio_paquete sp JOIN proveedor p  ON sp.proveedor_id = p.proveedor_id";
     private static final String EXISTS_SERVICE = "SELECT * FROM servicio_paquete WHERE paquete_id = ? AND proveedor_id = ?";
 
     public boolean exists(int paquete_id, int proveedor_id) throws SQLException {
@@ -96,10 +98,20 @@ public class ServicioPaqueteDAO implements CRUD<ServicioPaquete> {
     }
 
     private ServicioPaquete extraerDatos(ResultSet resultSet) throws SQLException {
-        return new ServicioPaquete(
+        ServicioPaquete servicioPaquete = new ServicioPaquete(
                 resultSet.getInt("proveedor_id"),
                 resultSet.getInt("paquete_id"),
                 resultSet.getString("descripcion"),
                 resultSet.getDouble("costo"));
+
+        Proveedor proveedor = new Proveedor(resultSet.getString("nombre_proveedor"),
+                resultSet.getString("pais"),
+                EnumProveedor.valueOf(resultSet.getString("tipo")));
+        proveedor.setProveedor_id(resultSet.getInt("proveedor_id"));
+        proveedor.setContacto(resultSet.getString("contacto"));
+
+        servicioPaquete.setProveedor(proveedor);
+
+        return servicioPaquete;
     }
 }

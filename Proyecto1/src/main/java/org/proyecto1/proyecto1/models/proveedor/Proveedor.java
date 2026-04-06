@@ -15,13 +15,6 @@ public class Proveedor {
         this.tipo = tipo;
     }
 
-    public Proveedor(String nombre, EnumProveedor tipo, String pais, String contacto) {
-        this.nombre = nombre;
-        this.tipo = tipo;
-        this.pais = pais;
-        this.contacto = contacto;
-    }
-
     public String getNombre() {
         return nombre;
     }

@@ -1,5 +1,6 @@
 package org.proyecto1.proyecto1.dtos.paqueteTuristico;
 
+import org.proyecto1.proyecto1.dtos.destino.DestinoResponse;
 import org.proyecto1.proyecto1.models.paqueteTuristico.PaqueteTuristico;
 
 public class PaqueteTuristicoResponse {
@@ -11,6 +12,7 @@ public class PaqueteTuristicoResponse {
     private int capacidadMaxima;
     private String descripcion;
     private boolean estado;
+    private DestinoResponse destinoResponse;
 
     public PaqueteTuristicoResponse(PaqueteTuristico paqueteTuristico) {
         this.paqueteId = paqueteTuristico.getPaqueteId();
@@ -21,6 +23,7 @@ public class PaqueteTuristicoResponse {
         this.capacidadMaxima = paqueteTuristico.getCapacidadMaxima();
         this.descripcion = paqueteTuristico.getDescripcion();
         this.estado = paqueteTuristico.isEstado();
+        this.destinoResponse = new DestinoResponse(paqueteTuristico.getDestino());
     }
 
     public int getPaqueteId() {
@@ -85,5 +88,13 @@ public class PaqueteTuristicoResponse {
 
     public void setEstado(boolean estado) {
         this.estado = estado;
+    }
+
+    public DestinoResponse getDestinoResponse() {
+        return destinoResponse;
+    }
+
+    public void setDestinoResponse(DestinoResponse destinoResponse) {
+        this.destinoResponse = destinoResponse;
     }
 }

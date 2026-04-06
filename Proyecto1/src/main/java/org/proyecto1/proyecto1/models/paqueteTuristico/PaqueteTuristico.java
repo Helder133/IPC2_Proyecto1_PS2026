@@ -1,6 +1,7 @@
 package org.proyecto1.proyecto1.models.paqueteTuristico;
 
 import org.apache.commons.lang3.StringUtils;
+import org.proyecto1.proyecto1.models.destino.Destino;
 
 public class PaqueteTuristico {
     private int paqueteId;
@@ -11,6 +12,7 @@ public class PaqueteTuristico {
     private int capacidadMaxima;
     private String descripcion;
     private boolean estado;
+    private Destino destino;
 
     public PaqueteTuristico(int destinoId, String nombre, int duracion, double precioPublico, int capacidadMaxima) {
         this.destinoId = destinoId;
@@ -85,11 +87,20 @@ public class PaqueteTuristico {
         this.estado = estado;
     }
 
+    public Destino getDestino() {
+        return destino;
+    }
+
+    public void setDestino(Destino destino) {
+        this.destino = destino;
+    }
+
     public boolean isValid() {
         return StringUtils.isNotBlank(nombre) &&
                 duracion > 0 &&
                 precioPublico > 0 &&
-                capacidadMaxima > 0;
+                capacidadMaxima > 0 &&
+                destinoId > 0;
     }
 
 }

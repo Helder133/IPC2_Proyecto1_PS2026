@@ -3,6 +3,7 @@ package org.proyecto1.proyecto1.db;
 import org.proyecto1.proyecto1.db.config.CRUD;
 import org.proyecto1.proyecto1.db.config.DBConnection;
 import org.proyecto1.proyecto1.exceptions.UserDataInvalidException;
+import org.proyecto1.proyecto1.models.destino.Destino;
 import org.proyecto1.proyecto1.models.paqueteTuristico.PaqueteTuristico;
 
 import java.sql.Connection;
@@ -15,10 +16,10 @@ public class PaqueteTuristicoDAO implements CRUD<PaqueteTuristico> {
     private static final String INSERT = "INSERT INTO paquete_turistico (nombre, destino_id, duracion, precio_publico, capacidad_maxima, descripcion) VALUES (?, ?, ?, ?, ?, ?)";
     private static final String UPDATE = "UPDATE paquete_turistico SET nombre = ?, destino_id = ?, duracion = ?, precio_publico = ?, capacidad_maxima = ?, descripcion = ?, estado = ? WHERE paquete_id = ?";
     private static final String DELETE = "DELETE FROM paquete_turistico WHERE paquete_id = ?";
-    private static final String GET_BY_ID = "SELECT * FROM paquete_turistico WHERE paquete_id = ?";
-    private static final String GET_ALL = "SELECT * FROM paquete_turistico";
+    private static final String GET_BY_ID = "SELECT pt.paquete_id, pt.destino_id, pt.nombre AS nombre_paquete, pt.duracion, pt.precio_publico, pt.capacidad_maxima, pt.descripcion, pt.estado, d.nombre AS nombre_destino, d.pais, d.descripcion, d.clima_mejor_epoca, d.imagen FROM paquete_turistico pt JOIN destino d ON pt.destino_id = d.destino_id WHERE pt.paquete_id = ?";
+    private static final String GET_ALL = "SELECT pt.paquete_id, pt.destino_id, pt.nombre AS nombre_paquete, pt.duracion, pt.precio_publico, pt.capacidad_maxima, pt.descripcion, pt.estado, d.nombre AS nombre_destino, d.pais, d.descripcion, d.clima_mejor_epoca, d.imagen FROM paquete_turistico pt JOIN destino d ON pt.destino_id = d.destino_id";
     private static final String EXISTS_NAME = "SELECT paquete_id FROM paquete_turistico WHERE nombre = ?";
-    private static final String GET_BY_COINCIDENCE = "SELECT * FROM paquete_turistico WHERE nombre LIKE ?";
+    private static final String GET_BY_COINCIDENCE = "SELECT pt.paquete_id, pt.destino_id, pt.nombre AS nombre_paquete, pt.duracion, pt.precio_publico, pt.capacidad_maxima, pt.descripcion, pt.estado, d.nombre AS nombre_destino, d.pais, d.descripcion, d.clima_mejor_epoca, d.imagen FROM paquete_turistico pt JOIN destino d ON pt.destino_id = d.destino_id WHERE pt.nombre LIKE ?";
     private static final String VALID_UPDATE = "SELECT paquete_id FROM paquete_turistico WHERE paquete_id <> ? AND nombre = ?";
 //    private static final String UPDATE_ESTADO = "UPDATE paquete_turistico SET estado = NOT estado WHERE paquete_id = ?";
     private static final String GET_PRECIOS = "SELECT pt.precio_publico, COALESCE(SUM(sp.costo), 0) AS precio_agencia FROM paquete_turistico pt LEFT JOIN servicio_paquete sp ON pt.paquete_id = sp.paquete_id WHERE pt.paquete_id = ? GROUP BY pt.paquete_id, pt.precio_publico";
@@ -154,13 +155,24 @@ public class PaqueteTuristicoDAO implements CRUD<PaqueteTuristico> {
     private PaqueteTuristico extraerDatos(ResultSet resultSet) throws SQLException {
         PaqueteTuristico paqueteTuristico = new PaqueteTuristico(
                 resultSet.getInt("destino_id"),
-                resultSet.getString("nombre"),
+                resultSet.getString("nombre_paquete"),
                 resultSet.getInt("duracion"),
                 resultSet.getDouble("precio_publico"),
                 resultSet.getInt("capacidad_maxima"));
         paqueteTuristico.setPaqueteId(resultSet.getInt("paquete_id"));
         paqueteTuristico.setDescripcion(resultSet.getString("descripcion"));
         paqueteTuristico.setEstado(resultSet.getBoolean("estado"));
+
+        Destino destino = new Destino(
+                resultSet.getString("nombre_destino"),
+                resultSet.getString("pais"),
+                resultSet.getString("descripcion"));
+        destino.setDestino_id(resultSet.getInt("destino_id"));
+        destino.setClima_mejor_epoca(resultSet.getString("clima_mejor_epoca"));
+        destino.setImagen(resultSet.getString("imagen"));
+
+        paqueteTuristico.setDestino(destino);
+
         return paqueteTuristico;
     }
 }

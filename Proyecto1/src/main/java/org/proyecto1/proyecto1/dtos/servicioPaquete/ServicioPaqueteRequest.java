@@ -3,7 +3,7 @@ package org.proyecto1.proyecto1.dtos.servicioPaquete;
 public class ServicioPaqueteRequest {
     private int proveedorId;
     private int paqueteId;
-    private String destino;
+    private String descripcion;
     private double costo;
 
     public int getProveedorId() {
@@ -14,12 +14,12 @@ public class ServicioPaqueteRequest {
         this.proveedorId = proveedorId;
     }
 
-    public String getDestino() {
-        return destino;
+    public String getDescripcion() {
+        return descripcion;
     }
 
-    public void setDestino(String destino) {
-        this.destino = destino;
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
     }
 
     public int getPaqueteId() {

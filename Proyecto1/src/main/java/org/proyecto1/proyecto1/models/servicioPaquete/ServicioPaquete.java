@@ -1,12 +1,14 @@
 package org.proyecto1.proyecto1.models.servicioPaquete;
 
 import org.apache.commons.lang3.StringUtils;
+import org.proyecto1.proyecto1.models.proveedor.Proveedor;
 
 public class ServicioPaquete {
     private int proveedorId;
     private int paqueteId;
     private String descripcion;
     private double costo;
+    private Proveedor proveedor;
 
     public ServicioPaquete(int proveedorId, int paqueteId, String descripcion, double costo) {
         this.proveedorId = proveedorId;
@@ -45,6 +47,14 @@ public class ServicioPaquete {
 
     public void setCosto(double costo) {
         this.costo = costo;
+    }
+
+    public Proveedor getProveedor() {
+        return proveedor;
+    }
+
+    public void setProveedor(Proveedor proveedor) {
+        this.proveedor = proveedor;
     }
 
     public boolean isValid() {
