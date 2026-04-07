@@ -3,6 +3,8 @@ package org.proyecto1.proyecto1.services.reservacion;
 import org.proyecto1.proyecto1.db.ClienteDAO;
 import org.proyecto1.proyecto1.db.ReservacionDAO;
 import org.proyecto1.proyecto1.db.config.DBConnection;
+import org.proyecto1.proyecto1.dtos.reservacion.ReservacionRequest;
+import org.proyecto1.proyecto1.dtos.reservacion.ReservacionUpdate;
 import org.proyecto1.proyecto1.exceptions.EntityAlreadyExistsException;
 import org.proyecto1.proyecto1.exceptions.UserDataInvalidException;
 import org.proyecto1.proyecto1.models.cliente.Cliente;
@@ -10,17 +12,20 @@ import org.proyecto1.proyecto1.models.paqueteTuristico.PaqueteTuristico;
 import org.proyecto1.proyecto1.models.reservacion.EnumReservacion;
 import org.proyecto1.proyecto1.models.reservacion.Reservacion;
 import org.proyecto1.proyecto1.models.reservacion.ReservacionCliente;
+import org.proyecto1.proyecto1.services.pago.HistorialPagoService;
 import org.proyecto1.proyecto1.services.paqueteTuristico.PaqueteTuristicoService;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 public class ReservacionService {
     public void insertDesdeArchivo(Reservacion reservacion, List<String> dpiOPasaporte) throws SQLException, UserDataInvalidException, EntityAlreadyExistsException {
-        if (!reservacion.isValid()) throw new UserDataInvalidException("Los datos de la reservación son inválidos");
+        if (!reservacion.isValid()) throw new UserDataInvalidException("Los datos de la reservación son inválidos.");
         ReservacionDAO reservacionDAO = new ReservacionDAO();
         Connection connection = DBConnection.getInstance().getConnection();
         connection.setAutoCommit(false);
@@ -77,6 +82,69 @@ public class ReservacionService {
         return String.format("RES-%05d", siguienteNumero);
     }
 
+    public void insert(ReservacionRequest reservacionRequest) throws SQLException, UserDataInvalidException {
+        Reservacion reservacion = new Reservacion(reservacionRequest.getPaqueteId(), reservacionRequest.getUsuarioId(),
+                reservacionRequest.getFechaViaje(), reservacionRequest.getFechaCreacion());
+        reservacion.setCantidadPersona(reservacionRequest.getCantidadPersonas());
+        if (!reservacion.isValid()) throw new UserDataInvalidException("Los datos de la reservación son inválidos.");
+        ReservacionDAO reservacionDAO = new ReservacionDAO();
+        PaqueteTuristicoService paqueteTuristicoService = new PaqueteTuristicoService();
+        Connection connection = DBConnection.getInstance().getConnection();
+        connection.setAutoCommit(false);
+        try {
+            Map<String, Double> precios = paqueteTuristicoService.getPrecios(reservacion.getPaqueteId(), connection);
+            if (!precios.isEmpty()) {
+                if (precios.get("precio_publico") == null) {
+                    reservacion.setCostoTotal(0);
+                } else {
+                    reservacion.setCostoTotal(precios.get("precio_publico"));
+                }
+                reservacion.setCostoAgencia(precios.get("precio_agencia"));
+            }
+            reservacionDAO.insert(reservacion, connection);
+        } catch (SQLException | UserDataInvalidException e) {
+            connection.rollback();
+            throw e;
+        } finally {
+            connection.setAutoCommit(true);
+        }
+    }
+
+    public void update(ReservacionUpdate reservacionUpdate) throws SQLException, UserDataInvalidException {
+        Reservacion reservacion = new Reservacion(reservacionUpdate.getPaqueteId(), reservacionUpdate.getUsuarioId(), reservacionUpdate.getFechaViaje());
+        reservacion.setCantidadPersona(reservacionUpdate.getCantidadPersonas());
+        reservacion.setReservacionId(reservacionUpdate.getReservacionId());
+        if (!reservacion.isValid()) throw new UserDataInvalidException("Los datos de la reservación son inválidos.");
+        ReservacionDAO reservacionDAO = new ReservacionDAO();
+        reservacionDAO.update(reservacion);
+    }
+
+    public void cancelarReservacion(int reservacionId) throws SQLException, UserDataInvalidException {
+        ReservacionDAO reservacionDAO = new ReservacionDAO();
+        Optional<Reservacion> reservacionOptional = reservacionDAO.getById(reservacionId);
+        if (reservacionOptional.isEmpty())
+            throw new UserDataInvalidException("La reservación a cancelar no se encontró, vuelva a intentar.");
+        Reservacion reservacion = reservacionOptional.get();
+        LocalDate fechaActual = LocalDate.now();
+        long diasRestantesAlViaje = ChronoUnit.DAYS.between(fechaActual, reservacion.getFechaViaje());
+        HistorialPagoService historialPagoService = new HistorialPagoService();
+        double dineroAbonado = historialPagoService.pagosLlevado(reservacionId);
+        if (diasRestantesAlViaje > 30) {
+            reservacion.setReembolso(dineroAbonado);
+        } else if (diasRestantesAlViaje >= 15) {
+            double reembolso = dineroAbonado * 0.7;
+            reservacion.setReembolso(reembolso);
+        } else if (diasRestantesAlViaje >= 7) {
+            double reembolso = dineroAbonado * 0.4;
+            reservacion.setReembolso(reembolso);
+        } else {
+            throw new UserDataInvalidException("No se puede cancelar el viaje, ya que faltan menos de 7 días para que se realize.");
+        }
+        reservacion.setEstado(EnumReservacion.Cancelada);
+        reservacion.setFechaCancelacion(fechaActual);
+        reservacionDAO.cancelarReservacion(reservacion);
+    }
+
     public int getByCodigoArchivo(String codigo) throws SQLException {
         ReservacionDAO reservacionDAO = new ReservacionDAO();
         return reservacionDAO.getByCodigoArchivo(codigo);
@@ -94,7 +162,7 @@ public class ReservacionService {
         reservacionDAO.delete(id);
     }
 
-    public List<Reservacion> getByUserId(int cliente_id) throws SQLException {
+    public List<Reservacion> getByClientId(int cliente_id) throws SQLException {
         ReservacionDAO reservacionDAO = new ReservacionDAO();
         return reservacionDAO.getByUserId(cliente_id);
     }

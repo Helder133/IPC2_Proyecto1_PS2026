@@ -1,6 +1,7 @@
 package org.proyecto1.proyecto1.db;
 
 import org.proyecto1.proyecto1.db.config.CRUD;
+import org.proyecto1.proyecto1.db.config.DBConnection;
 import org.proyecto1.proyecto1.models.pago.HistorialPago;
 
 import java.sql.*;
@@ -22,6 +23,17 @@ public class HistorialPagoDAO implements CRUD<HistorialPago> {
     }
 
     public double getAnticipo(int reservacionId, Connection connection) throws SQLException {
+        try (PreparedStatement getAnticipo = connection.prepareStatement(GET_ANTICIPO)) {
+            getAnticipo.setInt(1, reservacionId);
+            try (ResultSet resultSet = getAnticipo.executeQuery()) {
+                if (resultSet.next()) return resultSet.getDouble("anticipo");
+                return 0.0;
+            }
+        }
+    }
+
+    public double getAnticipo(int reservacionId) throws SQLException {
+        Connection connection = DBConnection.getInstance().getConnection();
         try (PreparedStatement getAnticipo = connection.prepareStatement(GET_ANTICIPO)) {
             getAnticipo.setInt(1, reservacionId);
             try (ResultSet resultSet = getAnticipo.executeQuery()) {

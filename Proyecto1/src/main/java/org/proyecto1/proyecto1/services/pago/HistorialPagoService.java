@@ -41,4 +41,10 @@ public class HistorialPagoService {
             connection.setAutoCommit(true);
         }
     }
+
+    public double pagosLlevado(int reservacionId) throws SQLException {
+        HistorialPagoDAO historialPagoDAO = new HistorialPagoDAO();
+        return historialPagoDAO.getAnticipo(reservacionId);
+    }
+
 }

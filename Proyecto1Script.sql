@@ -51,6 +51,9 @@ CREATE TABLE IF NOT EXISTS paquete_turistico (
 	CONSTRAINT fk_destino FOREIGN KEY (destino_id) REFERENCES destino (destino_id)
 );
 
+SELECT pt.paquete_id, pt.destino_id, pt.nombre AS nombre_paquete, pt.duracion, pt.precio_publico, pt.capacidad_maxima, pt.descripcion, pt.estado, d.nombre AS nombre_destino, d.pais, d.descripcion, d.clima_mejor_epoca, d.imagen FROM paquete_turistico pt JOIN destino d ON pt.destino_id = d.destino_id
+SELECT pt.paquete_id, pt.destino_id, pt.nombre AS nombre_paquete, pt.duracion, pt.precio_publico, pt.capacidad_maxima, pt.descripcion, pt.estado, d.nombre AS nombre_destino, d.pais, d.descripcion, d.clima_mejor_epoca, d.imagen FROM paquete_turistico pt JOIN destino d ON pt.destino_id = d.destino_id WHERE pt.nombre LIKE "%Buceo%" 
+
 CREATE TABLE IF NOT EXISTS servicio_paquete (
 	proveedor_id INT NOT NULL,
 	paquete_id INT NOT NULL,
@@ -62,7 +65,7 @@ CREATE TABLE IF NOT EXISTS servicio_paquete (
 );
 
 SELECT pt.precio_publico, COALESCE(SUM(sp.costo), 0) AS precio_agencia FROM paquete_turistico pt LEFT JOIN servicio_paquete sp ON pt.paquete_id = sp.paquete_id WHERE pt.paquete_id = 1 GROUP BY pt.paquete_id, pt.precio_publico;
-
+SELECT sp.proveedor_id, sp.paquete_id, sp.descripcion, sp.costo, p.nombre AS nombre_proveedor, p.pais, p.tipo, p.contacto FROM servicio_paquete sp JOIN proveedor p  ON sp.proveedor_id = p.proveedor_id  WHERE sp.paquete_id = ?
 
 CREATE TABLE IF NOT EXISTS reservacion (
 	reservacion_id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
@@ -80,6 +83,9 @@ CREATE TABLE IF NOT EXISTS reservacion (
 	CONSTRAINT fk_paquete2 FOREIGN KEY (paquete_id) REFERENCES paquete_turistico (paquete_id),
 	CONSTRAINT fk_usuario FOREIGN KEY (usuario_id) REFERENCES usuario (usuario_id)
 );
+
+SELECT r.reservacion_id, r.paquete_id, r.usuario_id, r.fecha_viaje, r.fecha_creacion, r.cantidad_persona, r.costo_total, r.costo_agencia, r.estado AS estado_reservacion, r.reembolso, r.fecha_cancelacion, r.codigo_archivo, p.destino_id, p.nombre AS nombre_destino, p.duracion, p.precio_publico, p.capacidad_maxima, p.descripcion, p.estado AS estado_paquete FROM reservacion r JOIN paquete_turistico p ON r.paquete_id = p.paquete_id 
+SELECT r.reservacion_id, r.paquete_id, r.usuario_id, r.fecha_viaje, r.fecha_creacion, r.cantidad_persona, r.costo_total, r.costo_agencia, r.estado, r.reembolso, r.fecha_cancelacion, r.codigo_archivo, p.destino_id, p.nombre AS nombre_destino, p.duracion, p.precio_publico, p.capacidad_maxima, p.descripcion, p.estado FROM reservacion r JOIN paquete_turistico p ON r.paquete_id = p.paquete_id JOIN reservacion_cliente rc ON r.reservacion_id = rc.reservacion_id WHERE rc.cliente_id = 2
 
 CREATE TABLE IF NOT EXISTS reservacion_cliente (
 	reservacion_id INT NOT NULL,
@@ -100,6 +106,16 @@ CREATE TABLE IF NOT EXISTS historial_pago (
 	CONSTRAINT fk_reservacion2 FOREIGN KEY (reservacion_id) REFERENCES reservacion (reservacion_id)
 );
 
+SELECT * FROM paquete_turistico; 
+SELECT * FROM proveedor;
+SELECT * FROM servicio_paquete;
+SELECT * FROM servicio_paquete WHERE paquete_id = 5 AND proveedor_id = 1
+SELECT * FROM paquete_turistico
+
+SELECT * FROM usuario
+SELECT * FROM reservacion
+
+SELECT SUM(monto) AS anticipo FROM historial_pago WHERE reservacion_id = 1
 
 -- Para eliminar los datos basuras
 SET FOREIGN_KEY_CHECKS = 0; 

@@ -3,6 +3,7 @@ package org.proyecto1.proyecto1.dtos.reservacion;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import org.proyecto1.proyecto1.dtos.paqueteTuristico.PaqueteTuristicoResponse;
 import org.proyecto1.proyecto1.models.reservacion.EnumReservacion;
 import org.proyecto1.proyecto1.models.reservacion.Reservacion;
 
@@ -27,6 +28,7 @@ public class ReservacionResponse {
     @JsonDeserialize(using = LocalDateDeserializer.class)
     private LocalDate fechaCancelacion;
     private String codigoArchivo;
+    private PaqueteTuristicoResponse paqueteTuristico;
 
     public ReservacionResponse(Reservacion  reservacion) {
         this.reservacionId = reservacion.getReservacionId();
@@ -41,6 +43,7 @@ public class ReservacionResponse {
         this.reembolso = reservacion.getReembolso();
         this.fechaCancelacion = reservacion.getFechaCancelacion();
         this.codigoArchivo = reservacion.getCodigoArchivo();
+        this.paqueteTuristico = new PaqueteTuristicoResponse(reservacion.getPaqueteTuristico());
     }
 
     public int getReservacionId() {
@@ -137,5 +140,13 @@ public class ReservacionResponse {
 
     public void setCodigoArchivo(String codigoArchivo) {
         this.codigoArchivo = codigoArchivo;
+    }
+
+    public PaqueteTuristicoResponse getPaqueteTuristico() {
+        return paqueteTuristico;
+    }
+
+    public void setPaqueteTuristico(PaqueteTuristicoResponse paqueteTuristico) {
+        this.paqueteTuristico = paqueteTuristico;
     }
 }

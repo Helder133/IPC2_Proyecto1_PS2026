@@ -23,7 +23,9 @@ public class PaqueteTuristicoResponse {
         this.capacidadMaxima = paqueteTuristico.getCapacidadMaxima();
         this.descripcion = paqueteTuristico.getDescripcion();
         this.estado = paqueteTuristico.isEstado();
-        this.destinoResponse = new DestinoResponse(paqueteTuristico.getDestino());
+        if (paqueteTuristico.getDestino() != null) {
+            this.destinoResponse = new DestinoResponse(paqueteTuristico.getDestino());
+        }
     }
 
     public int getPaqueteId() {

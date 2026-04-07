@@ -64,7 +64,6 @@ public class ServicioPaqueteResource {
         }
     }
 
-//    revisar que esta dando error a la hora de intentar hacer una actualizacion
     @PUT
     @Path("actualizar")
     @Consumes(MediaType.APPLICATION_JSON)

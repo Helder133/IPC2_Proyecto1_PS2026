@@ -1,5 +1,7 @@
 package org.proyecto1.proyecto1.models.reservacion;
 
+import org.proyecto1.proyecto1.models.paqueteTuristico.PaqueteTuristico;
+
 import java.time.LocalDate;
 
 public class Reservacion {
@@ -15,7 +17,7 @@ public class Reservacion {
     private double reembolso;
     private LocalDate fechaCancelacion;
     private String codigoArchivo;
-
+    private PaqueteTuristico paqueteTuristico;
 
     public Reservacion(int paqueteId, int usuarioId, LocalDate fechaViaje) {
         this.paqueteId = paqueteId;
@@ -127,9 +129,18 @@ public class Reservacion {
         this.codigoArchivo = codigoArchivo;
     }
 
+    public PaqueteTuristico getPaqueteTuristico() {
+        return paqueteTuristico;
+    }
+
+    public void setPaqueteTuristico(PaqueteTuristico paqueteTuristico) {
+        this.paqueteTuristico = paqueteTuristico;
+    }
+
     public boolean isValid() {
         return paqueteId > 0
                 && usuarioId > 0
-                && fechaViaje != null;
+                && fechaViaje != null
+                && fechaCreacion != null;
     }
 }
