@@ -76,4 +76,8 @@ public class UsuarioService {
         return usuarioDAO.existsUser(name);
     }
 
+    public void updateEstado(int usuarioId) throws SQLException {
+        UsuarioDAO usuarioDAO = new UsuarioDAO();
+        usuarioDAO.updateEstado(usuarioId);
+    }
 }

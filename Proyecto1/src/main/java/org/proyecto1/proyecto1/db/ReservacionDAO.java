@@ -2,6 +2,7 @@ package org.proyecto1.proyecto1.db;
 
 import org.proyecto1.proyecto1.db.config.CRUD;
 import org.proyecto1.proyecto1.db.config.DBConnection;
+import org.proyecto1.proyecto1.models.destino.Destino;
 import org.proyecto1.proyecto1.models.paqueteTuristico.PaqueteTuristico;
 import org.proyecto1.proyecto1.models.reservacion.EnumReservacion;
 import org.proyecto1.proyecto1.models.reservacion.Reservacion;
@@ -13,15 +14,16 @@ import java.util.Optional;
 
 public class ReservacionDAO implements CRUD<Reservacion> {
     private static final String INSERT = "INSERT INTO reservacion (paquete_id, usuario_id, fecha_creacion, fecha_viaje, cantidad_persona, costo_total, costo_agencia, codigo_archivo) VALUES (?,?,?,?,?,?,?,?)";
-    private static final String UPDATE = "UPDATE reservacion SET paquete_id = ?, fecha_viaje = ?, cantidad_persona = ? WHERE reservacion_id = ?";
+    private static final String UPDATE = "UPDATE reservacion SET paquete_id = ?, fecha_viaje = ?, cantidad_persona = ?, costo_total = ?, costo_agencia = ? WHERE reservacion_id = ?";
     private static final String DELETE = "DELETE FROM reservacion WHERE reservacion_id = ?";
-    private static final String GET_BY_ID = "SELECT r.reservacion_id, r.paquete_id, r.usuario_id, r.fecha_viaje, r.fecha_creacion, r.cantidad_persona, r.costo_total, r.costo_agencia, r.estado AS estado_reservacion, r.reembolso, r.fecha_cancelacion, r.codigo_archivo, p.destino_id, p.nombre AS nombre_destino, p.duracion, p.precio_publico, p.capacidad_maxima, p.descripcion, p.estado AS estado_paquete FROM reservacion r JOIN paquete_turistico p ON r.paquete_id = p.paquete_id  WHERE r.reservacion_id = ?";
-    private static final String GET_ALL = "SELECT r.reservacion_id, r.paquete_id, r.usuario_id, r.fecha_viaje, r.fecha_creacion, r.cantidad_persona, r.costo_total, r.costo_agencia, r.estado AS estado_reservacion, r.reembolso, r.fecha_cancelacion, r.codigo_archivo, p.destino_id, p.nombre AS nombre_destino, p.duracion, p.precio_publico, p.capacidad_maxima, p.descripcion, p.estado AS estado_paquete FROM reservacion r JOIN paquete_turistico p ON r.paquete_id = p.paquete_id";
+    private static final String GET_BY_ID = "SELECT r.reservacion_id, r.paquete_id, r.usuario_id, r.fecha_viaje, r.fecha_creacion, r.cantidad_persona, r.costo_total, r.costo_agencia, r.estado AS estado_reservacion, r.reembolso, r.fecha_cancelacion, r.codigo_archivo, p.destino_id, p.nombre AS nombre_destino, p.duracion, p.precio_publico, p.capacidad_maxima, p.descripcion AS descripcion_paquete, p.estado AS estado_paquete, d.nombre AS nombre_destino, d.pais, d.descripcion AS descripcion_destino, d.clima_mejor_epoca, d.imagen  FROM reservacion r JOIN paquete_turistico p ON r.paquete_id = p.paquete_id JOIN destino d ON p.destino_id = d.destino_id  WHERE r.reservacion_id = ?";
+    private static final String GET_ALL = "SELECT r.reservacion_id, r.paquete_id, r.usuario_id, r.fecha_viaje, r.fecha_creacion, r.cantidad_persona, r.costo_total, r.costo_agencia, r.estado AS estado_reservacion, r.reembolso, r.fecha_cancelacion, r.codigo_archivo, p.destino_id, p.nombre AS nombre_destino, p.duracion, p.precio_publico, p.capacidad_maxima, p.descripcion AS descripcion_paquete, p.estado AS estado_paquete, d.nombre AS nombre_destino, d.pais, d.descripcion AS descripcion_destino, d.clima_mejor_epoca, d.imagen  FROM reservacion r JOIN paquete_turistico p ON r.paquete_id = p.paquete_id JOIN destino d ON p.destino_id = d.destino_id";
     private static final String UPDATE_ESTADO = "UPDATE reservacion SET estado = ? WHERE reservacion_id = ?";
-    private static final String GET_BY_USER_ID = "SELECT r.reservacion_id, r.paquete_id, r.usuario_id, r.fecha_viaje, r.fecha_creacion, r.cantidad_persona, r.costo_total, r.costo_agencia, r.estado AS estado_reservacion, r.reembolso, r.fecha_cancelacion, r.codigo_archivo, p.destino_id, p.nombre AS nombre_destino, p.duracion, p.precio_publico, p.capacidad_maxima, p.descripcion, p.estado AS estado_paquete FROM reservacion r JOIN paquete_turistico p ON r.paquete_id = p.paquete_id JOIN reservacion_cliente rc ON r.reservacion_id = rc.reservacion_id WHERE rc.cliente_id = ?";
+    private static final String GET_BY_CLIENTE_ID = "SELECT r.reservacion_id, r.paquete_id, r.usuario_id, r.fecha_viaje, r.fecha_creacion, r.cantidad_persona, r.costo_total, r.costo_agencia, r.estado AS estado_reservacion, r.reembolso, r.fecha_cancelacion, r.codigo_archivo, p.destino_id, p.nombre AS nombre_destino, p.duracion, p.precio_publico, p.capacidad_maxima, p.descripcion AS descripcion_paquete, p.estado AS estado_paquete, d.nombre AS nombre_destino, d.pais, d.descripcion AS descripcion_destino, d.clima_mejor_epoca, d.imagen FROM reservacion r JOIN paquete_turistico p ON r.paquete_id = p.paquete_id JOIN reservacion_cliente rc ON r.reservacion_id = rc.reservacion_id JOIN destino d ON p.destino_id = d.destino_id  WHERE rc.cliente_id = ?";
     private static final String GET_ULTIMO_CODIGO_ARCHIVO = "SELECT codigo_archivo FROM reservacion WHERE codigo_archivo IS NOT NULL ORDER BY reservacion_id DESC LIMIT 1";
     private static final String GET_BY_CODIGO_ARCHIVO = "SELECT reservacion_id FROM reservacion WHERE codigo_archivo = ?";
     private static final String RESERVACION_CANCELADA = "UPDATE reservacion SET estado = ?, fecha_cancelacion = ?, reembolso = ? WHERE reservacion_id = ?";
+    private static final String GET_BY_USUARIO_ID = "SELECT r.reservacion_id, r.paquete_id, r.usuario_id, r.fecha_viaje, r.fecha_creacion, r.cantidad_persona, r.costo_total, r.costo_agencia, r.estado AS estado_reservacion, r.reembolso, r.fecha_cancelacion, r.codigo_archivo, p.destino_id, p.nombre AS nombre_destino, p.duracion, p.precio_publico, p.capacidad_maxima, p.descripcion AS descripcion_paquete, p.estado AS estado_paquete, d.nombre AS nombre_destino, d.pais, d.descripcion AS descripcion_destino, d.clima_mejor_epoca, d.imagen  FROM reservacion r JOIN paquete_turistico p ON r.paquete_id = p.paquete_id JOIN destino d ON p.destino_id = d.destino_id WHERE r.usuario_id = ?";
 
     public void cancelarReservacion(Reservacion reservacion) throws SQLException {
         Connection connection = DBConnection.getInstance().getConnection();
@@ -56,10 +58,22 @@ public class ReservacionDAO implements CRUD<Reservacion> {
         }
     }
 
-    public List<Reservacion> getByUserId(int cliente_id) throws SQLException {
+    public List<Reservacion> getByUsuarioId(int usuario_id) throws SQLException {
         Connection connection = DBConnection.getInstance().getConnection();
         List<Reservacion> reservaciones = new ArrayList<>();
-        try (PreparedStatement getByUserId = connection.prepareStatement(GET_BY_USER_ID)) {
+        try (PreparedStatement getByUsuarioId = connection.prepareStatement(GET_BY_USUARIO_ID)) {
+            getByUsuarioId.setInt(1, usuario_id);
+            try (ResultSet resultSet = getByUsuarioId.executeQuery()) {
+                while (resultSet.next()) reservaciones.add(extraerDatos(resultSet));
+                return reservaciones;
+            }
+        }
+    }
+
+    public List<Reservacion> getByClienteId(int cliente_id) throws SQLException {
+        Connection connection = DBConnection.getInstance().getConnection();
+        List<Reservacion> reservaciones = new ArrayList<>();
+        try (PreparedStatement getByUserId = connection.prepareStatement(GET_BY_CLIENTE_ID)) {
             getByUserId.setInt(1, cliente_id);
             try (ResultSet resultSet = getByUserId.executeQuery()) {
                 while (resultSet.next()) reservaciones.add(extraerDatos(resultSet));
@@ -69,6 +83,15 @@ public class ReservacionDAO implements CRUD<Reservacion> {
     }
 
     public void updateEstado(int reservacionId, EnumReservacion estado, Connection connection) throws SQLException {
+        try (PreparedStatement updateEstado = connection.prepareStatement(UPDATE_ESTADO)) {
+            updateEstado.setString(1, estado.name());
+            updateEstado.setInt(2, reservacionId);
+            updateEstado.executeUpdate();
+        }
+    }
+
+    public void updateEstado(int reservacionId, EnumReservacion estado) throws SQLException {
+        Connection connection = DBConnection.getInstance().getConnection();
         try (PreparedStatement updateEstado = connection.prepareStatement(UPDATE_ESTADO)) {
             updateEstado.setString(1, estado.name());
             updateEstado.setInt(2, reservacionId);
@@ -119,6 +142,18 @@ public class ReservacionDAO implements CRUD<Reservacion> {
             update.setDate(2, Date.valueOf(reservacion.getFechaViaje()));
             update.setInt(3, reservacion.getCantidadPersona());
             update.setInt(4, reservacion.getReservacionId());
+            update.executeUpdate();
+        }
+    }
+
+    public void update(Reservacion reservacion, Connection connection) throws SQLException {
+        try (PreparedStatement update = connection.prepareStatement(UPDATE)) {
+            update.setInt(1, reservacion.getPaqueteId());
+            update.setDate(2, Date.valueOf(reservacion.getFechaViaje()));
+            update.setInt(3, reservacion.getCantidadPersona());
+            update.setDouble(4, reservacion.getCostoTotal());
+            update.setDouble(5, reservacion.getCostoAgencia());
+            update.setInt(6, reservacion.getReservacionId());
             update.executeUpdate();
         }
     }
@@ -182,6 +217,7 @@ public class ReservacionDAO implements CRUD<Reservacion> {
             reservacion.setReembolso(reembolso);
         }
         reservacion.setFechaCancelacion(resultSet.getDate("fecha_cancelacion") != null ? resultSet.getDate("fecha_cancelacion").toLocalDate() : null);
+        reservacion.setCodigoArchivo(resultSet.getString("codigo_archivo"));
 
         PaqueteTuristico paqueteTuristico = new PaqueteTuristico(resultSet.getInt("destino_id"),
                 resultSet.getString("nombre_destino"),
@@ -189,8 +225,17 @@ public class ReservacionDAO implements CRUD<Reservacion> {
                 resultSet.getDouble("precio_publico"),
                 resultSet.getInt("capacidad_maxima"));
         paqueteTuristico.setPaqueteId(resultSet.getInt("paquete_id"));
-        paqueteTuristico.setDescripcion(resultSet.getString("descripcion"));
+        paqueteTuristico.setDescripcion(resultSet.getString("descripcion_paquete"));
         paqueteTuristico.setEstado(resultSet.getBoolean("estado_paquete"));
+
+        Destino destino = new Destino(resultSet.getString("nombre_destino"),
+                resultSet.getString("pais"),
+                resultSet.getString("descripcion_destino"));
+        destino.setClima_mejor_epoca(resultSet.getString("clima_mejor_epoca"));
+        destino.setImagen(resultSet.getString("imagen"));
+        destino.setDestino_id(resultSet.getInt("destino_id"));
+
+        paqueteTuristico.setDestino(destino);
 
         reservacion.setPaqueteTuristico(paqueteTuristico);
         return reservacion;

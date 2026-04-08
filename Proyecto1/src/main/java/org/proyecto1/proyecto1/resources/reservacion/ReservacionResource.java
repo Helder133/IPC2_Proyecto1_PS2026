@@ -6,8 +6,10 @@ import jakarta.ws.rs.core.Response;
 import org.proyecto1.proyecto1.dtos.reservacion.ReservacionRequest;
 import org.proyecto1.proyecto1.dtos.reservacion.ReservacionResponse;
 import org.proyecto1.proyecto1.dtos.reservacion.ReservacionUpdate;
+import org.proyecto1.proyecto1.exceptions.EntityAlreadyExistsException;
 import org.proyecto1.proyecto1.exceptions.UserDataInvalidException;
 import org.proyecto1.proyecto1.models.reservacion.Reservacion;
+import org.proyecto1.proyecto1.models.reservacion.ReservacionCliente;
 import org.proyecto1.proyecto1.services.reservacion.ReservacionService;
 
 import java.sql.SQLException;
@@ -26,6 +28,23 @@ public class ReservacionResource {
             return Response.ok().build();
         } catch (UserDataInvalidException e) {
             return errorEjecucion(e.getMessage(), 1);
+        } catch (SQLException e) {
+            return errorEjecucion(e.getMessage(), 3);
+        }
+    }
+
+    @POST
+    @Path("/insertar/reservacion/cliente")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response newReservacionCliente(ReservacionCliente reservacionCliente) {
+        try {
+            ReservacionService reservacionService = new ReservacionService();
+            reservacionService.agregarClienteAReservacion(reservacionCliente);
+            return Response.ok().build();
+        } catch (UserDataInvalidException e) {
+            return errorEjecucion(e.getMessage(), 1);
+        } catch (EntityAlreadyExistsException e) {
+            return errorEjecucion(e.getMessage(), 2);
         } catch (SQLException e) {
             return errorEjecucion(e.getMessage(), 3);
         }
@@ -57,7 +76,23 @@ public class ReservacionResource {
                     .map(ReservacionResponse::new)
                     .toList();
             return Response.ok(reservacionResponses).build();
-        }  catch (SQLException e) {
+        } catch (SQLException e) {
+            return errorEjecucion(e.getMessage(), 3);
+        }
+    }
+
+    @GET
+    @Path("/usuario/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAllReservacionesUsuario(@PathParam("id") int id) {
+        try {
+            ReservacionService reservacionService = new ReservacionService();
+            List<ReservacionResponse> reservacionResponses = reservacionService.getByUsuarioId(id)
+                    .stream()
+                    .map(ReservacionResponse::new)
+                    .toList();
+            return Response.ok(reservacionResponses).build();
+        } catch (SQLException e) {
             return errorEjecucion(e.getMessage(), 3);
         }
     }
@@ -106,6 +141,20 @@ public class ReservacionResource {
         }
     }
 
+    @PUT
+    @Path("/actualizar/completada/{id}")
+    public Response reservacionCompletada(@PathParam("id") int id) {
+        try {
+            ReservacionService reservacionService = new ReservacionService();
+            reservacionService.updateEstadoACompletada(id);
+            return Response.ok().build();
+        } catch (UserDataInvalidException e) {
+            return errorEjecucion(e.getMessage(), 1);
+        } catch (SQLException e) {
+            return errorEjecucion(e.getMessage(), 3);
+        }
+    }
+
     @DELETE
     @Path("/eliminar/{id}")
     public Response deleteReservacion(@PathParam("id") int id) {
@@ -113,7 +162,21 @@ public class ReservacionResource {
             ReservacionService reservacionService = new ReservacionService();
             reservacionService.delete(id);
             return Response.ok().build();
-        } catch (UserDataInvalidException e)  {
+        } catch (UserDataInvalidException e) {
+            return errorEjecucion(e.getMessage(), 1);
+        } catch (SQLException e) {
+            return errorEjecucion(e.getMessage(), 3);
+        }
+    }
+
+    @DELETE
+    @Path("/eliminar/reservacion/{reservacionId}/cliente/{clienteId}")
+    public Response deleteReservacion(@PathParam("reservacionId") int reservacinId, @PathParam("clienteId") int clienteId) {
+        try {
+            ReservacionService reservacionService = new ReservacionService();
+            reservacionService.deleteClienteAReservacion(reservacinId, clienteId);
+            return Response.ok().build();
+        } catch (UserDataInvalidException e) {
             return errorEjecucion(e.getMessage(), 1);
         } catch (SQLException e) {
             return errorEjecucion(e.getMessage(), 3);

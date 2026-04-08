@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class UsuarioDAO implements CRUD<Usuario> {
-    private static final String LOGIN = "SELECT * FROM usuario WHERE nombre = ? AND password = ?";
+    private static final String LOGIN = "SELECT * FROM usuario WHERE nombre = ? AND password = ? AND estado = 1";
     private static final String INSERT_USER = "INSERT INTO usuario (nombre, password, rol) VALUES (?, ?, ?)";
     private static final String UPDATE_USER_WITH_PASSWORD = "UPDATE usuario SET nombre = ?, password = ?, rol = ? WHERE usuario_id = ?";
     private static final String UPDATE_USER_WITHOUT_PASSWORD = "UPDATE usuario SET nombre = ?, rol = ? WHERE usuario_id = ?";
@@ -25,6 +25,15 @@ public class UsuarioDAO implements CRUD<Usuario> {
     private static final String EXISTS_USER = "SELECT usuario_id FROM usuario WHERE nombre = ?";
     private static final String GET_BY_COINCIDENCE = "SELECT * FROM usuario WHERE nombre LIKE ?";
     private static final String VALID_UPDATE = "SELECT usuario_id FROM usuario WHERE usuario_id <> ? AND nombre = ?";
+    private static final String UPDATE_ESTADO = "UPDATE usuario SET estado = NOT estado WHERE usuario_id = ?";
+
+    public void updateEstado(int usuarioId) throws SQLException {
+        Connection connection = DBConnection.getInstance().getConnection();
+        try (PreparedStatement updateEstado = connection.prepareStatement(UPDATE_ESTADO)) {
+            updateEstado.setInt(1, usuarioId);
+            updateEstado.executeUpdate();
+        }
+    }
 
     public Optional<Usuario> login(Usuario usuario) throws SQLException {
         Connection connection = DBConnection.getInstance().getConnection();
@@ -145,6 +154,7 @@ public class UsuarioDAO implements CRUD<Usuario> {
                 "",
                 EnumUsuario.valueOf(resultSet.getString("rol")));
         usuario.setUsuario_id(resultSet.getInt("usuario_id"));
+        usuario.setEstado(resultSet.getBoolean("estado"));
         return usuario;
     }
 

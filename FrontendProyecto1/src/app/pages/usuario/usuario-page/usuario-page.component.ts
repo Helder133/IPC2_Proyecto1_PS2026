@@ -61,6 +61,17 @@ export class UsuarioPageComponent implements OnInit {
     this.eliminar.set(true);
   }
 
+  notEstado(usuarioId: number): void {
+    this.usuarioService.notEstado(usuarioId).subscribe({
+      next: () => {
+        this.getUsuarios();
+      },
+      error: (error) => {
+        this.mensajeError.set(error.error?.error || "Error de conexión con el servidor.");
+      }
+    });
+  }
+
   eliminarUsuario(): void {
     if (!this.eliminar()) return;
     

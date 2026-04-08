@@ -5,4 +5,5 @@ export interface UsuarioResponse {
     nombre: string;
     password?: string;
     rol: EnumUsuario
+    estado: boolean;
 }

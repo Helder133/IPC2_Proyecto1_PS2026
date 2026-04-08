@@ -25,11 +25,11 @@ public class UsuarioResource {
             usuarioService.insert(usuarioRequest);
             return Response.ok().build();
         } catch (UserDataInvalidException e) {
-            return errorEjecucion(e.getMessage(),1);
+            return errorEjecucion(e.getMessage(), 1);
         } catch (EntityAlreadyExistsException e) {
-            return errorEjecucion(e.getMessage(),2);
-        }catch (SQLException e) {
-            return errorEjecucion(e.getMessage(),3);
+            return errorEjecucion(e.getMessage(), 2);
+        } catch (SQLException e) {
+            return errorEjecucion(e.getMessage(), 3);
         }
     }
 
@@ -44,7 +44,7 @@ public class UsuarioResource {
                     toList();
             return Response.ok(getAllUsers).build();
         } catch (SQLException e) {
-            return errorEjecucion(e.getMessage(),3);
+            return errorEjecucion(e.getMessage(), 3);
         }
     }
 
@@ -57,11 +57,11 @@ public class UsuarioResource {
             int id = Integer.parseInt(parameter);
             return Response.ok(new UsuarioResponse(usuarioService.getById(id))).build();
         } catch (NumberFormatException e) {
-            return getByCoincidence(parameter,usuarioService);
+            return getByCoincidence(parameter, usuarioService);
         } catch (UserDataInvalidException e) {
-            return errorEjecucion(e.getMessage(),1);
+            return errorEjecucion(e.getMessage(), 1);
         } catch (SQLException e) {
-            return errorEjecucion(e.getMessage(),3);
+            return errorEjecucion(e.getMessage(), 3);
         }
     }
 
@@ -73,7 +73,7 @@ public class UsuarioResource {
                     .toList();
             return Response.ok(getByCoincidence).build();
         } catch (SQLException e) {
-            return errorEjecucion(e.getMessage(),3);
+            return errorEjecucion(e.getMessage(), 3);
         }
     }
 
@@ -86,11 +86,23 @@ public class UsuarioResource {
             usuarioService.update(usuarioUpdate);
             return Response.ok().build();
         } catch (UserDataInvalidException e) {
-            return  errorEjecucion(e.getMessage(),1);
+            return errorEjecucion(e.getMessage(), 1);
         } catch (EntityAlreadyExistsException e) {
-            return errorEjecucion(e.getMessage(),2);
+            return errorEjecucion(e.getMessage(), 2);
         } catch (SQLException e) {
-            return errorEjecucion(e.getMessage(),3);
+            return errorEjecucion(e.getMessage(), 3);
+        }
+    }
+
+    @PUT
+    @Path("/actualizar/estado/{id}")
+    public Response updateUserEstado(@PathParam("id") int usuarioId) {
+        try {
+            UsuarioService usuarioService = new UsuarioService();
+            usuarioService.updateEstado(usuarioId);
+            return Response.ok().build();
+        } catch (SQLException e) {
+            return errorEjecucion(e.getMessage(), 3);
         }
     }
 
@@ -101,10 +113,10 @@ public class UsuarioResource {
             UsuarioService usuarioService = new UsuarioService();
             usuarioService.delete(id);
             return Response.ok().build();
-        }  catch (UserDataInvalidException e) {
-            return errorEjecucion(e.getMessage(),1);
+        } catch (UserDataInvalidException e) {
+            return errorEjecucion(e.getMessage(), 1);
         } catch (SQLException e) {
-            return errorEjecucion(e.getMessage(),3);
+            return errorEjecucion(e.getMessage(), 3);
         }
     }
 

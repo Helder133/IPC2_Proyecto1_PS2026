@@ -16,9 +16,9 @@ CREATE TABLE IF NOT EXISTS usuario (
 	usuario_id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
 	nombre VARCHAR(250) UNIQUE NOT NULL,
 	password VARCHAR(250) NOT NULL,
-	rol ENUM('Atencion_al_Cliente', 'Operaciones', 'Administrador') DEFAULT 'Atencion_al_Cliente' NOT NULL
-);
-
+	rol ENUM('Atencion_al_Cliente', 'Operaciones', 'Administrador') DEFAULT 'Atencion_al_Cliente' NOT NULL,
+	estado bool DEFAULT 1
+); 
 -- password = 123
 INSERT INTO usuario (nombre, password, rol) VALUES ('admin', 'MTIz','Administrador');
 
@@ -84,8 +84,9 @@ CREATE TABLE IF NOT EXISTS reservacion (
 	CONSTRAINT fk_usuario FOREIGN KEY (usuario_id) REFERENCES usuario (usuario_id)
 );
 
-SELECT r.reservacion_id, r.paquete_id, r.usuario_id, r.fecha_viaje, r.fecha_creacion, r.cantidad_persona, r.costo_total, r.costo_agencia, r.estado AS estado_reservacion, r.reembolso, r.fecha_cancelacion, r.codigo_archivo, p.destino_id, p.nombre AS nombre_destino, p.duracion, p.precio_publico, p.capacidad_maxima, p.descripcion, p.estado AS estado_paquete FROM reservacion r JOIN paquete_turistico p ON r.paquete_id = p.paquete_id 
-SELECT r.reservacion_id, r.paquete_id, r.usuario_id, r.fecha_viaje, r.fecha_creacion, r.cantidad_persona, r.costo_total, r.costo_agencia, r.estado, r.reembolso, r.fecha_cancelacion, r.codigo_archivo, p.destino_id, p.nombre AS nombre_destino, p.duracion, p.precio_publico, p.capacidad_maxima, p.descripcion, p.estado FROM reservacion r JOIN paquete_turistico p ON r.paquete_id = p.paquete_id JOIN reservacion_cliente rc ON r.reservacion_id = rc.reservacion_id WHERE rc.cliente_id = 2
+SELECT r.reservacion_id, r.paquete_id, r.usuario_id, r.fecha_viaje, r.fecha_creacion, r.cantidad_persona, r.costo_total, r.costo_agencia, r.estado AS estado_reservacion, r.reembolso, r.fecha_cancelacion, r.codigo_archivo, p.destino_id, p.nombre AS nombre_destino, p.duracion, p.precio_publico, p.capacidad_maxima, p.descripcion AS descripcion_paquete, p.estado AS estado_paquete, d.nombre AS nombre_destino, d.pais, d.descripcion AS descripcion_destino, d.clima_mejor_epoca, d.imagen  FROM reservacion r JOIN paquete_turistico p ON r.paquete_id = p.paquete_id JOIN destino d ON p.destino_id = d.destino_id;
+
+SELECT r.reservacion_id, r.paquete_id, r.usuario_id, r.fecha_viaje, r.fecha_creacion, r.cantidad_persona, r.costo_total, r.costo_agencia, r.estado, r.reembolso, r.fecha_cancelacion, r.codigo_archivo, p.destino_id, p.nombre AS nombre_destino, p.duracion, p.precio_publico, p.capacidad_maxima, p.descripcion AS descripcion_paquete, p.estado AS estado_paquete, d.nombre AS nombre_destino, d.pais, d.descripcion AS descripcion_destino, d.clima_mejor_epoca, d.imagen FROM reservacion r JOIN paquete_turistico p ON r.paquete_id = p.paquete_id JOIN reservacion_cliente rc ON r.reservacion_id = rc.reservacion_id JOIN destino d ON p.destino_id = d.destino_id  WHERE rc.cliente_id = 2
 
 CREATE TABLE IF NOT EXISTS reservacion_cliente (
 	reservacion_id INT NOT NULL,

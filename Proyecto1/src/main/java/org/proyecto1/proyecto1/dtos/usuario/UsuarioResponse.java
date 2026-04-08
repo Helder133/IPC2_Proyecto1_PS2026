@@ -8,12 +8,14 @@ public class UsuarioResponse {
     private String nombre;
     private String password;
     private EnumUsuario rol;
+    private boolean estado;
 
     public UsuarioResponse(Usuario usuario) {
         this.usuario_id = usuario.getUsuario_id();
         this.nombre = usuario.getNombre();
         this.password = "";
         this.rol = usuario.getRol();
+        this.estado = usuario.isEstado();
     }
 
     public int getUsuario_id() {
@@ -46,5 +48,13 @@ public class UsuarioResponse {
 
     public void setRol(EnumUsuario rol) {
         this.rol = rol;
+    }
+
+    public boolean isEstado() {
+        return estado;
+    }
+
+    public void setEstado(boolean estado) {
+        this.estado = estado;
     }
 }

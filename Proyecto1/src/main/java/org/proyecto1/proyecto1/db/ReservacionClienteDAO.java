@@ -31,6 +31,17 @@ public class ReservacionClienteDAO implements CRUD<ReservacionCliente> {
         }
     }
 
+    public int getNumberClientesRegistrados(int reservacionId) throws SQLException {
+        Connection connection = DBConnection.getInstance().getConnection();
+        try (PreparedStatement preparedStatement = connection.prepareStatement(GET_NUMBER_CLIENTES_REGISTRADOS)) {
+            preparedStatement.setInt(1, reservacionId);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next())  return resultSet.getInt("total_clientes");
+                return 0;
+            }
+        }
+    }
+
     public boolean exists(ReservacionCliente reservacionCliente) throws SQLException {
         Connection connection = DBConnection.getInstance().getConnection();
         try (PreparedStatement exists = connection.prepareStatement(EXISTS)){

@@ -25,7 +25,7 @@
     <div class="row">
         @for (usuario of usuarios(); track $index) {
         <div class="col-md-4 col-sm-6 mb-4">
-            <app-usuario-card-component [usuario]="usuario" (onDelete)="seleccionarUsuario($event)">
+            <app-usuario-card-component [usuario]="usuario" (onDelete)="seleccionarUsuario($event)" (notEstado)="notEstado($event)">
             </app-usuario-card-component>
 
         </div>

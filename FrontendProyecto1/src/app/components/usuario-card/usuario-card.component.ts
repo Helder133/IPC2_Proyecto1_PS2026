@@ -12,6 +12,7 @@ import { RouterLink } from "@angular/router";
 export class UsuarioCardComponent {
   @Input() usuario!: UsuarioResponse;
   @Output() onDelete = new EventEmitter<UsuarioResponse>(); 
+  @Output() notEstado = new EventEmitter<number>();
   enumUsuario = EnumUsuario;
   
 }

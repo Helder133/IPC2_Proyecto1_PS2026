@@ -27,6 +27,10 @@ export class UsuarioService {
         return this.httpClient.get<UsuarioResponse>(`${this.url}/${id}`);
     }
 
+    public notEstado(usuarioId: number): Observable<null> {
+        return this.httpClient.put<any>(`${this.url}/actualizar/estado/${usuarioId}`, null);
+    }
+
     public getUsuarioByCoincidence(coincidence: string): Observable<UsuarioResponse[]> {
         return this.httpClient.get<UsuarioResponse[]>(`${this.url}/${coincidence}`);
     }

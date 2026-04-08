@@ -9,6 +9,9 @@ public class ReservacionCliente {
         this.clienteId = clienteId;
     }
 
+    public ReservacionCliente() {
+    }
+
     public int getReservacionId() {
         return reservacionId;
     }

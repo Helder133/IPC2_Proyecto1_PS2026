@@ -12,9 +12,11 @@ import org.proyecto1.proyecto1.models.paqueteTuristico.PaqueteTuristico;
 import org.proyecto1.proyecto1.models.reservacion.EnumReservacion;
 import org.proyecto1.proyecto1.models.reservacion.Reservacion;
 import org.proyecto1.proyecto1.models.reservacion.ReservacionCliente;
+import org.proyecto1.proyecto1.services.cliente.ClienteService;
 import org.proyecto1.proyecto1.services.pago.HistorialPagoService;
 import org.proyecto1.proyecto1.services.paqueteTuristico.PaqueteTuristicoService;
 
+import javax.swing.text.html.Option;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -51,7 +53,7 @@ public class ReservacionService {
             ClienteDAO clienteDAO = new ClienteDAO();
             for (String dpi : dpiOPasaporte) {
                 if (getNumberClientesRegistrados >= paqueteTuristico.getCapacidadMaxima()) {
-                    throw new UserDataInvalidException("El máximo de clientes en un mismo paquete, ya fue alcanzado =");
+                    throw new UserDataInvalidException("El máximo de clientes en un mismo paquete, ya fue alcanzado.");
                 }
                 Optional<Cliente> clienteOptional = clienteDAO.existsClient(dpi, connection);
                 if (clienteOptional.isEmpty())
@@ -101,6 +103,9 @@ public class ReservacionService {
                 }
                 reservacion.setCostoAgencia(precios.get("precio_agencia"));
             }
+            PaqueteTuristico paqueteTuristico = paqueteTuristicoService.getById(reservacion.getPaqueteId(), connection);
+            if (reservacion.getCantidadPersona() > paqueteTuristico.getCapacidadMaxima())
+                throw new UserDataInvalidException(String.format("Esta tratando de asignar %d clientes a un paquete que solo permite %d clientes", reservacion.getCantidadPersona(), paqueteTuristico.getCapacidadMaxima()));
             reservacionDAO.insert(reservacion, connection);
         } catch (SQLException | UserDataInvalidException e) {
             connection.rollback();
@@ -116,7 +121,29 @@ public class ReservacionService {
         reservacion.setReservacionId(reservacionUpdate.getReservacionId());
         if (!reservacion.isValid()) throw new UserDataInvalidException("Los datos de la reservación son inválidos.");
         ReservacionDAO reservacionDAO = new ReservacionDAO();
-        reservacionDAO.update(reservacion);
+        PaqueteTuristicoService paqueteTuristicoService = new PaqueteTuristicoService();
+        Connection connection = DBConnection.getInstance().getConnection();
+        connection.setAutoCommit(false);
+        try {
+            Map<String, Double> precios = paqueteTuristicoService.getPrecios(reservacion.getPaqueteId(), connection);
+            if (!precios.isEmpty()) {
+                if (precios.get("precio_publico") == null) {
+                    reservacion.setCostoTotal(0);
+                } else {
+                    reservacion.setCostoTotal(precios.get("precio_publico"));
+                }
+                reservacion.setCostoAgencia(precios.get("precio_agencia"));
+            }
+            PaqueteTuristico paqueteTuristico = paqueteTuristicoService.getById(reservacion.getPaqueteId(), connection);
+            if (reservacion.getCantidadPersona() > paqueteTuristico.getCapacidadMaxima())
+                throw new UserDataInvalidException(String.format("Esta tratando de asignar %d clientes a un paquete que solo permite %d clientes", reservacion.getCantidadPersona(), paqueteTuristico.getCapacidadMaxima()));
+            reservacionDAO.update(reservacion, connection);
+        } catch (SQLException | UserDataInvalidException e) {
+            connection.rollback();
+            throw e;
+        } finally {
+            connection.setAutoCommit(true);
+        }
     }
 
     public void cancelarReservacion(int reservacionId) throws SQLException, UserDataInvalidException {
@@ -164,7 +191,12 @@ public class ReservacionService {
 
     public List<Reservacion> getByClientId(int cliente_id) throws SQLException {
         ReservacionDAO reservacionDAO = new ReservacionDAO();
-        return reservacionDAO.getByUserId(cliente_id);
+        return reservacionDAO.getByClienteId(cliente_id);
+    }
+
+    public List<Reservacion> getByUsuarioId(int usuarioId) throws SQLException {
+        ReservacionDAO reservacionDAO = new ReservacionDAO();
+        return reservacionDAO.getByUsuarioId(usuarioId);
     }
 
     public Reservacion getById(int id) throws SQLException, UserDataInvalidException {
@@ -173,11 +205,28 @@ public class ReservacionService {
         return reservacionDAO.getById(id).get();
     }
 
-    public void updateEstado(int reservacion_id, EnumReservacion estado, Connection connection) throws SQLException, UserDataInvalidException {
+    public void updateEstadoACompletada(int reservacion_id) throws SQLException, UserDataInvalidException {
         ReservacionDAO reservacionDAO = new ReservacionDAO();
         if (reservacionDAO.getById(reservacion_id).isEmpty())
             throw new UserDataInvalidException("La reservación no existe");
-        reservacionDAO.updateEstado(reservacion_id, estado, connection);
+        reservacionDAO.updateEstado(reservacion_id, EnumReservacion.Completada);
 
     }
+
+    public void agregarClienteAReservacion(ReservacionCliente reservacionCliente) throws SQLException, UserDataInvalidException, EntityAlreadyExistsException {
+        if (!reservacionCliente.isValid()) throw new UserDataInvalidException("Los datos de la reservación son incorrectos");
+        Reservacion reservacion = getById(reservacionCliente.getReservacionId());
+        ClienteService clienteService = new ClienteService();
+        Cliente cliente = clienteService.getClientById(reservacionCliente.getClienteId());
+        PaqueteTuristicoService paqueteTuristicoService = new PaqueteTuristicoService();
+        PaqueteTuristico paqueteTuristico = paqueteTuristicoService.getById(reservacion.getPaqueteId());
+        ReservacionClienteService reservacionClienteService = new ReservacionClienteService();
+        reservacionClienteService.insertCliente(reservacionCliente, paqueteTuristico.getCapacidadMaxima());
+    }
+
+    public void deleteClienteAReservacion(int reservacionId, int clienteId) throws SQLException, UserDataInvalidException {
+        ReservacionClienteService reservacionClienteService = new ReservacionClienteService();
+        reservacionClienteService.delete(reservacionId, clienteId);
+    }
+
 }

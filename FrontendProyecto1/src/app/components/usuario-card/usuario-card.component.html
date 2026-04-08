@@ -19,13 +19,20 @@
             {{ usuario.rol }}
         </span>
 
-        <div class="border-top pt-3 d-flex justify-content-around">
-            <a routerLink="/usuario/actualizar/{{ usuario.usuario_id }}" class="btn btn-outline-success btn-sm px-3">
-                <i class="bi bi-pencil-square me-1"></i> Editar Usuario</a>
-            <button class="btn btn-outline-danger btn-sm px-3" data-bs-toggle="modal" data-bs-target="#deleteModal"
-                (click)="onDelete.emit(usuario)">
-                <i class="bi bi-trash-fill me-1"></i> Eliminar Usuario
+        <div class="border-top pt-3 d-flex justify-content-center gap-2 flex-wrap">
+            <a routerLink="/usuario/actualizar/{{ usuario.usuario_id }}" class="btn btn-outline-primary btn-sm px-2">
+                <i class="bi bi-pencil-square me-1"></i> Editar
+            </a>
+            <button class="btn btn-sm px-2" [ngClass]="usuario.estado ? 'btn-outline-danger' : 'btn-outline-success'"
+                (click)="notEstado.emit(usuario.usuario_id)">
+                <i class="bi me-1" [ngClass]="usuario.estado ? 'bi-person-fill-x' : 'bi-person-fill-check'"></i>
+                {{ usuario.estado ? 'Desactivar' : 'Activar' }}
             </button>
+            <button class="btn btn-outline-danger btn-sm px-2" data-bs-toggle="modal" data-bs-target="#deleteModal"
+                (click)="onDelete.emit(usuario)">
+                <i class="bi bi-trash-fill me-1"></i> Eliminar
+            </button>
+
         </div>
 
     </div>

@@ -10,11 +10,14 @@ public class Usuario {
     private String nombre;
     private String password;
     private EnumUsuario rol;
+    private boolean estado;
 
     public Usuario(String nombre, String password, EnumUsuario rol) {
         this.nombre = nombre;
         this.password = encriptarContrasena(password);
         this.rol = rol;
+        this.estado = true;
+
     }
 
     public int getUsuario_id() {
@@ -47,6 +50,14 @@ public class Usuario {
 
     public void setRol(EnumUsuario rol) {
         this.rol = rol;
+    }
+
+    public boolean isEstado() {
+        return estado;
+    }
+
+    public void setEstado(boolean estado) {
+        this.estado = estado;
     }
 
     public boolean isValid() {

@@ -30,4 +30,12 @@ public class ReservacionClienteService {
         ReservacionClienteDAO reservacionClienteDAO = new ReservacionClienteDAO();
         return reservacionClienteDAO.getNumberClientesRegistrados(reservacionId, connection);
     }
+
+    public void insertCliente(ReservacionCliente reservacionCliente, int capacidadMaxima) throws SQLException, UserDataInvalidException,  EntityAlreadyExistsException {
+        ReservacionClienteDAO reservacionClienteDAO = new ReservacionClienteDAO();
+        int clientesRegistrados = reservacionClienteDAO.getNumberClientesRegistrados(reservacionCliente.getReservacionId());
+        if (clientesRegistrados >= capacidadMaxima) throw new UserDataInvalidException("El máximo de clientes en un mismo paquete, ya fue alcanzado.");
+        if (reservacionClienteDAO.exists(reservacionCliente)) throw new EntityAlreadyExistsException("El cliente ya está asociado a la reservación");
+        reservacionClienteDAO.insert(reservacionCliente);
+    }
 }

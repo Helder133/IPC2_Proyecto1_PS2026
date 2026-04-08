@@ -2,7 +2,7 @@ package org.proyecto1.proyecto1.models.pago;
 
 import java.time.LocalDate;
 
-public class HistorialPago {
+public class    HistorialPago {
     private int historialId;
     private int reservacionId;
     private double monto;
