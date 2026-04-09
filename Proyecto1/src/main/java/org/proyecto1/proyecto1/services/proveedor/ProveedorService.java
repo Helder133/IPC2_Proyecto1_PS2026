@@ -15,8 +15,10 @@ public class ProveedorService {
     public void insertDesdeArchivo(Proveedor proveedor) throws SQLException, UserDataInvalidException, EntityAlreadyExistsException {
         if (!proveedor.idValid()) throw new UserDataInvalidException("Los datos del proveedor son inválidos");
         ProveedorDAO proveedorDAO = new ProveedorDAO();
-        if (proveedorDAO.existsName(proveedor.getNombre()) != -1)
+        if (proveedorDAO.existsName(proveedor.getProveedor_id(), proveedor.getNombre()))
             throw new EntityAlreadyExistsException("El nombre que desea registrar, ya esta registrado en otro proveedor.");
+        if (StringUtils.isNotBlank(proveedor.getContacto()) && proveedorDAO.existsContacto(proveedor.getProveedor_id(), proveedor.getContacto()))
+            throw new EntityAlreadyExistsException("El contacto que desea registrar, ya esta registrado en otro proveedor.");
         proveedorDAO.insert(proveedor);
     }
 
@@ -25,19 +27,23 @@ public class ProveedorService {
         if (StringUtils.isNotBlank(proveedorRequest.getContacto())) proveedor.setContacto(proveedorRequest.getContacto());
         if (!proveedor.idValid()) throw new UserDataInvalidException("Los datos del proveedor son inválidos");
         ProveedorDAO proveedorDAO = new ProveedorDAO();
-        if (proveedorDAO.existsName(proveedor.getNombre()) != -1)
+        if (proveedorDAO.existsName(proveedor.getProveedor_id(), proveedor.getNombre()))
             throw new EntityAlreadyExistsException("El nombre que desea registrar, ya esta registrado en otro proveedor.");
+        if (proveedorDAO.existsContacto(proveedor.getProveedor_id(), proveedor.getContacto()))
+            throw new EntityAlreadyExistsException("El contacto que desea registrar, ya esta registrado en otro proveedor.");
         proveedorDAO.insert(proveedor);
     }
 
     public void update(ProveedorUpdate proveedorUpdate) throws SQLException, UserDataInvalidException, EntityAlreadyExistsException {
         Proveedor proveedor = new Proveedor(proveedorUpdate.getNombre(), proveedorUpdate.getPais(), proveedorUpdate.getTipo());
         if (StringUtils.isNotBlank(proveedorUpdate.getContacto())) proveedor.setContacto(proveedorUpdate.getContacto());
-        proveedor.setProveedor_id(proveedorUpdate.getProveedor_id());
+        proveedor.setProveedor_id(proveedorUpdate.getProveedorId());
         if (!proveedor.idValid()) throw new UserDataInvalidException("Los datos del proveedor son inválidos");
         ProveedorDAO proveedorDAO = new ProveedorDAO();
-        if (proveedorDAO.validUpdate(proveedor.getProveedor_id(), proveedor.getNombre()))
+        if (proveedorDAO.existsName(proveedor.getProveedor_id(), proveedor.getNombre()))
             throw new EntityAlreadyExistsException("El nombre que desea registrar, ya esta registrado en otro proveedor.");
+        if (proveedorDAO.existsContacto(proveedor.getProveedor_id(), proveedor.getContacto()))
+            throw new EntityAlreadyExistsException("El contacto que desea registrar, ya esta registrado en otro proveedor.");
         proveedorDAO.update(proveedor);
     }
 

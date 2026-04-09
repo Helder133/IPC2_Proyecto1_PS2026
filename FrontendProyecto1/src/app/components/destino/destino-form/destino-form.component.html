@@ -1,0 +1,47 @@
+<form [formGroup]="destinoForm" (ngSubmit)="guardar()" class="p-4 bg-white bg-opacity-50 rounded shadow-sm">
+
+    <div class="row g-4">
+        <div class="col-md-6">
+            <label for="nombre" class="form-label fw-bold">Nombre del Destino</label>
+            <input type="text" id="nombre" class="form-control" formControlName="nombre" placeholder="Ej. Roatán"
+                [ngClass]="{'is-invalid': destinoForm.get('nombre')?.invalid && destinoForm.get('nombre')?.touched}">
+            <div class="invalid-feedback">El nombre es obligatorio.</div>
+        </div>
+
+        <div class="col-md-6">
+            <label for="pais" class="form-label fw-bold">País</label>
+            <input type="text" id="pais" class="form-control" formControlName="pais" placeholder="Ej. Honduras"
+                [ngClass]="{'is-invalid': destinoForm.get('pais')?.invalid && destinoForm.get('pais')?.touched}">
+            <div class="invalid-feedback">El país es obligatorio.</div>
+        </div>
+
+        <div class="col-12">
+            <label for="descripcion" class="form-label fw-bold">Descripción Corta</label>
+            <textarea id="descripcion" class="form-control" formControlName="descripcion" rows="3" placeholder="Describe los atractivos principales de este destino..."
+                [ngClass]="{'is-invalid': destinoForm.get('descripcion')?.invalid && destinoForm.get('descripcion')?.touched}"></textarea>
+            <div class="invalid-feedback">La descripción es obligatoria.</div>
+        </div>
+
+        <div class="col-md-6">
+            <label for="clima" class="form-label fw-bold">Clima y Mejor Época</label>
+            <input type="text" id="clima" class="form-control" formControlName="clima_mejor_epoca" placeholder="Ej. Tropical - De marzo a julio"
+                [ngClass]="{'is-invalid': destinoForm.get('clima_mejor_epoca')?.invalid && destinoForm.get('clima_mejor_epoca')?.touched}">
+            <div class="invalid-feedback">Debe especificar el clima o la mejor época.</div>
+        </div>
+
+        <div class="col-md-6">
+            <label for="imagen" class="form-label fw-bold">Ruta de la Imagen</label>
+            <input type="text" id="imagen" class="form-control" formControlName="imagen" placeholder="assets/img/destino1.jpg o URL de internet"
+                [ngClass]="{'is-invalid': destinoForm.get('imagen')?.invalid && destinoForm.get('imagen')?.touched}">
+            <div class="invalid-feedback">La ruta de la imagen es obligatoria.</div>
+        </div>
+
+        <div class="col-12 text-end mt-4">
+            <button type="submit" class="btn btn-success px-4 fw-bold">
+                <i class="bi" [ngClass]="destinoEditar ? 'bi-pencil-square' : 'bi-save'"></i>
+                {{ destinoEditar ? 'Actualizar Destino' : 'Guardar Destino' }}
+            </button>
+        </div>
+    </div>
+
+</form>

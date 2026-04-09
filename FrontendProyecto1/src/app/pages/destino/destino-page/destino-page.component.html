@@ -1,0 +1,57 @@
+<div class="container mt-4">
+    <div class="row mb-4 align-items-center">
+        <div class="col-md-8">
+            <h2 class="mb-0"><i class="bi bi-geo-alt-fill text-primary me-2"></i> Gestión de Destinos</h2>
+            <p class="text-muted mt-1">Administra los lugares turísticos que ofrece la agencia.</p>
+        </div>
+        <div class="col-md-4 text-md-end mt-3 mt-md-0">
+            <button class="btn btn-success shadow-sm px-4 fw-bold" routerLink="/destino/crear">
+                <i class="bi bi-plus-circle-fill me-2"></i> Crear Nuevo Destino
+            </button>
+        </div>
+    </div>
+
+    <div class="row mb-5">
+        <div class="col-md-6 offset-md-3 d-flex shadow-sm rounded">
+            <input type="text" class="form-control me-2 border-0 bg-light"
+                placeholder="Ingrese un nombre para buscar..." [(ngModel)]="concidencia" (keyup.enter)="buscar()">
+            <button class="btn btn-primary px-4" (click)="buscar()">
+                <i class="bi bi-search"></i> Buscar
+            </button>
+        </div>
+    </div>
+
+    <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1055;">
+        @if (mensajeError()) {
+        <div class="alert alert-danger shadow-lg border-0 d-flex align-items-center fade show">
+            <i class="bi bi-exclamation-triangle-fill fs-4 me-3"></i>
+            <div>{{ mensajeError() }}</div>
+        </div>
+        }
+    </div>
+
+    @if (cargando()) {
+    <div class="text-center py-5">
+        <div class="spinner-border text-primary" role="status"></div>
+        <p class="mt-2 fw-semibold">Cargando catálogo...</p>
+    </div>
+    } @else {
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 mb-5">
+        @for (destino of destinos(); track $index) {
+        <div class="col">
+            <app-destino-card-component [destino]="destino" (onDelete)="seleccionarDestino($event)">
+            </app-destino-card-component>
+        </div>
+        } @empty {
+        <div class="col-12 text-center py-5 text-muted bg-light rounded-3 border border-dashed">
+            <i class="bi bi-image fs-1 d-block mb-2 text-secondary"></i>
+            <h5 class="fw-bold">No hay destinos registrados</h5>
+            <p>Haz clic en "Crear Nuevo Destino" para comenzar tu catálogo.</p>
+        </div>
+        }
+    </div>
+    }
+</div>
+
+<confirmation-modal-destino-component [destino]="destinoSeleccionado()" (onConfirm)="eliminarDestino()">
+</confirmation-modal-destino-component>

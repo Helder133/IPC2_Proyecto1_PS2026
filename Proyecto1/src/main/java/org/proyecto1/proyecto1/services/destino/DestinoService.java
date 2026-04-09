@@ -23,9 +23,9 @@ public class DestinoService {
 
     public void insert(DestinoRequest destinoRequest) throws SQLException, UserDataInvalidException, EntityAlreadyExistsException {
         Destino destino = new Destino(destinoRequest.getNombre(), destinoRequest.getPais(), destinoRequest.getDescripcion());
-        if (StringUtils.isNotBlank(destino.getClima_mejor_epoca()))
+        if (StringUtils.isNotBlank(destinoRequest.getClima_mejor_epoca()))
             destino.setClima_mejor_epoca(destinoRequest.getClima_mejor_epoca());
-        if (StringUtils.isNotBlank(destino.getImagen())) destino.setImagen(destinoRequest.getImagen());
+        if (StringUtils.isNotBlank(destinoRequest.getImagen())) destino.setImagen(destinoRequest.getImagen());
         if (!destino.isValid()) throw new UserDataInvalidException("Los datos del destino son inválidos.");
         DestinoDAO destinoDAO = new DestinoDAO();
         if (destinoDAO.existsName(destino.getNombre()) != -1)
@@ -35,7 +35,7 @@ public class DestinoService {
 
     public void update(DestinoUpdate destinoUpdate) throws SQLException, UserDataInvalidException, EntityAlreadyExistsException {
         Destino destino = new Destino(destinoUpdate.getNombre(), destinoUpdate.getPais(), destinoUpdate.getDescripcion());
-        destino.setDestino_id(destinoUpdate.getDestino_id());
+        destino.setDestino_id(destinoUpdate.getDestinoId());
         if (StringUtils.isNotBlank(destinoUpdate.getClima_mejor_epoca()))
             destino.setClima_mejor_epoca(destinoUpdate.getClima_mejor_epoca());
         if (StringUtils.isNotBlank(destinoUpdate.getImagen())) destino.setImagen(destinoUpdate.getImagen());

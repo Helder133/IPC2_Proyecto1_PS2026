@@ -6,6 +6,12 @@ import { UsuarioPageComponent } from './pages/usuario/usuario-page/usuario-page.
 import { CreateUsuarioPageComponent } from './pages/usuario/create-usuario-page.component/create-usuario-page.component';
 import { UpdateUsuarioPageComponent } from './pages/usuario/update-usuario-page.component/update-usuario-page.component';
 import { CargaArchivoPageComponent } from './pages/carga-archivo/carga-archivo-page.component';
+import { DestinoPageComponent } from './pages/destino/destino-page/destino-page.component';
+import { CreateDestinoPageComponent } from './pages/destino/create-destino-page/create-destino-page.component';
+import { UpdateDestinoPageComponent } from './pages/destino/update-destino-page/update-destino-page.component';
+import { ProveedorPageComponent } from './pages/proveedor/proveedor-page/proveedor-page.component';
+import { UpdateProveedorPageComponent } from './pages/proveedor/update-proveedor-page/update-proveedor-page.component';
+import { CreateProveedorPageComponent } from './pages/proveedor/create-proveedor-page/create-proveedor-page.component';
 
 export const routes: Routes = [
     {
@@ -40,6 +46,30 @@ export const routes: Routes = [
             {
                 path: 'carga-archivo',
                 component: CargaArchivoPageComponent
+            },
+            {
+                path: 'destino',
+                component: DestinoPageComponent
+            },
+            {
+                path: 'destino/crear',
+                component: CreateDestinoPageComponent
+            },
+            {
+                path: 'destino/actualizar/:id',
+                component: UpdateDestinoPageComponent
+            },
+            {
+                path: 'proveedor',
+                component: ProveedorPageComponent
+            },
+            {
+                path: 'proveedor/crear',
+                component: CreateProveedorPageComponent
+            },
+            {
+                path: 'proveedor/actualizar/:id',
+                component: UpdateProveedorPageComponent
             }
         ]
 

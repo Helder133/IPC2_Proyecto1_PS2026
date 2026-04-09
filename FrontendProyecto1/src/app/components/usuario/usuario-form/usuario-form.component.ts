@@ -1,9 +1,9 @@
 import { Component, EventEmitter, inject, Input, OnInit, Output, signal } from '@angular/core';
-import { UsuarioResponse } from '../../models/usuario/UsuarioResponse';
-import { UsuarioRequest } from '../../models/usuario/UsuarioRequest';
+import { UsuarioResponse } from '../../../models/usuario/UsuarioResponse';
+import { UsuarioRequest } from '../../../models/usuario/UsuarioRequest';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { EnumUsuario } from '../../models/usuario/EnumUsuario';
+import { EnumUsuario } from '../../../models/usuario/EnumUsuario';
 
 @Component({
   selector: 'app-usuario-form-component',

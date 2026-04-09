@@ -20,7 +20,8 @@ public class ProveedorDAO implements CRUD<Proveedor> {
     private static final String GET_BY_ID = "SELECT * FROM proveedor WHERE proveedor_id = ?";
     private static final String GET_ALL = "SELECT * FROM proveedor";
     private static final String EXISTS_NAME = "SELECT proveedor_id FROM proveedor WHERE nombre = ?";
-    private static final String VALIDAR_UPDATE = "SELECT proveedor_id FROM proveedor WHERE proveedor_id <> ? AND nombre = ?";
+    private static final String VALIDAR_UPDATE_NAME = "SELECT proveedor_id FROM proveedor WHERE proveedor_id <> ? AND nombre = ?";
+    private static final String VALIDAR_UPDATE_CONTACTO = "SELECT proveedor_id FROM proveedor WHERE proveedor_id <> ? AND contacto = ?";
     private static final String GET_BY_COINCIDENCE = "SELECT * FROM proveedor WHERE nombre LIKE ?";
 
     public List<Proveedor> getByCoincidence(String parameter) throws SQLException {
@@ -35,11 +36,22 @@ public class ProveedorDAO implements CRUD<Proveedor> {
         }
     }
 
-    public boolean validUpdate(int proveedor_id, String nombre) throws SQLException {
+    public boolean existsName(int proveedor_id, String nombre) throws SQLException {
         Connection connection = DBConnection.getInstance().getConnection();
-        try (PreparedStatement validUpdate = connection.prepareStatement(VALIDAR_UPDATE)) {
+        try (PreparedStatement validUpdate = connection.prepareStatement(VALIDAR_UPDATE_NAME)) {
             validUpdate.setInt(1, proveedor_id);
             validUpdate.setString(2, nombre);
+            try (ResultSet resultSet = validUpdate.executeQuery()) {
+                return resultSet.next();
+            }
+        }
+    }
+
+    public boolean existsContacto(int proveedor_id, String contacto) throws SQLException {
+        Connection connection = DBConnection.getInstance().getConnection();
+        try (PreparedStatement validUpdate = connection.prepareStatement(VALIDAR_UPDATE_CONTACTO)) {
+            validUpdate.setInt(1, proveedor_id);
+            validUpdate.setString(2, contacto);
             try (ResultSet resultSet = validUpdate.executeQuery()) {
                 return resultSet.next();
             }

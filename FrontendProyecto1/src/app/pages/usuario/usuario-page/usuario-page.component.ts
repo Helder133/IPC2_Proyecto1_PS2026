@@ -3,9 +3,9 @@ import { UsuarioResponse } from '../../../models/usuario/UsuarioResponse';
 import { UsuarioService } from '../../../services/usuario/usuario.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { UsuarioCardComponent } from '../../../components/usuario-card/usuario-card.component';
 import { ConfirmationModalUsuarioComponent } from "../../../components/confirmation-modal/confirmation-modal-usuario/confirmation-modal-usuario.component";
 import { RouterLink } from '@angular/router';
+import { UsuarioCardComponent } from '../../../components/usuario/usuario-card/usuario-card.component';
 
 @Component({
   selector: 'app-usuario-page.component',

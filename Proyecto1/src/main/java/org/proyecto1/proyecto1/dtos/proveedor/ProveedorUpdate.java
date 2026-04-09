@@ -3,18 +3,18 @@ package org.proyecto1.proyecto1.dtos.proveedor;
 import org.proyecto1.proyecto1.models.proveedor.EnumProveedor;
 
 public class ProveedorUpdate {
-    private int proveedor_id;
+    private int proveedorId;
     private String nombre;
     private String pais;
     private EnumProveedor tipo;
     private String contacto;
 
-    public int getProveedor_id() {
-        return proveedor_id;
+    public int getProveedorId() {
+        return proveedorId;
     }
 
-    public void setProveedor_id(int proveedor_id) {
-        this.proveedor_id = proveedor_id;
+    public void setProveedorId(int proveedorId) {
+        this.proveedorId = proveedorId;
     }
 
     public String getNombre() {

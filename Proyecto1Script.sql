@@ -19,6 +19,7 @@ CREATE TABLE IF NOT EXISTS usuario (
 	rol ENUM('Atencion_al_Cliente', 'Operaciones', 'Administrador') DEFAULT 'Atencion_al_Cliente' NOT NULL,
 	estado bool DEFAULT 1
 ); 
+
 -- password = 123
 INSERT INTO usuario (nombre, password, rol) VALUES ('admin', 'MTIz','Administrador');
 

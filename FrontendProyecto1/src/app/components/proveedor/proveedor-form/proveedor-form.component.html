@@ -1,0 +1,45 @@
+<form [formGroup]="proveedorForm" (ngSubmit)="guardar()" class="p-4 bg-white bg-opacity-50 rounded shadow-sm border-top border-warning border-3">
+
+    <div class="row g-4">
+        <div class="col-md-6">
+            <label for="nombre" class="form-label fw-bold text-dark">Nombre del Proveedor</label>
+            <input type="text" id="nombre" class="form-control" formControlName="nombre" placeholder="Ej. TACA Airlines"
+                [ngClass]="{'is-invalid': proveedorForm.get('nombre')?.invalid && proveedorForm.get('nombre')?.touched}">
+            <div class="invalid-feedback text-dark fw-bold">El nombre es obligatorio.</div>
+        </div>
+
+        <div class="col-md-6">
+            <label for="pais" class="form-label fw-bold text-dark">País de Origen</label>
+            <input type="text" id="pais" class="form-control" formControlName="pais" placeholder="Ej. Guatemala"
+                [ngClass]="{'is-invalid': proveedorForm.get('pais')?.invalid && proveedorForm.get('pais')?.touched}">
+            <div class="invalid-feedback text-dark fw-bold">El país es obligatorio.</div>
+        </div>
+
+        <div class="col-md-6">
+            <label for="tipo" class="form-label fw-bold text-dark">Tipo de Servicio</label>
+            <select id="tipo" class="form-select" formControlName="tipo"
+                [ngClass]="{'is-invalid': proveedorForm.get('tipo')?.invalid && proveedorForm.get('tipo')?.touched}">
+                <option value="" disabled selected>Seleccione un tipo...</option>
+                @for (tipo of tiposProveedor; track tipo) {
+                    <option [value]="tipo">{{ tipo }}</option>
+                }
+            </select>
+            <div class="invalid-feedback text-dark fw-bold">Debe seleccionar el tipo de proveedor.</div>
+        </div>
+
+        <div class="col-md-6">
+            <label for="contacto" class="form-label fw-bold text-dark">Información de Contacto</label>
+            <input type="text" id="contacto" class="form-control" formControlName="contacto" placeholder="Teléfono, email o sitio web"
+                [ngClass]="{'is-invalid': proveedorForm.get('contacto')?.invalid && proveedorForm.get('contacto')?.touched}">
+            <div class="invalid-feedback text-dark fw-bold">El contacto es obligatorio.</div>
+        </div>
+
+        <div class="col-12 text-end mt-4">
+            <button type="submit" class="btn btn-warning px-4 fw-bold text-dark">
+                <i class="bi" [ngClass]="proveedorEditar ? 'bi-pencil-square' : 'bi-save'"></i>
+                {{ proveedorEditar ? 'Actualizar Proveedor' : 'Guardar Proveedor' }}
+            </button>
+        </div>
+    </div>
+
+</form>

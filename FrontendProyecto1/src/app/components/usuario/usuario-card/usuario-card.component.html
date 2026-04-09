@@ -1,16 +1,13 @@
 <div class="card h-100 shadow-sm border-0 border-top border-primary border-3">
     <div class="card-body p-4 text-center">
-
         <div class="mb-3">
             <div class="bg-light text-primary rounded-circle d-inline-flex align-items-center justify-content-center shadow-inner"
                 style="width: 70px; height: 70px;">
                 <i class="bi bi-person-bounding-box fs-1"></i>
             </div>
         </div>
-
         <h5 class="card-title fw-bold mb-1 text-dark text-truncate">{{ usuario.nombre }}</h5>
         <p class="text-muted small mb-3">ID: #{{ usuario.usuario_id }}</p>
-
         <span class="badge rounded-pill mb-4 px-3 py-2 fw-bold" [ngClass]="{
             'bg-success text-light': usuario.rol === enumUsuario.Administrador,
             'bg-info text-dark': usuario.rol === enumUsuario.Operaciones,
@@ -18,7 +15,6 @@
             }">
             {{ usuario.rol }}
         </span>
-
         <div class="border-top pt-3 d-flex justify-content-center gap-2 flex-wrap">
             <a routerLink="/usuario/actualizar/{{ usuario.usuario_id }}" class="btn btn-outline-primary btn-sm px-2">
                 <i class="bi bi-pencil-square me-1"></i> Editar
@@ -32,8 +28,6 @@
                 (click)="onDelete.emit(usuario)">
                 <i class="bi bi-trash-fill me-1"></i> Eliminar
             </button>
-
         </div>
-
     </div>
 </div>

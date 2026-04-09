@@ -11,6 +11,9 @@ export class HeaderComponent implements OnInit {
 
   nombreUsuario = signal<string>('');
   rolUsuario = signal<EnumUsuario>(null!);
+
+  enumUsuario = EnumUsuario;
+
   private router = inject(Router);
 
   ngOnInit(): void {

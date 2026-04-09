@@ -3,7 +3,7 @@
         <div class="col">
             <h1 class="display-5 fw-bold text-dark">¡Hola, {{ nombreUsuario() }}!</h1>
             <p class="lead text-secondary">Bienvenido al panel de control. Tu rol actual es: <span
-                    class="badge bg-info text-dark">{{ rolUsuario() }}</span></p>
+                    class="badge bg-info text-dark fw-bold">{{ rolUsuario() }}</span></p>
         </div>
     </div>
 
@@ -32,8 +32,7 @@
         <div class="col-md-4">
             <div class="card h-100 shadow-sm border-0 border-start border-warning border-4 bg-light">
                 <div class="card-body">
-                    <h5 class="card-title fw-bold text-muted"><i class="bi bi-bar-chart text-warning me-2"></i>Reportes
-                        (Próximamente)</h5>
+                    <h5 class="card-title fw-bold text-muted"><i class="bi bi-bar-chart text-warning me-2"></i>Reportes</h5>
                     <p class="card-text text-muted">Módulo en construcción. Se habilitará cuando existan datos.</p>
                     <button class="btn btn-secondary btn-sm" disabled>Ver Reportes</button>
                 </div>
@@ -42,9 +41,62 @@
     </div>
     }
 
-    @if (rolUsuario() === enumUsuario.Atencion_al_Cliente) {
+    @if (rolUsuario() === enumUsuario.Operaciones) {
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm border-0 border-start border-success border-4">
+                <div class="card-body">
+                    <h5 class="card-title fw-bold"><i class="bi bi-geo-alt-fill text-success me-2"></i>Destinos</h5>
+                    <p class="card-text text-muted">Gestiona los destinos turísticos disponibles.</p>
+                    <a routerLink="/destino" class="btn btn-outline-success btn-sm">Ir a Destinos</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm border-0 border-start border-warning border-4">
+                <div class="card-body">
+                    <h5 class="card-title fw-bold"><i class="bi bi-building text-warning me-2"></i>Proveedores</h5>
+                    <p class="card-text text-muted">Registra y administra las empresas proveedoras (aerolíneas, hoteles).</p>
+                    <a routerLink="/proveedor" class="btn btn-outline-warning btn-sm">Ir a Proveedores</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm border-0 border-start border-info border-4">
+                <div class="card-body">
+                    <h5 class="card-title fw-bold"><i class="bi bi-box-seam text-info me-2"></i>Paquetes Turísticos</h5>
+                    <p class="card-text text-muted">Crea paquetes, asigna servicios y monitorea la demanda.</p>
+                    <a routerLink="/operaciones/paquetes" class="btn btn-outline-info btn-sm">Ir a Paquetes</a>
+                </div>
+            </div>
+        </div>
+    </div>
     }
 
-    @if (rolUsuario() === enumUsuario.Operaciones) {
+    @if (rolUsuario() === enumUsuario.Atencion_al_Cliente) {
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm border-0 border-start border-primary border-4">
+                <div class="card-body">
+                    <h5 class="card-title fw-bold"><i class="bi bi-person-vcard text-primary me-2"></i>Clientes</h5>
+                    <p class="card-text text-muted">Registra y consulta la información de los viajeros.</p>
+                    <a routerLink="/clientes" class="btn btn-outline-primary btn-sm">Gestionar Clientes</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm border-0 border-start border-danger border-4">
+                <div class="card-body">
+                    <h5 class="card-title fw-bold"><i class="bi bi-calendar-check text-danger me-2"></i>Reservaciones</h5>
+                    <p class="card-text text-muted">Crea reservaciones y registra pagos o anticipos.</p>
+                    <a routerLink="/reservaciones" class="btn btn-outline-danger btn-sm">Ir a Reservaciones</a>
+                </div>
+            </div>
+        </div>
+    </div>
     }
+
 </div>

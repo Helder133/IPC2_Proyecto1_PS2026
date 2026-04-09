@@ -1,0 +1,12 @@
+<div class="container mt-4 mb-5">
+    @if (mensajeError()) {
+    <div class="alert alert-danger shadow-lg border-0 d-flex align-items-center fade show" role="alert">
+        <i class="bi bi-exclamation-triangle-fill fs-4 me-3"></i>
+        <div>
+            {{ mensajeError() }}
+        </div>
+    </div>
+    }
+    <h3 class="mb-4 text-primary"><i class="bi bi-node-plus-fill me-2"></i> Registrar Nuevo Destino</h3>
+    <app-destino-form-component (destino)="crearDestino($event)"></app-destino-form-component>
+</div>

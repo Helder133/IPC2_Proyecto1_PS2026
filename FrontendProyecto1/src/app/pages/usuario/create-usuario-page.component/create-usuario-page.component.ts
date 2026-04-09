@@ -2,7 +2,7 @@ import { Component, inject, signal } from '@angular/core';
 import { UsuarioService } from '../../../services/usuario/usuario.service';
 import { Router } from '@angular/router';
 import { UsuarioRequest } from '../../../models/usuario/UsuarioRequest';
-import { UsuarioFormComponent } from "../../../components/usuario-form/usuario-form.component";
+import { UsuarioFormComponent } from '../../../components/usuario/usuario-form/usuario-form.component';
 
 @Component({
   selector: 'app-create-usuario-page',

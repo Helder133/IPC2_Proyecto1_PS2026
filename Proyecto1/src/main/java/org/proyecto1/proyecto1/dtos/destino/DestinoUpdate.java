@@ -1,19 +1,19 @@
 package org.proyecto1.proyecto1.dtos.destino;
 
 public class DestinoUpdate {
-    private int destino_id;
+    private int destinoId;
     private String nombre;
     private String pais;
     private String descripcion;
     private String clima_mejor_epoca;
     private String imagen;
 
-    public int getDestino_id() {
-        return destino_id;
+    public int getDestinoId() {
+        return destinoId;
     }
 
-    public void setDestino_id(int destino_id) {
-        this.destino_id = destino_id;
+    public void setDestinoId(int destinoId) {
+        this.destinoId = destinoId;
     }
 
     public String getNombre() {

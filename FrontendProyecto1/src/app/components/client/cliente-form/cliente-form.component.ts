@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, inject, Input, OnInit, Output, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ClienteResponse } from '../../models/cliente/ClienteResponse';
-import { ClienteRequest } from '../../models/cliente/clienteRequest';
+import { ClienteResponse } from '../../../models/cliente/ClienteResponse';
+import { ClienteRequest } from '../../../models/cliente/clienteRequest';
 import { validate } from '@angular/forms/signals';
 
 @Component({

@@ -1,0 +1,32 @@
+<div class="card h-100 bg-dark text-light border-secondary shadow-sm">
+    <div class="card-body p-4 d-flex flex-column">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <div class="fs-2">
+                <i class="bi" [ngClass]="getIconoPorTipo(proveedor.tipo)"></i>
+            </div>
+            <span class="badge bg-secondary rounded-pill px-3 py-2 border border-light text-white">
+                {{ proveedor.tipo }}
+            </span>
+        </div>
+        <h5 class="card-title fw-bold mb-1 text-truncate">{{ proveedor.nombre }}</h5>
+        <p class="text-muted small mb-3">ID: #{{ proveedor.proveedorId }}</p>
+        <div class="mb-2">
+            <i class="bi bi-geo-alt-fill text-danger me-2"></i>
+            <span class="fw-semibold">{{ proveedor.pais }}</span>
+        </div>
+        <div class="mb-4 text-truncate">
+            <i class="bi bi-telephone-fill text-success me-2"></i>
+            <span class="text-light opacity-75">{{ proveedor.contacto }}</span>
+        </div>
+        <div class="mt-auto border-top border-secondary pt-3 d-flex justify-content-between gap-2">
+            <a routerLink="/proveedor/actualizar/{{ proveedor.proveedorId }}"
+                class="btn btn-outline-light btn-sm flex-grow-1">
+                <i class="bi bi-pencil-square me-1"></i> Editar
+            </a>
+            <button class="btn btn-outline-danger btn-sm flex-grow-1" data-bs-toggle="modal"
+                data-bs-target="#deleteModal" (click)="onDelete.emit(proveedor)">
+                <i class="bi bi-trash-fill me-1"></i> Eliminar
+            </button>
+        </div>
+    </div>
+</div>

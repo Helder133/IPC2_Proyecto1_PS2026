@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { UsuarioResponse } from '../../models/usuario/UsuarioResponse';
-import { EnumUsuario } from '../../models/usuario/EnumUsuario';
+import { UsuarioResponse } from '../../../models/usuario/UsuarioResponse';
+import { EnumUsuario } from '../../../models/usuario/EnumUsuario';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from "@angular/router";
 

@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { UsuarioUpdate } from '../../../models/usuario/UsuarioUpdate';
 import { UsuarioResponse } from '../../../models/usuario/UsuarioResponse';
 import { UsuarioRequest } from '../../../models/usuario/UsuarioRequest';
-import { UsuarioFormComponent } from "../../../components/usuario-form/usuario-form.component";
+import { UsuarioFormComponent } from '../../../components/usuario/usuario-form/usuario-form.component';
 
 @Component({
   selector: 'app-update-usuario-page.component',
@@ -17,8 +17,8 @@ export class UpdateUsuarioPageComponent implements OnInit {
   usuarioOriginal = signal<UsuarioResponse>(null!);
 
   private usuarioService = inject(UsuarioService);
-  private router = inject(Router);
-  private route = inject(ActivatedRoute);
+    private router = inject(Router);
+    private route = inject(ActivatedRoute);
 
   mensajeError = signal<string>('');
 
