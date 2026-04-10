@@ -1,0 +1,86 @@
+<div class="container mt-4 text-light pb-5">
+    
+    <div class="d-flex align-items-center mb-4">
+        <a routerLink="/paquete" class="btn btn-outline-secondary me-3 shadow-sm rounded-circle" style="width: 40px; height: 40px; padding: 6px;">
+            <i class="bi bi-arrow-left fs-5"></i>
+        </a>
+        <div>
+            <h2 class="mb-0 fw-bold text-primary"><i class="bi bi-list-check me-2"></i> Itinerario y Servicios</h2>
+            <p class="text-light opacity-75 mt-1 mb-0">Gestiona los proveedores asignados a este paquete.</p>
+        </div>
+    </div>
+
+    <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1055;">
+        @if (mensajeError()) {
+            <div class="alert alert-danger bg-danger text-white shadow-lg border-0 fade show"><i class="bi bi-exclamation-triangle-fill me-2"></i>{{ mensajeError() }}</div>
+        }
+    </div>
+
+    @if (cargando()) {
+        <div class="text-center py-5"><div class="spinner-border text-primary"></div><p class="mt-2">Cargando...</p></div>
+    } @else if (paqueteActual()) {
+        
+        <div class="card bg-dark border-primary mb-4 shadow-sm">
+            <div class="card-body p-4 d-flex justify-content-between align-items-center">
+                <div>
+                    <span class="badge bg-primary mb-2">Paquete #{{ paqueteActual()!.paqueteId }}</span>
+                    <h4 class="fw-bold text-white mb-0">{{ paqueteActual()!.nombre }}</h4>
+                </div>
+                <div class="text-end">
+                    <div class="text-muted small">Costo al Público</div>
+                    <div class="fs-4 fw-bold text-success">Q{{ paqueteActual()!.precioPublico }}</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            @if (mostrarFormulario()) {
+                <div class="col-lg-5 mb-4">
+                    <h5 class="fw-bold text-info mb-3">
+                        <i class="bi" [ngClass]="servicioEnEdicion() ? 'bi-pencil' : 'bi-plus-circle'"></i>
+                        {{ servicioEnEdicion() ? 'Editar Servicio' : 'Nuevo Servicio' }}
+                    </h5>
+                    
+                    <app-servicio-form-component
+                        [paqueteId]="paqueteActual()!.paqueteId"
+                        [listaProveedores]="listaProveedores()"
+                        [servicioEditar]="servicioEnEdicion()"
+                        (servicio)="guardarServicio($event)"
+                        (cancelar)="cerrarFormulario()">
+                    </app-servicio-form-component>
+                </div>
+            }
+
+            <div [ngClass]="mostrarFormulario() ? 'col-lg-7' : 'col-12'">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="fw-bold text-white mb-0"><i class="bi bi-collection me-2"></i> Servicios Incluidos</h5>
+                    @if (!mostrarFormulario()) {
+                        <button class="btn btn-primary btn-sm fw-bold shadow-sm" (click)="abrirNuevoServicio()">
+                            <i class="bi bi-plus-lg me-1"></i> Agregar
+                        </button>
+                    }
+                </div>
+
+                @if (listaServicios().length === 0) {
+                    <div class="text-center py-5 border border-secondary rounded-3" style="background-color: rgba(255,255,255,0.05);">
+                        <i class="bi bi-box-seam text-secondary fs-1 d-block mb-2"></i>
+                        <p class="text-light opacity-75">Este paquete aún no tiene servicios asignados.</p>
+                        @if (!mostrarFormulario()) {
+                            <button class="btn btn-outline-primary mt-2" (click)="abrirNuevoServicio()">Agregar el primero</button>
+                        }
+                    </div>
+                } @else {
+                    <div class="d-flex flex-column gap-2">
+                        @for (servicio of listaServicios(); track servicio.proveedorId) {
+                            <app-servicio-card-component
+                                [servicio]="servicio"
+                                (onEdit)="abrirEditarServicio($event)"
+                                (onDelete)="seleccionarServicio($event)">
+                            </app-servicio-card-component>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    }
+</div>

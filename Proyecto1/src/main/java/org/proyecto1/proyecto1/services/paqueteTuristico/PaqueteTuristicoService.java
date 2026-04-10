@@ -45,7 +45,6 @@ public class PaqueteTuristicoService {
         if (StringUtils.isNotBlank(paqueteTuristicoUpdate.getDescripcion()))
             paqueteTuristico.setDescripcion(paqueteTuristicoUpdate.getDescripcion());
         paqueteTuristico.setPaqueteId(paqueteTuristicoUpdate.getPaqueteId());
-        paqueteTuristico.setEstado(paqueteTuristicoUpdate.isEstado());
         if (!paqueteTuristico.isValid())
             throw new UserDataInvalidException("Los datos del paquete turístico son inválidos, por favor verifique.");
         PaqueteTuristicoDAO paqueteTuristicoDAO = new PaqueteTuristicoDAO();
@@ -95,6 +94,11 @@ public class PaqueteTuristicoService {
     public Map<String, Double> getPrecios(int paqueteId, Connection connection) throws SQLException {
         PaqueteTuristicoDAO paqueteTuristicoDAO = new PaqueteTuristicoDAO();
         return paqueteTuristicoDAO.getPrecios(paqueteId, connection);
+    }
+
+    public void updateEstado(int paqueteId) throws SQLException {
+        PaqueteTuristicoDAO paqueteTuristicoDAO = new PaqueteTuristicoDAO();
+        paqueteTuristicoDAO.updateEstado(paqueteId);
     }
 
 }

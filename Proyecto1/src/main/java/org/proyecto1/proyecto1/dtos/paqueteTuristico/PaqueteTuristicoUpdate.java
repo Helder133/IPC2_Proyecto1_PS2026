@@ -8,7 +8,6 @@ public class PaqueteTuristicoUpdate {
     private double precioPublico;
     private int capacidadMaxima;
     private String descripcion;
-    private boolean estado;
 
     public int getPaqueteId() {
         return paqueteId;
@@ -64,13 +63,5 @@ public class PaqueteTuristicoUpdate {
 
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
-    }
-
-    public boolean isEstado() {
-        return estado;
-    }
-
-    public void setEstado(boolean estado) {
-        this.estado = estado;
     }
 }

@@ -1,0 +1,46 @@
+<form [formGroup]="servicioForm" (ngSubmit)="guardar()" class="p-4 bg-white bg-opacity-50 rounded shadow-sm border-top border-primary border-3">
+
+    <div class="row g-3">
+        <div class="col-md-12">
+            <label for="proveedorId" class="form-label fw-bold text-dark">Proveedor del Servicio</label>
+            <select id="proveedorId" class="form-select" formControlName="proveedorId"
+                [ngClass]="{'is-invalid': servicioForm.get('proveedorId')?.invalid && servicioForm.get('proveedorId')?.touched}">
+                <option value="" disabled selected>Seleccione un proveedor...</option>
+                @for (prov of listaProveedores; track prov.proveedorId) {
+                    <option [value]="prov.proveedorId">
+                        {{ prov.nombre }} ({{ prov.tipo }})
+                    </option>
+                }
+            </select>
+            <div class="invalid-feedback text-dark fw-bold">Debe seleccionar un proveedor.</div>
+            @if (servicioEditar) {
+                <small class="text-dark fw-bold"><i class="bi bi-info-circle me-1"></i>No se puede cambiar el proveedor al editar. Si te equivocaste, elimina el servicio y créalo de nuevo.</small>
+            }
+        </div>
+
+        <div class="col-md-8">
+            <label for="descripcion" class="form-label fw-bold text-dark">Descripción del Servicio</label>
+            <input type="text" id="descripcion" class="form-control" formControlName="descripcion" placeholder="Ej. Vuelo redondo GUA-CUN"
+                [ngClass]="{'is-invalid': servicioForm.get('descripcion')?.invalid && servicioForm.get('descripcion')?.touched}">
+            <div class="invalid-feedback text-dark fw-bold">La descripción es obligatoria.</div>
+        </div>
+
+        <div class="col-md-4">
+            <label for="costo" class="form-label fw-bold text-dark">Costo Interno (Q)</label>
+            <div class="input-group">
+                <span class="input-group-text">Q</span>
+                <input type="number" id="costo" class="form-control" formControlName="costo" step="0.01" min="0"
+                    [ngClass]="{'is-invalid': servicioForm.get('costo')?.invalid && servicioForm.get('costo')?.touched}">
+            </div>
+            <div class="invalid-feedback text-dark fw-bold">El costo es obligatorio y debe ser mayor a 0.</div>
+        </div>
+
+        <div class="col-12 text-end mt-4">
+            <button type="button" class="btn btn-dark px-4 me-2" (click)="cancelar.emit()">Cancelar</button>
+            <button type="submit" class="btn btn-primary px-4 fw-bold text-white">
+                <i class="bi" [ngClass]="servicioEditar ? 'bi-pencil-square' : 'bi-plus-circle'"></i>
+                {{ servicioEditar ? 'Actualizar' : 'Agregar Servicio' }}
+            </button>
+        </div>
+    </div>
+</form>

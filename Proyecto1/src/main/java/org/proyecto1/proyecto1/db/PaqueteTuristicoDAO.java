@@ -21,7 +21,7 @@ public class PaqueteTuristicoDAO implements CRUD<PaqueteTuristico> {
     private static final String EXISTS_NAME = "SELECT paquete_id FROM paquete_turistico WHERE nombre = ?";
     private static final String GET_BY_COINCIDENCE = "SELECT pt.paquete_id, pt.destino_id, pt.nombre AS nombre_paquete, pt.duracion, pt.precio_publico, pt.capacidad_maxima, pt.descripcion, pt.estado, d.nombre AS nombre_destino, d.pais, d.descripcion, d.clima_mejor_epoca, d.imagen FROM paquete_turistico pt JOIN destino d ON pt.destino_id = d.destino_id WHERE pt.nombre LIKE ?";
     private static final String VALID_UPDATE = "SELECT paquete_id FROM paquete_turistico WHERE paquete_id <> ? AND nombre = ?";
-//    private static final String UPDATE_ESTADO = "UPDATE paquete_turistico SET estado = NOT estado WHERE paquete_id = ?";
+    private static final String UPDATE_ESTADO = "UPDATE paquete_turistico SET estado = NOT estado WHERE paquete_id = ?";
     private static final String GET_PRECIOS = "SELECT pt.precio_publico, COALESCE(SUM(sp.costo), 0) AS precio_agencia FROM paquete_turistico pt LEFT JOIN servicio_paquete sp ON pt.paquete_id = sp.paquete_id WHERE pt.paquete_id = ? GROUP BY pt.paquete_id, pt.precio_publico";
 
     public Map<String, Double> getPrecios(int paqueteId, Connection connection) throws SQLException, UserDataInvalidException {
@@ -72,13 +72,13 @@ public class PaqueteTuristicoDAO implements CRUD<PaqueteTuristico> {
         }
     }
 
-    /*public void updateEstado(int paquete_id) throws SQLException {
+    public void updateEstado(int paquete_id) throws SQLException {
         Connection connection = DBConnection.getInstance().getConnection();
         try (PreparedStatement updateEstado = connection.prepareStatement(UPDATE_ESTADO)) {
             updateEstado.setInt(1, paquete_id);
             updateEstado.executeUpdate();
         }
-    }*/
+    }
 
     @Override
     public void insert(PaqueteTuristico paqueteTuristico) throws SQLException {

@@ -1,0 +1,20 @@
+<div class="container mt-4 mb-5 text-light">
+    <h3 class="mb-4 fw-bold text-info"><i class="bi bi-box-fill me-2"></i> Crear Nuevo Paquete</h3>
+
+    @if (mensajeError()) {
+    <div class="alert alert-danger bg-danger text-white shadow-lg border-0 d-flex align-items-center fade show">
+        <i class="bi bi-exclamation-triangle-fill fs-4 me-3"></i>
+        <div>{{ mensajeError() }}</div>
+    </div>
+    }
+
+    @if (cargandoDestinos()) {
+    <div class="text-center py-5">
+        <div class="spinner-border text-info" role="status"></div>
+        <p class="mt-2">Cargando destinos disponibles...</p>
+    </div>
+    } @else {
+    <app-paquete-form-component [listaDestinos]="destinos()" (paquete)="crearPaquete($event)">
+    </app-paquete-form-component>
+    }
+</div>

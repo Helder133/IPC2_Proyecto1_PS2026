@@ -1,0 +1,59 @@
+<form [formGroup]="paqueteForm" (ngSubmit)="guardar()" class="p-4 bg-white bg-opacity-50 rounded shadow-sm border-top border-info border-3">
+
+    <div class="row g-4">
+        <div class="col-md-6">
+            <label for="nombre" class="form-label fw-bold text-dark">Nombre del Paquete</label>
+            <input type="text" id="nombre" class="form-control" formControlName="nombre" placeholder="Ej. Aventura en Tikal"
+                [ngClass]="{'is-invalid': paqueteForm.get('nombre')?.invalid && paqueteForm.get('nombre')?.touched}">
+            <div class="invalid-feedback text-dark fw-bold">El nombre es obligatorio.</div>
+        </div>
+
+        <div class="col-md-6">
+            <label for="destinoId" class="form-label fw-bold text-dark">Destino</label>
+            <select id="destinoId" class="form-select" formControlName="destinoId"
+                [ngClass]="{'is-invalid': paqueteForm.get('destinoId')?.invalid && paqueteForm.get('destinoId')?.touched}">
+                <option value="" disabled selected>Seleccione el destino principal...</option>
+                @for (destino of listaDestinos; track $index) {
+                    <option [value]="destino.destinoId">{{ destino.nombre }} - {{ destino.pais }}</option>
+                }
+            </select>
+            <div class="invalid-feedback text-dark fw-bold">Debe asignar un destino.</div>
+        </div>
+
+        <div class="col-md-3">
+            <label for="duracion" class="form-label fw-bold text-dark">Duración (Días)</label>
+            <input type="number" id="duracion" class="form-control" formControlName="duracion" min="1"
+                [ngClass]="{'is-invalid': paqueteForm.get('duracion')?.invalid && paqueteForm.get('duracion')?.touched}">
+        </div>
+
+        <div class="col-md-3">
+            <label for="capacidadMaxima" class="form-label fw-bold text-dark">Capacidad Máxima</label>
+            <input type="number" id="capacidadMaxima" class="form-control" formControlName="capacidadMaxima" min="1"
+                [ngClass]="{'is-invalid': paqueteForm.get('capacidadMaxima')?.invalid && paqueteForm.get('capacidadMaxima')?.touched}">
+        </div>
+
+        <div class="col-md-6">
+            <label for="precioPublico" class="form-label fw-bold text-dark">Precio al Público (Q)</label>
+            <div class="input-group">
+                <span class="input-group-text">Q</span>
+                <input type="number" id="precioPublico" class="form-control" formControlName="precioPublico" step="0.01" min="0"
+                    [ngClass]="{'is-invalid': paqueteForm.get('precioPublico')?.invalid && paqueteForm.get('precioPublico')?.touched}">
+            </div>
+        </div>
+
+        <div class="col-12">
+            <label for="descripcion" class="form-label fw-bold text-dark">Descripción del Paquete</label>
+            <textarea id="descripcion" class="form-control" formControlName="descripcion" rows="3"
+                [ngClass]="{'is-invalid': paqueteForm.get('descripcion')?.invalid && paqueteForm.get('descripcion')?.touched}"></textarea>
+            <div class="invalid-feedback text-dark fw-bold">La descripción es obligatoria.</div>
+        </div>
+
+        <div class="col-12 text-end mt-4">
+            <button type="button" class="btn btn-dark px-4 me-2" routerLink="/paquete">Cancelar</button>
+            <button type="submit" class="btn btn-info px-4 fw-bold text-dark">
+                <i class="bi" [ngClass]="paqueteEditar ? 'bi-pencil-square' : 'bi-save'"></i>
+                {{ paqueteEditar ? 'Actualizar Paquete' : 'Guardar Paquete' }}
+            </button>
+        </div>
+    </div>
+</form>

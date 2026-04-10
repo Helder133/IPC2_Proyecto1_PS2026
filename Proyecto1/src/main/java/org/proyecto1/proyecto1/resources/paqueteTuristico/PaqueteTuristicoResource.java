@@ -66,7 +66,7 @@ public class PaqueteTuristicoResource {
     }
 
     @PUT
-    @Path("-/actualizar")
+    @Path("/actualizar")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response updatePaqueteTuristico(PaqueteTuristicoUpdate paqueteTuristicoUpdate) {
         try {
@@ -77,6 +77,18 @@ public class PaqueteTuristicoResource {
             return errorEjecucion(e.getMessage(), 1);
         } catch (EntityAlreadyExistsException e) {
             return errorEjecucion(e.getMessage(), 2);
+        } catch (SQLException e) {
+            return errorEjecucion(e.getMessage(), 3);
+        }
+    }
+
+    @PUT
+    @Path("/actualizar/estado/{id}")
+    public Response updatePaqueteEstado(@PathParam("id") int paqueteId) {
+        try {
+            PaqueteTuristicoService paqueteTuristicoService = new PaqueteTuristicoService();
+            paqueteTuristicoService.updateEstado(paqueteId);
+            return Response.ok().build();
         } catch (SQLException e) {
             return errorEjecucion(e.getMessage(), 3);
         }

@@ -12,6 +12,10 @@ import { UpdateDestinoPageComponent } from './pages/destino/update-destino-page/
 import { ProveedorPageComponent } from './pages/proveedor/proveedor-page/proveedor-page.component';
 import { UpdateProveedorPageComponent } from './pages/proveedor/update-proveedor-page/update-proveedor-page.component';
 import { CreateProveedorPageComponent } from './pages/proveedor/create-proveedor-page/create-proveedor-page.component';
+import { PaquetePageComponent } from './pages/paqueteTuristico/paquete-page/paquete-page.component';
+import { CreatePaquetePageComponent } from './pages/paqueteTuristico/create-paquete-page/create-paquete-page.component';
+import { UpdatePaquetePageComponent } from './pages/paqueteTuristico/update-paquete-page/update-paquete-page.component';
+import { ServicioPageComponent } from './pages/servicioPaquete/servicio-page/servicio-page.component';
 
 export const routes: Routes = [
     {
@@ -42,7 +46,7 @@ export const routes: Routes = [
             {
                 path: 'usuario/actualizar/:id',
                 component: UpdateUsuarioPageComponent
-            }, 
+            },
             {
                 path: 'carga-archivo',
                 component: CargaArchivoPageComponent
@@ -70,6 +74,22 @@ export const routes: Routes = [
             {
                 path: 'proveedor/actualizar/:id',
                 component: UpdateProveedorPageComponent
+            },
+            {
+                path: 'paquete',
+                component: PaquetePageComponent
+            },
+            {
+                path: 'paquete/crear',
+                component: CreatePaquetePageComponent
+            },
+            {
+                path: 'paquete/actualizar/:id',
+                component: UpdatePaquetePageComponent
+            }, 
+            {
+                path: 'paquete/:id/servicio',
+                component: ServicioPageComponent
             }
         ]
 

@@ -1,0 +1,58 @@
+<div class="card h-100 bg-dark text-light border-info shadow-sm" [ngClass]="{'opacity-75': !paquete.estado}">
+    <div class="card-body p-4 d-flex flex-column">
+
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <span class="badge bg-primary rounded-pill px-3 py-2">
+                <i class="bi bi-geo-alt-fill me-1"></i> {{ paquete.destinoResponse.nombre}}
+            </span>
+            <span class="badge" [ngClass]="paquete.estado ? 'bg-success' : 'bg-danger'">
+                {{ paquete.estado ? 'Activo' : 'Inactivo' }}
+            </span>
+        </div>
+
+        <h5 class="card-title fw-bold text-info mb-1">{{ paquete.nombre }}</h5>
+        <p class="text-muted small mb-3">ID: #{{ paquete.paqueteId }}</p>
+
+        <div class="d-flex justify-content-between border-bottom border-secondary pb-3 mb-3">
+            <div class="text-center">
+                <i class="bi bi-clock-history d-block text-warning fs-5"></i>
+                <span class="small fw-bold">{{ paquete.duracion }} Días</span>
+            </div>
+            <div class="text-center">
+                <i class="bi bi-people-fill d-block text-warning fs-5"></i>
+                <span class="small fw-bold">{{ paquete.capacidadMaxima }} Pers.</span>
+            </div>
+            <div class="text-center">
+                <i class="bi bi-cash-stack d-block text-success fs-5"></i>
+                <span class="small fw-bold">Q{{ paquete.precioPublico }}</span>
+            </div>
+        </div>
+
+        <p class="card-text flex-grow-1 text-light opacity-75 small">
+            {{ paquete.descripcion }}
+        </p>
+
+        <button class="btn btn-primary btn-sm w-100 mb-3 fw-bold" (click)="onVerServicios.emit(paquete.paqueteId)">
+            <i class="bi bi-list-check me-1"></i> Gestionar Servicios
+        </button>
+
+        <div class="d-flex justify-content-between gap-2">
+            <a routerLink="/paquete/actualizar/{{ paquete.paqueteId }}"
+                class="btn btn-outline-info btn-sm flex-grow-1">
+                <i class="bi bi-pencil-square"></i>
+            </a>
+
+            <button class="btn btn-sm flex-grow-1"
+                [ngClass]="paquete.estado ? 'btn-outline-warning' : 'btn-outline-success'"
+                (click)="onToggleEstado.emit(paquete.paqueteId)">
+                <i class="bi" [ngClass]="paquete.estado ? 'bi-eye-slash-fill' : 'bi-eye-fill'"></i>
+            </button>
+
+            <!-- <button class="btn btn-outline-danger btn-sm flex-grow-1" data-bs-toggle="modal"
+                data-bs-target="#deleteModal" (click)="onDelete.emit(paquete)">
+                <i class="bi bi-trash-fill"></i>
+            </button> -->
+        </div>
+
+    </div>
+</div>
