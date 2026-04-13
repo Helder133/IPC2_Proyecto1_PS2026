@@ -218,8 +218,9 @@ public class ReporteDAO {
                 while (resultSet.next()) {
                     DestinoMasConcurrido destinoMasConcurrido1 = new DestinoMasConcurrido(
                             resultSet.getString("destino"),
-                            resultSet.getInt("cantidad_viaje"),
-                            resultSet.getInt("total_turistas")
+                            resultSet.getInt("total_turistas"),
+                            resultSet.getInt("cantidad_viajes")
+
                     );
                     destinoMasConcurrido.add(destinoMasConcurrido1);
                 }

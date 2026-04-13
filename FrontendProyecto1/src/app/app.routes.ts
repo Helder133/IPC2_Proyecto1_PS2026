@@ -23,6 +23,8 @@ import { ReservacionPageComponent } from './pages/reservacion/reservacion-page/r
 import { HistorialReservacionClienteComponent } from './pages/reservacion/historial-reservacion-cliente/historial-reservacion-cliente.component';
 import { PagoPageComponent } from './pages/pago/pago-page/pago-page.component';
 import { ReciboPagoPageComponent } from './pages/pago/recibo-pago-page/recibo-pago-page.component';
+import { ReporetePageComponent } from './pages/reporte/reporete-page/reporete-page.component';
+import { ReporetePrintComponent } from './components/reporte/reporete-print.component/reporete-print.component';
 
 export const routes: Routes = [
     {
@@ -125,6 +127,14 @@ export const routes: Routes = [
             {
                 path: 'pago/recibo',
                 component: ReciboPagoPageComponent
+            },
+            {
+                path: 'reporte',
+                component: ReporetePageComponent
+            },
+            {
+                path: 'reporte/imprimir-reporte',
+                component: ReporetePrintComponent
             }
         ]
 

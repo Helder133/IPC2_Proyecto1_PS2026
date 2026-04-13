@@ -19,6 +19,7 @@ import java.util.Optional;
 
 @Path("/reporte")
 public class ReporteResource {
+    // formato esperado yyyy-MM-dd
     @GET
     @Path("/{fechaInicio}/reservacion/confirmada/{fechaFin}")
     @Produces(MediaType.APPLICATION_JSON)

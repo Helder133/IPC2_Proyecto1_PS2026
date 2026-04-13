@@ -17,7 +17,7 @@ public class ReporteService {
 
     private LocalDate formatearFecha(String fecha) throws UserDataInvalidException {
         try {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             return LocalDate.parse(fecha.trim(), formatter);
         } catch (DateTimeParseException e) {
             throw new UserDataInvalidException(("Fecha de pago inválida: " + fecha + ". El formato debe ser dd/MM/yyyy."));

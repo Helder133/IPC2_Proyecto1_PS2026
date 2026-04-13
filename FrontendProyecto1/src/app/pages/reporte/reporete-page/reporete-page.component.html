@@ -1,0 +1,33 @@
+<div class="container mt-4 text-light">
+    <h2 class="fw-bold text-info mb-4"><i class="bi bi-graph-up me-2"></i> Centro de Reportes</h2>
+    
+    @if (mensajeError()) { <div class="alert alert-danger">{{ mensajeError() }}</div> }
+
+    <div class="card bg-dark border-secondary mb-4 p-3 shadow">
+        <form [formGroup]="fechasForm" class="row g-3 align-items-end">
+            <div class="col-md-5">
+                <label class="form-label fw-bold">Fecha Inicio</label>
+                <input type="date" class="form-control text-dark fw-bold" formControlName="fechaInicio">
+            </div>
+            <div class="col-md-5">
+                <label class="form-label fw-bold">Fecha Fin</label>
+                <input type="date" class="form-control text-dark fw-bold" formControlName="fechaFin">
+            </div>
+        </form>
+    </div>
+
+    @if (cargando()) {
+        <div class="text-center py-5"><div class="spinner-border text-info"></div></div>
+    } @else {
+        <div class="row g-3">
+            <div class="col-md-3"><button class="btn btn-outline-light w-100 py-3" (click)="generarReporte('ventas')">1. Ventas Generales</button></div>
+            <div class="col-md-3"><button class="btn btn-outline-danger w-100 py-3" (click)="generarReporte('cancelaciones')">2. Cancelaciones y Pérdidas</button></div>
+            <div class="col-md-3"><button class="btn btn-outline-success w-100 py-3" (click)="generarReporte('ganancias')">3. Total Ganancias</button></div>
+            <div class="col-md-3"><button class="btn btn-outline-info w-100 py-3" (click)="generarReporte('agente_ventas')">4. Mejor Agente (Ventas)</button></div>
+            <div class="col-md-3"><button class="btn btn-outline-primary w-100 py-3" (click)="generarReporte('agente_ganancias')">5. Mejor Agente (Ganancia)</button></div>
+            <div class="col-md-3"><button class="btn btn-outline-warning w-100 py-3" (click)="generarReporte('paquete_mas')">6. Paquete Más Vendido</button></div>
+            <div class="col-md-3"><button class="btn btn-outline-secondary w-100 py-3" (click)="generarReporte('paquete_menos')">7. Paquete Menos Vendido</button></div>
+            <div class="col-md-3"><button class="btn btn-outline-light w-100 py-3" (click)="generarReporte('destinos')">8. Ocupación por Destino</button></div>
+        </div>
+    }
+</div>

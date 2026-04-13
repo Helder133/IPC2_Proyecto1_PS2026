@@ -36,5 +36,4 @@ public class GananciaEnUnIntervaloDeTiempoResponse {
     public void setGananciaNeta(double gananciaNeta) {
         this.gananciaNeta = gananciaNeta;
     }
-
 }

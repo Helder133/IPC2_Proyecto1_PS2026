@@ -1,0 +1,107 @@
+<div class="bg-white text-dark min-vh-100 p-4">
+    <div class="text-center d-print-none mb-3"><button class="btn btn-primary" onclick="window.print()">Imprimir PDF</button></div>
+
+    @if (datos()) {
+        <div class="text-center mb-4 border-bottom border-dark pb-3">
+            <h2 class="fw-bold text-uppercase">Horizontes sin Límites - Reporte Oficial</h2>
+            <h5 class="text-muted">Período: {{ fechas().inicio }} al {{ fechas().fin }}</h5>
+            <small>Generado el: {{ fechaHoy | date:'dd/MM/yyyy HH:mm' }}</small>
+        </div>
+
+        @switch (tipo()) {
+            
+            @case ('ventas') {
+                <h4 class="fw-bold mb-3">1. Reporte de Ventas Confirmadas</h4>
+                <table class="table table-bordered border-dark table-sm">
+                    <thead class="table-light"><tr><th>ID</th><th>Paquete</th><th>Pasajeros</th><th>Agente</th><th>Total(Q)</th></tr></thead>
+                    <tbody>
+                        @for (v of datos(); track v.reservacionId) {
+                            <tr><td>{{v.reservacionId}}</td><td>{{v.paquete}}</td><td>{{v.pasajeros}}</td><td>{{v.agente}}</td><td>{{v.costoTotal | number:'1.2-2'}}</td></tr>
+                        }
+                    </tbody>
+                </table>
+            }
+
+            @case ('cancelaciones') {
+                <h4 class="fw-bold mb-3">2. Reporte de Cancelaciones</h4>
+                <table class="table table-bordered border-dark table-sm">
+                    <thead class="table-light"><tr><th>ID</th><th>Paquete</th><th>Fecha Canc.</th><th>Reembolso(Q)</th><th>Pérdida Agencia(Q)</th></tr></thead>
+                    <tbody>
+                        @for (c of datos(); track c.reservacionId) {
+                            <tr><td>{{c.reservacionId}}</td><td>{{c.paquete}}</td><td>{{c.fechaCancelacion}}</td><td>{{c.montoReembolsado | number:'1.2-2'}}</td><td class="text-danger fw-bold">{{c.perdidaAgencia | number:'1.2-2'}}</td></tr>
+                        }
+                    </tbody>
+                </table>
+            }
+
+            @case ('ganancias') {
+                <h4 class="fw-bold mb-3">3. Resumen de Ganancias Financieras</h4>
+                <div class="row text-center mt-5">
+                    <div class="col-4"><div class="border border-dark p-3"><h5 class="text-muted">Ganancia Bruta</h5><h3 class="fw-bold">Q{{ datos().gananciaBruta | number:'1.2-2' }}</h3></div></div>
+                    <div class="col-4"><div class="border border-dark p-3"><h5 class="text-muted">Reembolsos Aplicados</h5><h3 class="fw-bold text-danger">- Q{{ datos().totalReembolsos | number:'1.2-2' }}</h3></div></div>
+                    <div class="col-4"><div class="border border-dark p-3 bg-light"><h5 class="text-muted">GANANCIA NETA</h5><h3 class="fw-bold text-success">Q{{ datos().gananciaNeta | number:'1.2-2' }}</h3></div></div>
+                </div>
+            }
+
+            @case ('agente_ventas') {
+                <h4 class="fw-bold mb-3">4. Mejor Agente (Por Volumen de Ventas)</h4>
+                <h5 class="mb-3">Agente Ganador: <strong>{{ datos().nombreAgente }}</strong> | Total Generado: <strong>Q{{ datos().totalVendido | number:'1.2-2' }}</strong></h5>
+                <table class="table table-bordered border-dark table-sm mt-3">
+                    <thead class="table-light"><tr><th>ID Res.</th><th>Paquete</th><th>Fecha Creación</th><th>Fecha Viaje</th><th>Pax</th><th>Monto(Q)</th></tr></thead>
+                    <tbody>
+                        @for (r of datos().reservaciones; track r.reservacionId) {
+                            <tr><td>{{r.reservacionId}}</td><td>{{r.paqueteNombre}}</td><td>{{r.fechaCreacion}}</td><td>{{r.fechaViaje}}</td><td>{{r.cantidadPersonas}}</td><td>{{r.monto | number:'1.2-2'}}</td></tr>
+                        }
+                    </tbody>
+                </table>
+            }
+
+            @case ('agente_ganancias') {
+                <h4 class="fw-bold mb-3">5. Mejor Agente (Por Rentabilidad Neta)</h4>
+                <div class="border border-dark p-4 text-center mt-4">
+                    <h2 class="fw-bold">{{ datos().nombreAgente }}</h2>
+                    <h5 class="text-muted">Ganancia Limpia Generada para la Empresa:</h5>
+                    <h1 class="text-success fw-bold">Q{{ datos().gananciaTotal | number:'1.2-2' }}</h1>
+                </div>
+            }
+
+            @case ('paquete_mas') {
+                <h4 class="fw-bold mb-3">6. Paquete MÁS Vendido</h4>
+                <h5 class="mb-3">Tour Estrella: <strong>{{ datos().nombrePaquete }}</strong> | Reservado <strong>{{ datos().totalReservacion }}</strong> veces.</h5>
+                <table class="table table-bordered border-dark table-sm mt-3">
+                    <thead class="table-light"><tr><th>ID Res.</th><th>Agente que lo vendió</th><th>Fecha Creación</th><th>Fecha Viaje</th><th>Pax</th><th>Monto(Q)</th></tr></thead>
+                    <tbody>
+                        @for (r of datos().reservaciones; track r.reservacionId) {
+                            <tr><td>{{r.reservacionId}}</td><td>{{r.nombreAgente}}</td><td>{{r.fechaCreacion}}</td><td>{{r.fechaViaje}}</td><td>{{r.cantidadPersonas}}</td><td>{{r.costoTotal | number:'1.2-2'}}</td></tr>
+                        }
+                    </tbody>
+                </table>
+            }
+
+            @case ('paquete_menos') {
+                <h4 class="fw-bold mb-3">7. Paquete MENOS Vendido</h4>
+                <h5 class="mb-3">Paquete: <strong>{{ datos().nombrePaquete }}</strong> | Reservado solo <strong>{{ datos().totalReservacion }}</strong> veces.</h5>
+                <table class="table table-bordered border-dark table-sm mt-3">
+                    <thead class="table-light"><tr><th>ID Res.</th><th>Agente</th><th>Fecha Creación</th><th>Viaje</th><th>Pax</th><th>Monto(Q)</th></tr></thead>
+                    <tbody>
+                        @for (r of datos().reservaciones; track r.reservacionId) {
+                            <tr><td>{{r.reservacionId}}</td><td>{{r.nombreAgente}}</td><td>{{r.fechaCreacion}}</td><td>{{r.fechaViaje}}</td><td>{{r.cantidadPersonas}}</td><td>{{r.costoTotal | number:'1.2-2'}}</td></tr>
+                        }
+                    </tbody>
+                </table>
+            }
+
+            @case ('destinos') {
+                <h4 class="fw-bold mb-3">8. Ocupación de Destinos Turísticos</h4>
+                <table class="table table-bordered border-dark table-sm mt-3">
+                    <thead class="table-light"><tr><th>Destino Turístico</th><th class="text-center">Cant. de Viajes (Reservas)</th><th class="text-center">Total de Turistas que Viajaron</th></tr></thead>
+                    <tbody>
+                        @for (d of datos(); track d.nombreDestino) {
+                            <tr><td class="fw-bold">{{d.nombreDestino}}</td><td class="text-center">{{d.cantidadViajes}}</td><td class="text-center">{{d.totolTurista}}</td></tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        }
+    }
+</div>
