@@ -1,0 +1,27 @@
+@media print {
+    /* Ocultamos todo lo que no sea el recibo */
+    .d-print-none {
+        display: none !important;
+    }
+
+    body {
+        background-color: white !important;
+        margin: 0;
+        padding: 0;
+    }
+
+    .recibo-container {
+        padding: 0 !important;
+    }
+
+    .receipt-box {
+        border: 2px solid black !important;
+        box-shadow: none !important;
+    }
+}
+
+/* En pantalla se ve con sombra para simular la hoja */
+.receipt-box {
+    background-color: white;
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+}

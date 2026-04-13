@@ -4,10 +4,11 @@ import { PaqueteTuristicoRequest } from '../../../models/paqueteTuristico/Paquet
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { DestinoResponse } from '../../../models/destino/DestinoResponse';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-paquete-form-component',
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './paquete-form.component.html'
 })
 export class PaqueteFormComponent implements OnInit{

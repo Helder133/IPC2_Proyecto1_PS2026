@@ -4,10 +4,11 @@ import { ProveedorRequest } from '../../../models/proveedor/ProveedorRequest';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { EnumProveedor } from '../../../models/proveedor/EnumProveedor';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-proveedor-form-component',
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './proveedor-form.component.html'
 })
 export class ProveedorFormComponent implements OnInit {

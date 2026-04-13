@@ -1,0 +1,10 @@
+<div class="container mt-4 mb-5 text-light">
+    <h3 class="mb-4 fw-bold text-primary"><i class="bi bi-person-add me-2"></i> Registrar Nuevo Cliente</h3>
+    @if (mensajeError()) {
+    <div class="alert alert-danger bg-danger text-white shadow-lg border-0 fade show">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>{{ mensajeError() }}
+    </div>
+    }
+
+    <app-cliente-form-component (cliente)="crearCliente($event)"></app-cliente-form-component>
+</div>

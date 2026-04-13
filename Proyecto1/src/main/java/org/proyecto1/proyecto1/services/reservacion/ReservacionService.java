@@ -5,6 +5,7 @@ import org.proyecto1.proyecto1.db.ReservacionDAO;
 import org.proyecto1.proyecto1.db.config.DBConnection;
 import org.proyecto1.proyecto1.dtos.reservacion.ReservacionRequest;
 import org.proyecto1.proyecto1.dtos.reservacion.ReservacionUpdate;
+import org.proyecto1.proyecto1.dtos.reservacion.cliente.ReservacionClienteRequest;
 import org.proyecto1.proyecto1.exceptions.EntityAlreadyExistsException;
 import org.proyecto1.proyecto1.exceptions.UserDataInvalidException;
 import org.proyecto1.proyecto1.models.cliente.Cliente;
@@ -16,7 +17,6 @@ import org.proyecto1.proyecto1.services.cliente.ClienteService;
 import org.proyecto1.proyecto1.services.pago.HistorialPagoService;
 import org.proyecto1.proyecto1.services.paqueteTuristico.PaqueteTuristicoService;
 
-import javax.swing.text.html.Option;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -151,6 +151,10 @@ public class ReservacionService {
         Optional<Reservacion> reservacionOptional = reservacionDAO.getById(reservacionId);
         if (reservacionOptional.isEmpty())
             throw new UserDataInvalidException("La reservación a cancelar no se encontró, vuelva a intentar.");
+        if (reservacionOptional.get().getEstado() == EnumReservacion.Cancelada)
+            throw new UserDataInvalidException("La reservación ya se encuentra cancelada.");
+        if (reservacionOptional.get().getEstado() == EnumReservacion.Completada)
+            throw new UserDataInvalidException("La reservación ya se encuentra completada por ende no se puede cancelar.");
         Reservacion reservacion = reservacionOptional.get();
         LocalDate fechaActual = LocalDate.now();
         long diasRestantesAlViaje = ChronoUnit.DAYS.between(fechaActual, reservacion.getFechaViaje());
@@ -207,14 +211,19 @@ public class ReservacionService {
 
     public void updateEstadoACompletada(int reservacion_id) throws SQLException, UserDataInvalidException {
         ReservacionDAO reservacionDAO = new ReservacionDAO();
-        if (reservacionDAO.getById(reservacion_id).isEmpty())
+        Optional<Reservacion> reservacionOptional = reservacionDAO.getById(reservacion_id);
+        if (reservacionOptional.isEmpty())
             throw new UserDataInvalidException("La reservación no existe");
+        if (reservacionOptional.get().getEstado() != EnumReservacion.Confirmada)
+            throw new UserDataInvalidException("La reservación no se encuentra confirmada, por eso no se puede cambiar al estado: completada");
         reservacionDAO.updateEstado(reservacion_id, EnumReservacion.Completada);
 
     }
 
-    public void agregarClienteAReservacion(ReservacionCliente reservacionCliente) throws SQLException, UserDataInvalidException, EntityAlreadyExistsException {
-        if (!reservacionCliente.isValid()) throw new UserDataInvalidException("Los datos de la reservación son incorrectos");
+    public void agregarClienteAReservacion(ReservacionClienteRequest reservacionClienteRequest) throws SQLException, UserDataInvalidException, EntityAlreadyExistsException {
+        ReservacionCliente reservacionCliente = new ReservacionCliente(reservacionClienteRequest.getReservacionId(), reservacionClienteRequest.getClienteId());
+        if (!reservacionCliente.isValid())
+            throw new UserDataInvalidException("Los datos de la reservación son incorrectos");
         Reservacion reservacion = getById(reservacionCliente.getReservacionId());
         ClienteService clienteService = new ClienteService();
         Cliente cliente = clienteService.getClientById(reservacionCliente.getClienteId());
@@ -227,6 +236,11 @@ public class ReservacionService {
     public void deleteClienteAReservacion(int reservacionId, int clienteId) throws SQLException, UserDataInvalidException {
         ReservacionClienteService reservacionClienteService = new ReservacionClienteService();
         reservacionClienteService.delete(reservacionId, clienteId);
+    }
+
+    public List<Cliente> getClientesDeUnaReservacion(int reservacionId) throws SQLException {
+        ReservacionClienteService reservacionClienteService = new ReservacionClienteService();
+        return reservacionClienteService.getClientesDeUnaReservacion(reservacionId);
     }
 
 }

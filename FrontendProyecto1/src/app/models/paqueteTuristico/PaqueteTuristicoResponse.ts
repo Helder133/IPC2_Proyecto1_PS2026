@@ -10,4 +10,5 @@ export interface PaqueteTuristicoResponse {
     descripcion?: string;
     estado: boolean;
     destinoResponse: DestinoResponse;
+    altaDemanda: boolean;
 }

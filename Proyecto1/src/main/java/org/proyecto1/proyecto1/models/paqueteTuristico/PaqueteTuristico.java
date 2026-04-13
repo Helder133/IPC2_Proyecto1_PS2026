@@ -13,6 +13,7 @@ public class PaqueteTuristico {
     private String descripcion;
     private boolean estado;
     private Destino destino;
+    private boolean altaDemanda;
 
     public PaqueteTuristico(int destinoId, String nombre, int duracion, double precioPublico, int capacidadMaxima) {
         this.destinoId = destinoId;
@@ -93,6 +94,14 @@ public class PaqueteTuristico {
 
     public void setDestino(Destino destino) {
         this.destino = destino;
+    }
+
+    public boolean isAltaDemanda() {
+        return altaDemanda;
+    }
+
+    public void setAltaDemanda(boolean altaDemanda) {
+        this.altaDemanda = altaDemanda;
     }
 
     public boolean isValid() {

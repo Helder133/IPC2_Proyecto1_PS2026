@@ -1,11 +1,11 @@
 package org.proyecto1.proyecto1.models.reporte;
 
-public class DestinoMaConcurrido {
+public class DestinoMasConcurrido {
     private String nombreDestino;
     private int cantidadViajes;
     private int totolTurista;
 
-    public DestinoMaConcurrido(String nombreDestino, int totolTurista, int cantidadViajes) {
+    public DestinoMasConcurrido(String nombreDestino, int totolTurista, int cantidadViajes) {
         this.nombreDestino = nombreDestino;
         this.totolTurista = totolTurista;
         this.cantidadViajes = cantidadViajes;

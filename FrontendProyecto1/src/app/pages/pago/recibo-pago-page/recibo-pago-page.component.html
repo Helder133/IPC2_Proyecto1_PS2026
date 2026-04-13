@@ -1,0 +1,86 @@
+<div class="recibo-container bg-white text-dark min-vh-100 p-5">
+
+    <div class="text-center mb-4 d-print-none">
+        <button class="btn btn-primary" (click)="imprimir()">
+            <i class="bi bi-printer me-2"></i> Intentar imprimir de nuevo
+        </button>
+        <p class="text-muted small mt-2">Si no se abrió la ventana, presiona Ctrl+P</p>
+    </div>
+
+    @if (pago() && reservacion()) {
+    <div class="receipt-box border border-dark p-4 mx-auto" style="max-width: 800px;">
+
+        <div class="row border-bottom border-dark pb-3 mb-4">
+            <div class="col-8">
+                <h2 class="fw-bold mb-0">Proyecto 1</h2>
+                <p class="mb-0">Agencia de Horizontes sin Límites</p>
+                <p class="small mb-0">Quetzaltenango, Guatemala</p>
+            </div>
+            <div class="col-4 text-end">
+                <h4 class="text-uppercase fw-bold text-secondary">Recibo de Pago</h4>
+                <p class="fw-bold text-danger mb-0">No. 00{{ pago()?.historialId }}</p>
+                <p class="small">{{ fechaActual | date:'dd/MM/yyyy HH:mm' }}</p>
+            </div>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-6">
+                <h6 class="text-uppercase fw-bold small text-muted">Cliente / Reservación</h6>
+                <p class="mb-0 fw-bold">Reservación #{{ reservacion()?.reservacionId }}</p>
+                <p class="mb-0">Viaje: {{ reservacion()?.paqueteTuristico?.nombre }}</p>
+            </div>
+            <div class="col-6 text-end">
+                <h6 class="text-uppercase fw-bold small text-muted">Fecha del Viaje</h6>
+                <p class="fw-bold">{{ reservacion()?.fechaViaje }}</p>
+            </div>
+        </div>
+
+        <table class="table table-bordered border-dark mb-4">
+            <thead class="bg-light">
+                <tr>
+                    <th>Descripción</th>
+                    <th class="text-center">Método</th>
+                    <th class="text-end">Monto Recibido</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Abono a reservación que incluye el paquete
+                        turístico ({{ reservacion()?.paqueteTuristico?.nombre }})</td>
+                    <td class="text-center">{{ pago()?.metodo }}</td>
+                    <td class="text-end fw-bold">Q{{ pago()?.monto | number:'1.2-2' }}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="row justify-content-end mb-5">
+            <div class="col-5">
+                <div class="d-flex justify-content-between mb-1">
+                    <span>Costo Total:</span>
+                    <span>Q{{ reservacion()?.costoTotal | number:'1.2-2' }}</span>
+                </div>
+                <div class="d-flex justify-content-between mb-1">
+                    <span>Total Pagado:</span>
+                    <span>Q{{ reservacion()?.totalPagoRealizado | number:'1.2-2' }}</span>
+                </div>
+                <div class="d-flex justify-content-between border-top border-dark pt-1 fw-bold fs-5">
+                    <span>Saldo Pendiente:</span>
+                    <span>Q{{ (reservacion()!.costoTotal - reservacion()!.totalPagoRealizado) | number:'1.2-2' }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-5 pt-4 text-center">
+            <div class="col-5 border-top border-dark mx-auto">
+                <p class="small fw-bold mt-1">Sello y Firma de la Agencia</p>
+            </div>
+            <div class="col-1"></div>
+            <div class="col-5 border-top border-dark mx-auto">
+                <p class="small fw-bold mt-1">Firma del Cliente</p>
+            </div>
+        </div>
+    </div>
+    } @else {
+    <div class="alert alert-warning">No se encontraron datos para generar el recibo.</div>
+    }
+</div>

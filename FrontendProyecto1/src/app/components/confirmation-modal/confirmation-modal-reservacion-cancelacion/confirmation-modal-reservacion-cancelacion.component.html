@@ -1,0 +1,21 @@
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            @if (reservacion != null) {
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Cancelar Reservacion: {{reservacion.reservacionId}}</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Una vez cancelada la reservacion {{reservacion.reservacionId}}, ya no prodras hacer nada, como 
+                actualizarla o cambiar otra vez de estado, estas seguro de querer cancelar esta reservacion??
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal"
+                    (click)="confirmarCancelacion()">Cancelar Reservación</button>
+            </div>
+            }
+        </div>
+    </div>
+</div>

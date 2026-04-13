@@ -16,10 +16,10 @@ public class PaqueteTuristicoDAO implements CRUD<PaqueteTuristico> {
     private static final String INSERT = "INSERT INTO paquete_turistico (nombre, destino_id, duracion, precio_publico, capacidad_maxima, descripcion) VALUES (?, ?, ?, ?, ?, ?)";
     private static final String UPDATE = "UPDATE paquete_turistico SET nombre = ?, destino_id = ?, duracion = ?, precio_publico = ?, capacidad_maxima = ?, descripcion = ?, estado = ? WHERE paquete_id = ?";
     private static final String DELETE = "DELETE FROM paquete_turistico WHERE paquete_id = ?";
-    private static final String GET_BY_ID = "SELECT pt.paquete_id, pt.destino_id, pt.nombre AS nombre_paquete, pt.duracion, pt.precio_publico, pt.capacidad_maxima, pt.descripcion, pt.estado, d.nombre AS nombre_destino, d.pais, d.descripcion, d.clima_mejor_epoca, d.imagen FROM paquete_turistico pt JOIN destino d ON pt.destino_id = d.destino_id WHERE pt.paquete_id = ?";
-    private static final String GET_ALL = "SELECT pt.paquete_id, pt.destino_id, pt.nombre AS nombre_paquete, pt.duracion, pt.precio_publico, pt.capacidad_maxima, pt.descripcion, pt.estado, d.nombre AS nombre_destino, d.pais, d.descripcion, d.clima_mejor_epoca, d.imagen FROM paquete_turistico pt JOIN destino d ON pt.destino_id = d.destino_id";
+    private static final String GET_BY_ID = "SELECT pt.paquete_id, pt.destino_id, pt.nombre AS nombre_paquete, pt.duracion, pt.precio_publico, pt.capacidad_maxima, pt.descripcion, pt.estado, d.nombre AS nombre_destino, d.pais, d.descripcion AS descripcion_destino, d.clima_mejor_epoca, d.imagen, COALESCE(SUM(r.cantidad_persona), 0) AS total_ocupado FROM paquete_turistico pt JOIN destino d ON pt.destino_id = d.destino_id LEFT JOIN reservacion r ON pt.paquete_id = r.paquete_id AND r.fecha_viaje >= CURRENT_DATE AND r.estado IN ('Pendiente', 'Confirmada') WHERE pt.paquete_id = ? GROUP BY pt.paquete_id, pt.destino_id, pt.nombre, pt.duracion, pt.precio_publico, pt.capacidad_maxima, pt.descripcion, pt.estado, d.nombre, d.pais, d.descripcion, d.clima_mejor_epoca, d.imagen";
+    private static final String GET_ALL = "SELECT pt.paquete_id, pt.destino_id, pt.nombre AS nombre_paquete, pt.duracion, pt.precio_publico, pt.capacidad_maxima, pt.descripcion, pt.estado, d.nombre AS nombre_destino, d.pais, d.descripcion AS descripcion_destino, d.clima_mejor_epoca, d.imagen, COALESCE(SUM(r.cantidad_persona), 0) AS total_ocupado FROM paquete_turistico pt JOIN destino d ON pt.destino_id = d.destino_id LEFT JOIN reservacion r ON pt.paquete_id = r.paquete_id AND r.fecha_viaje >= CURRENT_DATE AND r.estado IN ('Pendiente', 'Confirmada') GROUP BY pt.paquete_id, pt.destino_id, pt.nombre, pt.duracion, pt.precio_publico, pt.capacidad_maxima, pt.descripcion, pt.estado, d.nombre, d.pais, d.descripcion, d.clima_mejor_epoca, d.imagen";
     private static final String EXISTS_NAME = "SELECT paquete_id FROM paquete_turistico WHERE nombre = ?";
-    private static final String GET_BY_COINCIDENCE = "SELECT pt.paquete_id, pt.destino_id, pt.nombre AS nombre_paquete, pt.duracion, pt.precio_publico, pt.capacidad_maxima, pt.descripcion, pt.estado, d.nombre AS nombre_destino, d.pais, d.descripcion, d.clima_mejor_epoca, d.imagen FROM paquete_turistico pt JOIN destino d ON pt.destino_id = d.destino_id WHERE pt.nombre LIKE ?";
+    private static final String GET_BY_COINCIDENCE = "SELECT pt.paquete_id, pt.destino_id, pt.nombre AS nombre_paquete, pt.duracion, pt.precio_publico, pt.capacidad_maxima, pt.descripcion, pt.estado, d.nombre AS nombre_destino, d.pais, d.descripcion AS descripcion_destino, d.clima_mejor_epoca, d.imagen, COALESCE(SUM(r.cantidad_persona), 0) AS total_ocupado FROM paquete_turistico pt JOIN destino d ON pt.destino_id = d.destino_id LEFT JOIN reservacion r ON pt.paquete_id = r.paquete_id AND r.fecha_viaje >= CURRENT_DATE AND r.estado IN ('Pendiente', 'Confirmada') WHERE pt.nombre LIKE ? GROUP BY pt.paquete_id, pt.destino_id, pt.nombre, pt.duracion, pt.precio_publico, pt.capacidad_maxima, pt.descripcion, pt.estado, d.nombre, d.pais, d.descripcion, d.clima_mejor_epoca, d.imagen";
     private static final String VALID_UPDATE = "SELECT paquete_id FROM paquete_turistico WHERE paquete_id <> ? AND nombre = ?";
     private static final String UPDATE_ESTADO = "UPDATE paquete_turistico SET estado = NOT estado WHERE paquete_id = ?";
     private static final String GET_PRECIOS = "SELECT pt.precio_publico, COALESCE(SUM(sp.costo), 0) AS precio_agencia FROM paquete_turistico pt LEFT JOIN servicio_paquete sp ON pt.paquete_id = sp.paquete_id WHERE pt.paquete_id = ? GROUP BY pt.paquete_id, pt.precio_publico";
@@ -170,6 +170,15 @@ public class PaqueteTuristicoDAO implements CRUD<PaqueteTuristico> {
         destino.setDestino_id(resultSet.getInt("destino_id"));
         destino.setClima_mejor_epoca(resultSet.getString("clima_mejor_epoca"));
         destino.setImagen(resultSet.getString("imagen"));
+
+        int totalOcupado = resultSet.getInt("total_ocupado");
+        boolean esAltaDemanda = false;
+        if (paqueteTuristico.getCapacidadMaxima() > 0) {
+            double porcentaje = (double) totalOcupado / paqueteTuristico.getCapacidadMaxima();
+            esAltaDemanda = (porcentaje >= 0.8);
+        }
+
+        paqueteTuristico.setAltaDemanda(esAltaDemanda);
 
         paqueteTuristico.setDestino(destino);
 

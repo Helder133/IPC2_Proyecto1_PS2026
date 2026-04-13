@@ -37,8 +37,6 @@ public class ServicioPaqueteService {
         if (!servicioPaquete.isValid())
             throw new UserDataInvalidException("Los datos del servicio del paquete son inválidos");
         ServicioPaqueteDAO servicioPaqueteDAO = new ServicioPaqueteDAO();
-        if (servicioPaqueteDAO.exists(servicioPaquete.getPaqueteId(), servicioPaquete.getProveedorId()))
-            throw new EntityAlreadyExistsException("El servicio del paquete ya existe");
         servicioPaqueteDAO.update(servicioPaquete);
     }
 

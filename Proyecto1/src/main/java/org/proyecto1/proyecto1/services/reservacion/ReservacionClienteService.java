@@ -3,10 +3,12 @@ package org.proyecto1.proyecto1.services.reservacion;
 import org.proyecto1.proyecto1.db.ReservacionClienteDAO;
 import org.proyecto1.proyecto1.exceptions.EntityAlreadyExistsException;
 import org.proyecto1.proyecto1.exceptions.UserDataInvalidException;
+import org.proyecto1.proyecto1.models.cliente.Cliente;
 import org.proyecto1.proyecto1.models.reservacion.ReservacionCliente;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.List;
 
 public class ReservacionClienteService {
     public void insertDesdeArchivo(ReservacionCliente reservacionCliente, Connection connection) throws SQLException, UserDataInvalidException, EntityAlreadyExistsException {
@@ -38,4 +40,10 @@ public class ReservacionClienteService {
         if (reservacionClienteDAO.exists(reservacionCliente)) throw new EntityAlreadyExistsException("El cliente ya está asociado a la reservación");
         reservacionClienteDAO.insert(reservacionCliente);
     }
+
+    public List<Cliente> getClientesDeUnaReservacion(int reservacionId) throws SQLException {
+        ReservacionClienteDAO reservacionClienteDAO = new ReservacionClienteDAO();
+        return reservacionClienteDAO.getClientesDeUnaReservacion(reservacionId);
+    }
+
 }

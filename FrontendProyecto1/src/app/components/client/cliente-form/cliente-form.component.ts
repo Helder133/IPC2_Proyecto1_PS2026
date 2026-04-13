@@ -3,29 +3,28 @@ import { Component, EventEmitter, inject, Input, OnInit, Output, signal } from '
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ClienteResponse } from '../../../models/cliente/ClienteResponse';
 import { ClienteRequest } from '../../../models/cliente/clienteRequest';
-import { validate } from '@angular/forms/signals';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-cliente-form-component',
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './cliente-form.component.html'
 })
 export class ClienteFormComponent implements OnInit {
-  @Input() clienteEditar = signal<ClienteResponse>(null!);
-
-  @Output() clienteNuevo = signal<EventEmitter<ClienteRequest>>(new EventEmitter<ClienteRequest>());
+  @Input() clienteEditar! : ClienteResponse;
+  @Output() cliente = new EventEmitter<ClienteRequest>();
 
   clienteForm!: FormGroup;
   private formBuilder = inject(FormBuilder);
 
   ngOnInit(): void {
     this.clienteForm = this.formBuilder.group({
-      dpi_o_pasaporte: [this.clienteEditar()?.dpi_o_pasaporte || '', [Validators.required, Validators.maxLength(20), Validators.minLength(13)]],
-      nombre: [this.clienteEditar()?.nombre || '', [Validators.required, Validators.maxLength(300)]],
-      fecha: [this.clienteEditar()?.fecha || '', [Validators.required]],
-      telefono: [this.clienteEditar()?.telefono || '', [Validators.maxLength(20), Validators.minLength(8)]],
-      email: [this.clienteEditar()?.email || '', [Validators.email, Validators.maxLength(100)]],
-      nacionalidad: [this.clienteEditar()?.nacionalidad || '', [Validators.required, Validators.maxLength(100)]]
+      dpi_o_pasaporte: [this.clienteEditar?.dpi_o_pasaporte || '', [Validators.required, Validators.minLength(13), Validators.maxLength(20), Validators.minLength(13)]],
+      nombre: [this.clienteEditar?.nombre || '', [Validators.required, Validators.maxLength(300)]],
+      fecha: [this.clienteEditar?.fecha || '', [Validators.required]],
+      telefono: [this.clienteEditar?.telefono || '', [Validators.maxLength(20), Validators.minLength(8)]],
+      email: [this.clienteEditar?.email || '', [Validators.email, Validators.maxLength(100)]],
+      nacionalidad: [this.clienteEditar?.nacionalidad || '', [Validators.required, Validators.maxLength(100)]]
     })
   }
 
@@ -35,8 +34,7 @@ export class ClienteFormComponent implements OnInit {
       return;
     }
 
-    const clienteRequest = signal<ClienteRequest>(this.clienteForm.value);
-    this.clienteNuevo().emit(clienteRequest());
+    this.cliente.emit(this.clienteForm.value as ClienteRequest);
   }
 
 }

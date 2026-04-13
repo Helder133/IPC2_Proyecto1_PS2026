@@ -3,9 +3,11 @@ package org.proyecto1.proyecto1.resources.reservacion;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import org.proyecto1.proyecto1.dtos.cliente.ClienteResponse;
 import org.proyecto1.proyecto1.dtos.reservacion.ReservacionRequest;
 import org.proyecto1.proyecto1.dtos.reservacion.ReservacionResponse;
 import org.proyecto1.proyecto1.dtos.reservacion.ReservacionUpdate;
+import org.proyecto1.proyecto1.dtos.reservacion.cliente.ReservacionClienteRequest;
 import org.proyecto1.proyecto1.exceptions.EntityAlreadyExistsException;
 import org.proyecto1.proyecto1.exceptions.UserDataInvalidException;
 import org.proyecto1.proyecto1.models.reservacion.Reservacion;
@@ -33,13 +35,14 @@ public class ReservacionResource {
         }
     }
 
+    //Este endpint es para insertar a los clientes en una reservacion, ya que hay una tabla intermedia entre cliente y reservacion por lo que es una relacion mucho a mucho
     @POST
     @Path("/insertar/reservacion/cliente")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response newReservacionCliente(ReservacionCliente reservacionCliente) {
+    public Response newReservacionCliente(ReservacionClienteRequest reservacionClienteRequest) {
         try {
             ReservacionService reservacionService = new ReservacionService();
-            reservacionService.agregarClienteAReservacion(reservacionCliente);
+            reservacionService.agregarClienteAReservacion(reservacionClienteRequest);
             return Response.ok().build();
         } catch (UserDataInvalidException e) {
             return errorEjecucion(e.getMessage(), 1);
@@ -65,6 +68,7 @@ public class ReservacionResource {
         }
     }
 
+    //Todas las reservaciones en la que un cliente participa
     @GET
     @Path("/cliente/{id}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -81,6 +85,7 @@ public class ReservacionResource {
         }
     }
 
+    //Todas las reservaciones que un usuario a registrado
     @GET
     @Path("/usuario/{id}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -92,6 +97,23 @@ public class ReservacionResource {
                     .map(ReservacionResponse::new)
                     .toList();
             return Response.ok(reservacionResponses).build();
+        } catch (SQLException e) {
+            return errorEjecucion(e.getMessage(), 3);
+        }
+    }
+
+    //Todos los clientes de una reservacion
+    @GET
+    @Path("/{id}/pasajeros")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAllClientesReservacion(@PathParam("id") int id) {
+        try {
+            ReservacionService reservacionService = new ReservacionService();
+            List<ClienteResponse> reservacionClientes = reservacionService.getClientesDeUnaReservacion(id)
+                    .stream()
+                    .map(ClienteResponse::new)
+                    .toList();
+            return Response.ok(reservacionClientes).build();
         } catch (SQLException e) {
             return errorEjecucion(e.getMessage(), 3);
         }
@@ -169,9 +191,10 @@ public class ReservacionResource {
         }
     }
 
+    //Eliminar un cliente de una reservacion
     @DELETE
     @Path("/eliminar/reservacion/{reservacionId}/cliente/{clienteId}")
-    public Response deleteReservacion(@PathParam("reservacionId") int reservacinId, @PathParam("clienteId") int clienteId) {
+    public Response deleteReservacionCliente(@PathParam("reservacionId") int reservacinId, @PathParam("clienteId") int clienteId) {
         try {
             ReservacionService reservacionService = new ReservacionService();
             reservacionService.deleteClienteAReservacion(reservacinId, clienteId);

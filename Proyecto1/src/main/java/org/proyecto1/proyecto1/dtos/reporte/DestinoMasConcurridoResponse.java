@@ -1,14 +1,16 @@
-package org.proyecto1.proyecto1.models.reporte;
+package org.proyecto1.proyecto1.dtos.reporte;
 
-public class DestinoMasConcurrido {
+import org.proyecto1.proyecto1.models.reporte.DestinoMasConcurrido;
+
+public class DestinoMasConcurridoResponse {
     private String nombreDestino;
     private int cantidadViajes;
     private int totolTurista;
 
-    public DestinoMasConcurrido(String nombreDestino, int totolTurista, int cantidadViajes) {
-        this.nombreDestino = nombreDestino;
-        this.totolTurista = totolTurista;
-        this.cantidadViajes = cantidadViajes;
+    public DestinoMasConcurridoResponse(DestinoMasConcurrido destinoMasConcurrido) {
+        this.nombreDestino = destinoMasConcurrido.getNombreDestino();
+        this.cantidadViajes = destinoMasConcurrido.getCantidadViajes();
+        this.totolTurista = destinoMasConcurrido.getTotolTurista();
     }
 
     public int getCantidadViajes() {

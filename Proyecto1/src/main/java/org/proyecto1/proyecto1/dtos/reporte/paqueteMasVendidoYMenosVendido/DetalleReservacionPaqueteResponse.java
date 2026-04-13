@@ -1,9 +1,9 @@
-package org.proyecto1.proyecto1.dtos.reporte.paqueteMasVenvido;
+package org.proyecto1.proyecto1.dtos.reporte.paqueteMasVendidoYMenosVendido;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
-import org.proyecto1.proyecto1.models.reporte.paqueteMasVenvido.DetalleReservacionPaquete;
+import org.proyecto1.proyecto1.models.reporte.paqueteMasVendidoYMenosVendido.DetalleReservacionPaquete;
 
 import java.time.LocalDate;
 

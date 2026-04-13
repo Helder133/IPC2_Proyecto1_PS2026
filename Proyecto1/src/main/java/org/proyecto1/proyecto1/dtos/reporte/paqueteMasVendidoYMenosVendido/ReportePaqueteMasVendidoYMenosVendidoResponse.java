@@ -1,17 +1,16 @@
-package org.proyecto1.proyecto1.dtos.reporte.paqueteMasVenvido;
+package org.proyecto1.proyecto1.dtos.reporte.paqueteMasVendidoYMenosVendido;
 
-import org.proyecto1.proyecto1.models.reporte.paqueteMasVenvido.DetalleReservacionPaquete;
-import org.proyecto1.proyecto1.models.reporte.paqueteMasVenvido.ReportePaqueteMasVendido;
+import org.proyecto1.proyecto1.models.reporte.paqueteMasVendidoYMenosVendido.ReportePaqueteMasVendidoYMenosVendido;
 
 import java.util.List;
 
-public class ReportePaqueteMasVendidoResponse {
+public class ReportePaqueteMasVendidoYMenosVendidoResponse {
     private int paqueteId;
     private String nombrePaquete;
     private int totalReservacion;
     private List<DetalleReservacionPaqueteResponse> reservaciones;
 
-    public ReportePaqueteMasVendidoResponse(ReportePaqueteMasVendido reportePaqueteMasVendido) {
+    public ReportePaqueteMasVendidoYMenosVendidoResponse(ReportePaqueteMasVendidoYMenosVendido reportePaqueteMasVendido) {
         this.paqueteId = reportePaqueteMasVendido.getPaqueteId();
         this.nombrePaquete = reportePaqueteMasVendido.getNombrePaquete();
         this.totalReservacion = reportePaqueteMasVendido.getTotalReservacion();

@@ -13,6 +13,7 @@ public class PaqueteTuristicoResponse {
     private String descripcion;
     private boolean estado;
     private DestinoResponse destinoResponse;
+    private boolean altaDemanda;
 
     public PaqueteTuristicoResponse(PaqueteTuristico paqueteTuristico) {
         this.paqueteId = paqueteTuristico.getPaqueteId();
@@ -23,6 +24,7 @@ public class PaqueteTuristicoResponse {
         this.capacidadMaxima = paqueteTuristico.getCapacidadMaxima();
         this.descripcion = paqueteTuristico.getDescripcion();
         this.estado = paqueteTuristico.isEstado();
+        this.altaDemanda = paqueteTuristico.isAltaDemanda();
         if (paqueteTuristico.getDestino() != null) {
             this.destinoResponse = new DestinoResponse(paqueteTuristico.getDestino());
         }
@@ -98,5 +100,13 @@ public class PaqueteTuristicoResponse {
 
     public void setDestinoResponse(DestinoResponse destinoResponse) {
         this.destinoResponse = destinoResponse;
+    }
+
+    public boolean isAltaDemanda() {
+        return altaDemanda;
+    }
+
+    public void setAltaDemanda(boolean altaDemanda) {
+        this.altaDemanda = altaDemanda;
     }
 }

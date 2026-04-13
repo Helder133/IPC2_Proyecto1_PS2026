@@ -8,9 +8,14 @@ CREATE TABLE IF NOT EXISTS cliente (
 	nombre VARCHAR(300) NOT NULL,
 	fecha DATE NOT NULL,
 	telefono VARCHAR(20) NOT NULL,
-	email VARCHAR(100) UNIQUE,
+	email VARCHAR(100),
 	nacionalidad VARCHAR(100) NOT NULL
 );
+
+desc cliente
+
+ALTER TABLE cliente MODIFY COLUMN 'email'
+ALTER TABLE cliente DROP INDEX email;
 
 CREATE TABLE IF NOT EXISTS usuario (
 	usuario_id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
@@ -29,7 +34,7 @@ CREATE TABLE IF NOT EXISTS destino (
 	pais VARCHAR(200) NOT NULL,
 	descripcion VARCHAR(300) NOT NULL,
 	clima_mejor_epoca VARCHAR(250),
-	imagen VARCHAR(300)
+	imagen VARCHAR(300)Gerente
 );
 
 CREATE TABLE IF NOT EXISTS proveedor (
@@ -133,3 +138,32 @@ TRUNCATE TABLE reservacion_cliente;
 TRUNCATE TABLE historial_pago;
 
 SET FOREIGN_KEY_CHECKS = 1;
+
+SELECT pt.paquete_id, pt.destino_id, pt.nombre AS nombre_paquete, pt.duracion,
+    pt.precio_publico, pt.capacidad_maxima, pt.descripcion, pt.estado,
+    d.nombre AS nombre_destino, d.pais, d.descripcion AS descripcion_destino,
+    d.clima_mejor_epoca, d.imagen,
+    -- Sumamos la cantidad_persona de tu tabla reservacion
+    COALESCE(SUM(r.cantidad_persona), 0) AS total_ocupado 
+    FROM paquete_turistico pt 
+    JOIN destino d ON pt.destino_id = d.destino_id 
+    -- Hacemos el JOIN con las reservaciones futuras y que NO estén canceladas
+    LEFT JOIN reservacion r ON pt.paquete_id = r.paquete_id
+        AND r.fecha_viaje >= CURRENT_DATE 
+        AND r.estado IN ('Pendiente', 'Confirmada')
+    WHERE pt.paquete_id = 1
+    GROUP BY pt.paquete_id, pt.destino_id, pt.nombre, pt.duracion, pt.precio_publico,
+    pt.capacidad_maxima, pt.descripcion, pt.estado, d.nombre, d.pais, d.descripcion,
+    d.clima_mejor_epoca, d.imagen 
+    
+;    
+SELECT pt.paquete_id, pt.destino_id, pt.nombre AS nombre_paquete, pt.duracion, pt.precio_publico, pt.capacidad_maxima, pt.descripcion, pt.estado, d.nombre AS nombre_destino, d.pais, d.descripcion AS descripcion_destino, d.clima_mejor_epoca, d.imagen, COALESCE(SUM(r.cantidad_persona), 0) AS total_ocupado FROM paquete_turistico pt JOIN destino d ON pt.destino_id = d.destino_id LEFT JOIN reservacion r ON pt.paquete_id = r.paquete_id AND r.fecha_viaje >= CURRENT_DATE AND r.estado IN ('Pendiente', 'Confirmada') GROUP BY pt.paquete_id, pt.destino_id, pt.nombre, pt.duracion, pt.precio_publico, pt.capacidad_maxima, pt.descripcion, pt.estado, d.nombre, d.pais, d.descripcion, d.clima_mejor_epoca, d.imagen 
+
+
+SELECT r.reservacion_id, r.paquete_id, r.usuario_id, r.fecha_viaje, r.fecha_creacion, r.cantidad_persona, r.costo_total, r.costo_agencia, r.estado AS estado_reservacion, r.reembolso, r.fecha_cancelacion, r.codigo_archivo, p.destino_id, p.nombre AS nombre_destino, p.duracion, p.precio_publico, p.capacidad_maxima, p.descripcion AS descripcion_paquete, p.estado AS estado_paquete, d.nombre AS nombre_destino, d.pais, d.descripcion AS descripcion_destino, d.clima_mejor_epoca, d.imagen, ( SELECT COALESCE(SUM(hp.monto), 0) FROM historial_pago hp WHERE hp.reservacion_id = r.reservacion_id ) AS anticipo, ( SELECT COALESCE(SUM(r2.cantidad_persona), 0) FROM reservacion r2 WHERE r2.paquete_id = r.paquete_id AND r2.fecha_viaje >= CURRENT_DATE AND r2.estado IN ('Pendiente', 'Confirmada') ) AS total_ocupado FROM reservacion r JOIN paquete_turistico p ON r.paquete_id = p.paquete_id JOIN destino d ON p.destino_id = d.destino_id
+
+
+
+
+
+

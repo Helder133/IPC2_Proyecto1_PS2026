@@ -1,0 +1,71 @@
+
+<div class="container mt-4 text-light">
+    <div class="row mb-4 align-items-center">
+        <div class="col-md-8">
+            <h2 class="mb-0 fw-bold text-primary"><i class="bi bi-people-fill me-2"></i> Gestión de Clientes</h2>
+            <p class="text-light opacity-75 mt-1">Busca y administra el directorio de viajeros de la agencia.</p>
+        </div>
+        <div class="col-md-4 text-md-end mt-3 mt-md-0">
+            <button class="btn btn-primary shadow-sm px-4 fw-bold text-light" routerLink="/cliente/crear">
+                <i class="bi bi-person-plus-fill me-2"></i> Nuevo Cliente
+            </button>
+        </div>
+    </div>
+
+    <div class="card bg-dark border-secondary shadow-sm mb-4">
+        <div class="card-body p-3">
+            <div class="d-flex align-items-center">
+                <div class="input-group flex-grow-1 shadow-sm">
+                    <span class="input-group-text bg-light border-0"><i class="bi bi-search text-muted"></i></span>
+                    <input type="text" class="form-control border-0 bg-light"
+                        placeholder="Buscar por coincidencia (DPI o pasaporte)..." 
+                        [(ngModel)]="concidencia"
+                        (keyup.enter)="buscarClientes()">
+                    <button class="btn btn-primary px-4 fw-bold" (click)="buscarClientes()" [disabled]="buscando()">
+                        @if (buscando()) {
+                            <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+                        } @else {
+                            Buscar
+                        }
+                    </button>
+                </div>
+                @if (concidencia() !== '') {
+                    <button class="btn btn-outline-danger ms-2" (click)="limpiarBusqueda()">
+                        <i class="bi bi-x-lg"></i>
+                    </button>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1055;">
+        @if (mensajeError()) {
+            <div class="alert alert-danger bg-danger text-white shadow-lg border-0 fade show">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>{{ mensajeError() }}
+            </div>
+        }
+    </div>
+
+    @if (cargando()) {
+        <div class="text-center py-5">
+            <div class="spinner-border text-primary" role="status"></div>
+            <p class="mt-2 fw-semibold">Cargando directorio de clientes...</p>
+        </div>
+    } @else {
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 mb-5">
+            @for (cliente of clientes(); track cliente.cliente_id) {
+                <div class="col">
+                    <app-cliente-card-component 
+                        [cliente]="cliente">
+                    </app-cliente-card-component>
+                </div>
+            } @empty {
+                <div class="col-12 text-center py-5 rounded-3 border border-secondary" style="background-color: rgba(255,255,255,0.05);">
+                    <i class="bi bi-person-x fs-1 d-block mb-2 text-secondary"></i>
+                    <h5 class="fw-bold">No se encontraron clientes</h5>
+                    <p class="opacity-75">Intenta buscar con otro término o crea un cliente nuevo.</p>
+                </div>
+            }
+        </div>
+    }
+</div>

@@ -16,6 +16,13 @@ import { PaquetePageComponent } from './pages/paqueteTuristico/paquete-page/paqu
 import { CreatePaquetePageComponent } from './pages/paqueteTuristico/create-paquete-page/create-paquete-page.component';
 import { UpdatePaquetePageComponent } from './pages/paqueteTuristico/update-paquete-page/update-paquete-page.component';
 import { ServicioPageComponent } from './pages/servicioPaquete/servicio-page/servicio-page.component';
+import { ClientPageComponent } from './pages/client/client-page/client-page.component';
+import { CreateClientPageComponent } from './pages/client/create-client-page/create-client-page.component';
+import { UpdateClientPageComponent } from './pages/client/update-client-page/update-client-page.component';
+import { ReservacionPageComponent } from './pages/reservacion/reservacion-page/reservacion-page.component';
+import { HistorialReservacionClienteComponent } from './pages/reservacion/historial-reservacion-cliente/historial-reservacion-cliente.component';
+import { PagoPageComponent } from './pages/pago/pago-page/pago-page.component';
+import { ReciboPagoPageComponent } from './pages/pago/recibo-pago-page/recibo-pago-page.component';
 
 export const routes: Routes = [
     {
@@ -86,10 +93,38 @@ export const routes: Routes = [
             {
                 path: 'paquete/actualizar/:id',
                 component: UpdatePaquetePageComponent
-            }, 
+            },
             {
                 path: 'paquete/:id/servicio',
                 component: ServicioPageComponent
+            },
+            {
+                path: 'cliente',
+                component: ClientPageComponent
+            },
+            {
+                path: 'cliente/crear',
+                component: CreateClientPageComponent
+            },
+            {
+                path: 'cliente/actualizar/:id',
+                component: UpdateClientPageComponent
+            },
+            {
+                path: 'reservacion',
+                component: ReservacionPageComponent
+            },
+            {
+                path: 'reservacion/historial/cliente/:id',
+                component: HistorialReservacionClienteComponent
+            },
+            {
+                path: 'reservacion/:id/pago',
+                component: PagoPageComponent
+            },
+            {
+                path: 'pago/recibo',
+                component: ReciboPagoPageComponent
             }
         ]
 

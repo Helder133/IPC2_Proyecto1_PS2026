@@ -28,6 +28,7 @@ public class ReservacionResponse {
     @JsonDeserialize(using = LocalDateDeserializer.class)
     private LocalDate fechaCancelacion;
     private String codigoArchivo;
+    private double totalPagoRealizado;
     private PaqueteTuristicoResponse paqueteTuristico;
 
     public ReservacionResponse(Reservacion  reservacion) {
@@ -43,6 +44,7 @@ public class ReservacionResponse {
         this.reembolso = reservacion.getReembolso();
         this.fechaCancelacion = reservacion.getFechaCancelacion();
         this.codigoArchivo = reservacion.getCodigoArchivo();
+        this.totalPagoRealizado = reservacion.getTotalPagoRealizado();
         this.paqueteTuristico = new PaqueteTuristicoResponse(reservacion.getPaqueteTuristico());
     }
 
@@ -140,6 +142,14 @@ public class ReservacionResponse {
 
     public void setCodigoArchivo(String codigoArchivo) {
         this.codigoArchivo = codigoArchivo;
+    }
+
+    public double getTotalPagoRealizado() {
+        return totalPagoRealizado;
+    }
+
+    public void setTotalPagoRealizado(double totalPagoRealizado) {
+        this.totalPagoRealizado = totalPagoRealizado;
     }
 
     public PaqueteTuristicoResponse getPaqueteTuristico() {

@@ -3,10 +3,11 @@ import { DestinoResponse } from '../../../models/destino/DestinoResponse';
 import { DestinoRequest } from '../../../models/destino/DestinoRequest';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-destino-form-component',
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './destino-form.component.html'
 })
 export class DestinoFormComponent implements OnInit {

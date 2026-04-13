@@ -1,0 +1,71 @@
+<div class="modal-header border-secondary">
+    <h5 class="modal-title fw-bold text-info">
+        <i class="bi bi-people-fill me-2"></i> Gestión de Pasajeros
+    </h5>
+    <button type="button" class="btn-close btn-close-white" (click)="onClose.emit()"></button>
+</div>
+<div class="modal-body bg-dark text-light p-4">
+    <div class="alert alert-info bg-info bg-opacity-10 border-info text-info py-2 mb-4 small">
+        <i class="bi bi-info-circle-fill me-2"></i>
+        Cupos ocupados: <strong>{{ pasajeros().length }}</strong> de <strong>{{ reservacion.cantidadPersona
+            }}</strong>
+    </div>
+    <div class="mb-4">
+        <label class="form-label fw-bold opacity-75 small text-uppercase">Asignar nuevo pasajero</label>
+        <div class="input-group">
+            <span class="input-group-text bg-light border-0"><i class="bi bi-search"></i></span>
+            <input type="text" class="form-control border-0 bg-light" placeholder="Buscar cliente por DPI o pasaporte..."
+                [(ngModel)]="terminoBusqueda" (keyup)="buscarClientes()">
+        </div>
+        @if (resultadosBusqueda().length > 0) {
+        <div class="list-group mt-2 shadow-lg position-absolute w-100"
+            style="z-index: 1060; max-height: 200px; overflow-y: auto;">
+            @for (cliente of resultadosBusqueda(); track cliente.cliente_id) {
+            <button
+                class="list-group-item list-group-item-action list-group-item-dark d-flex justify-content-between align-items-center"
+                (click)="agregarPasajero(cliente.cliente_id)">
+                <div>
+                    <div class="fw-bold">{{ cliente.nombre }}</div>
+                    <small class="opacity-50">DPI: {{ cliente.dpi_o_pasaporte }}</small>
+                </div>
+                <i class="bi bi-plus-circle-fill text-primary fs-5"></i>
+            </button>
+            }
+        </div>
+        }
+    </div>
+    <hr class="border-secondary opacity-25">
+    <h6 class="fw-bold mb-3 opacity-75">Pasajeros en este viaje:</h6>
+    @if (cargandoPasajeros()) {
+    <div class="text-center py-3">
+        <div class="spinner-border spinner-border-sm text-info"></div>
+    </div>
+    } @else {
+    <div class="row g-2">
+        @for (p of pasajeros(); track p.cliente_id) {
+        <div class="col-12">
+            <div
+                class="d-flex align-items-center justify-content-between p-3 rounded bg-secondary bg-opacity-10 border border-secondary border-opacity-25">
+                <div class="d-flex align-items-center">
+                    <div class="bg-primary bg-opacity-20 text-primary rounded-circle p-2 me-3">
+                        <i class="bi bi-person-check-fill"></i>
+                    </div>
+                    <div>
+                        <div class="fw-bold">{{ p.nombre }}</div>
+                        <div class="small opacity-50">{{ p.email }}</div>
+                    </div>
+                </div>
+                <button class="btn btn-outline-danger btn-sm border-0" (click)="quitarPasajero(p.cliente_id)">
+                    <i class="bi bi-trash"></i>
+                </button>
+            </div>
+        </div>
+        } @empty {
+        <div class="text-center py-4 opacity-50">
+            <i class="bi bi-person-plus fs-2 d-block mb-2"></i>
+            <p>No se han asignado pasajeros aún.</p>
+        </div>
+        }
+    </div>
+    }
+</div>

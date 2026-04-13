@@ -1,4 +1,4 @@
-package org.proyecto1.proyecto1.models.reporte.paqueteMasVenvido;
+package org.proyecto1.proyecto1.models.reporte.paqueteMasVendidoYMenosVendido;
 
 import java.time.LocalDate;
 

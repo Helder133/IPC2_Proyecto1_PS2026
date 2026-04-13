@@ -17,6 +17,7 @@ public class Reservacion {
     private double reembolso;
     private LocalDate fechaCancelacion;
     private String codigoArchivo;
+    private double totalPagoRealizado;
     private PaqueteTuristico paqueteTuristico;
 
     public Reservacion(int paqueteId, int usuarioId, LocalDate fechaViaje) {
@@ -135,6 +136,14 @@ public class Reservacion {
 
     public void setPaqueteTuristico(PaqueteTuristico paqueteTuristico) {
         this.paqueteTuristico = paqueteTuristico;
+    }
+
+    public double getTotalPagoRealizado() {
+        return totalPagoRealizado;
+    }
+
+    public void setTotalPagoRealizado(double totalPagoRealizado) {
+        this.totalPagoRealizado = totalPagoRealizado;
     }
 
     public boolean isValid() {

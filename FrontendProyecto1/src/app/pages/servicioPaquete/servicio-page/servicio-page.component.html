@@ -27,7 +27,7 @@
                     <h4 class="fw-bold text-white mb-0">{{ paqueteActual()!.nombre }}</h4>
                 </div>
                 <div class="text-end">
-                    <div class="text-muted small">Costo al Público</div>
+                    <div class="text-light small">Costo al Público</div>
                     <div class="fs-4 fw-bold text-success">Q{{ paqueteActual()!.precioPublico }}</div>
                 </div>
             </div>
@@ -84,3 +84,8 @@
         </div>
     }
 </div>
+
+<confirmation-modal-servicio-component
+    [servicio]="servicioAEliminar()"
+    (onConfirm)="eliminarServicio()">
+</confirmation-modal-servicio-component>

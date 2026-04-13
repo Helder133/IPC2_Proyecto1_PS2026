@@ -1,16 +1,15 @@
 package org.proyecto1.proyecto1.dtos.reporte.mejorAgente;
 
-import org.proyecto1.proyecto1.models.reporte.mejorAgente.DetalleReservacion;
 import org.proyecto1.proyecto1.models.reporte.mejorAgente.ReporteMejorAgente;
 
 import java.util.List;
 
-public class ReporteMejorAgenteRespnse {
+public class ReporteMejorAgenteResponse {
     private String nombreAgente;
     private double totalVendido;
     private List<DetalleReservacionResponse> reservaciones;
 
-    public ReporteMejorAgenteRespnse(ReporteMejorAgente reporteMejorAgente) {
+    public ReporteMejorAgenteResponse(ReporteMejorAgente reporteMejorAgente) {
         this.nombreAgente = reporteMejorAgente.getNombreAgente();
         this.totalVendido = reporteMejorAgente.getTotalVendido();
         this.reservaciones = reporteMejorAgente.getReservaciones().stream().map(DetalleReservacionResponse::new).toList();

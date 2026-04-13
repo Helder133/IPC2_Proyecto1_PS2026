@@ -84,6 +84,4 @@ public class ClienteResponse {
     public void setNacionalidad(String nacionalidad) {
         this.nacionalidad = nacionalidad;
     }
-
-
 }

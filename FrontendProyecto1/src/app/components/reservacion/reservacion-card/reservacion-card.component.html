@@ -1,0 +1,97 @@
+<div class="card h-100 bg-dark text-light shadow-sm"
+    [ngClass]="[getBorderColor(reservacion.estado), reservacion.estado === 'Cancelada' ? 'opacity-75' : '']">
+    <div class="card-body p-4 d-flex flex-column">
+        <div class="d-flex justify-content-between align-items-start mb-3">
+            <div>
+                <span class="badge px-3 py-2 rounded-pill shadow-sm" [ngClass]="getBadgeColor(reservacion.estado)">
+                    <i class="bi bi-bookmark-fill me-1"></i> {{ reservacion.estado }}
+                </span>
+                <div class="text-light opacity-50 small mt-2">Registrada: {{ reservacion.fechaCreacion }}</div>
+            </div>
+            <span class="fw-bold text-light opacity-50 bg-secondary bg-opacity-25 px-2 py-1 rounded">
+                #{{ reservacion.reservacionId }}
+            </span>
+        </div>
+        <h5 class="card-title fw-bold text-warning mb-1 text-truncate" [title]="reservacion.paqueteTuristico.nombre">
+            {{ reservacion.paqueteTuristico.nombre }}
+        </h5>
+        <p class="text-light opacity-75 small mb-3">
+            <i class="bi bi-calendar-event text-info me-1"></i> Salida: <span class="fw-bold">{{ reservacion.fechaViaje
+                }}</span>
+        </p>
+        <div class="row g-2 mb-4 border-top border-bottom border-secondary py-3">
+            <div class="col-6">
+                <span class="d-block small text-light opacity-75">Viajeros</span>
+                <span class="fw-bold"><i class="bi bi-people-fill text-info me-1"></i> {{ reservacion.cantidadPersona
+                    }}</span>
+            </div>
+            <div class="col-6 text-end">
+                <span class="d-block small text-light opacity-75">Costo Total</span>
+                <span class="fw-bold text-white">Q{{ reservacion.costoTotal | number:'1.2-2' }}</span>
+            </div>
+            <div class="col-6">
+                <span class="d-block small text-light opacity-75">Total Pagado</span>
+                <span class="fw-bold text-success">Q{{ reservacion.totalPagoRealizado | number:'1.2-2' }}</span>
+            </div>
+            @if (reservacion.estado === 'Cancelada') {
+            <div class="col-6 text-end">
+                <span class="d-block small text-light opacity-75">Reembolso</span>
+                <span class="fw-bold text-danger">Q{{ reservacion.reembolso | number:'1.2-2' }}</span>
+            </div>
+            } @else {
+            <div class="col-6 text-end">
+                <span class="d-block small text-light opacity-75">Saldo Pendiente</span>
+                <span class="fw-bold"
+                    [ngClass]="(reservacion.costoTotal - reservacion.totalPagoRealizado) > 0 ? 'text-warning' : 'text-success'">
+                    Q{{ (reservacion.costoTotal - reservacion.totalPagoRealizado) | number:'1.2-2' }}
+                </span>
+            </div>
+            }
+        </div>
+        <div class="mt-auto d-flex flex-wrap gap-2">
+            @if (!soloLectura && (reservacion.estado === 'Pendiente' || reservacion.estado === 'Confirmada')) {
+            <div class="dropdown flex-grow-1">
+                <button class="btn btn-primary btn-sm flex-grow-1 fw-bold text-white shadow-sm"
+                    (click)="onPagos.emit(reservacion.reservacionId)">
+                    <i class="bi bi-wallet2 me-1"></i> Pagos
+                </button>
+                <button class="btn btn-outline-info btn-sm flex-grow-1 fw-bold" (click)="onPasajeros.emit(reservacion)">
+                    <i class="bi bi-people-fill me-1"></i> Pasajeros
+                </button>
+                <button class="btn btn-outline-warning btn-sm w-100 dropdown-toggle" type="button"
+                    data-bs-toggle="dropdown">
+                    <i class="bi bi-gear-fill me-1"></i> Opciones
+                </button>
+                <ul class="dropdown-menu dropdown-menu-dark shadow">
+                    <li>
+                        <a class="dropdown-item text-light" style="cursor: pointer;" (click)="onEdit.emit(reservacion)">
+                            <i class="bi bi-pencil-square text-warning me-2"></i> Editar Datos
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item text-light" style="cursor: pointer;" data-bs-toggle="modal"
+                            data-bs-target="#deleteModal" (click)="onComplete.emit(reservacion)">
+                            <i class="bi bi-check-circle-fill text-success me-2"></i> Marcar Completada
+                        </a>
+                    </li>
+                    <li>
+                        <hr class="dropdown-divider border-secondary">
+                    </li>
+                    <li>
+                        <a class="dropdown-item text-danger fw-bold" style="cursor: pointer;" data-bs-toggle="modal"
+                            data-bs-target="#deleteModal" (click)="onCancel.emit(reservacion)">
+                            <i class="bi bi-x-octagon-fill me-2"></i> Cancelar Reserva
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            } @else {
+            <!--
+            <button class="btn btn-outline-danger btn-sm flex-grow-1" (click)="onDelete.emit(reservacion)">
+                <i class="bi bi-trash-fill me-1"></i> Eliminar Registro
+            </button>
+            -->
+            }
+        </div>
+    </div>
+</div>

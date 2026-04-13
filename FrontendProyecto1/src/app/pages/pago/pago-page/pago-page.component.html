@@ -1,0 +1,156 @@
+<div class="container mt-4 text-light">
+    
+    <div class="d-flex align-items-center mb-4">
+        <button class="btn btn-outline-light me-3" routerLink="/reservacion">
+            <i class="bi bi-arrow-left"></i> Volver a Reservaciones
+        </button>
+        <div>
+            <h2 class="mb-0 fw-bold text-success"><i class="bi bi-wallet2 me-2"></i> Gestión de Pagos</h2>
+            <p class="text-light opacity-75 mt-1 mb-0">Reservación #{{ reservacionId() }}</p>
+        </div>
+    </div>
+
+    <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1060;">
+        @if (mensajeError()) { 
+            <div class="alert alert-danger shadow-lg border-0 fade show">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>{{ mensajeError() }}
+            </div> 
+        }
+    </div>
+
+    @if (cargando()) {
+        <div class="text-center py-5">
+            <div class="spinner-border text-success"></div>
+            <p class="mt-2 opacity-75">Cargando información...</p>
+        </div>
+    } @else {
+        
+        @if (reservacion()) {
+            <div class="row g-4">
+                
+                <div class="col-lg-4">
+                    <div class="card bg-dark border-secondary shadow-sm mb-4">
+                        <div class="card-body">
+                            <h5 class="fw-bold text-info mb-3">Resumen de Saldo</h5>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span class="text-light opacity-75">Costo Total:</span>
+                                <span class="fw-bold text-white">Q{{ reservacion().costoTotal | number:'1.2-2' }}</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span class="text-success opacity-75">Total Pagado:</span>
+                                <span class="fw-bold text-success">Q{{ reservacion().totalPagoRealizado | number:'1.2-2' }}</span>
+                            </div>
+                            <hr class="border-secondary">
+                            <div class="d-flex justify-content-between fs-5">
+                                <span class="text-light opacity-75">Pendiente:</span>
+                                <span class="fw-bold" [ngClass]="saldoPendiente() > 0 ? 'text-warning' : 'text-success'">
+                                    Q{{ saldoPendiente() | number:'1.2-2' }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    @if (saldoPendiente() > 0 && reservacion().estado !== 'Cancelada') {
+                        <div class="card bg-dark border-success shadow-sm">
+                            <div class="card-header border-success bg-success bg-opacity-10 text-success fw-bold">
+                                <i class="bi bi-plus-circle me-2"></i> Registrar Abono
+                            </div>
+                            <div class="card-body">
+                                <form [formGroup]="pagoForm" (ngSubmit)="registrarPago()">
+                                    
+                                    <div class="mb-3">
+                                        <label class="form-label text-light opacity-75 small fw-bold">Monto a Pagar (Q)</label>
+                                        <input type="number" class="form-control bg-light text-dark fw-bold" formControlName="monto"
+                                            [ngClass]="{'is-invalid': pagoForm.get('monto')?.invalid && pagoForm.get('monto')?.touched}">
+                                        @if (pagoForm.get('monto')?.hasError('max')) {
+                                            <div class="invalid-feedback text-warning fw-bold">El monto no puede superar el saldo pendiente.</div>
+                                        }
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="form-label text-light opacity-75 small fw-bold">Método de Pago</label>
+                                        <select class="form-select bg-light text-dark fw-bold" formControlName="metodo"
+                                            [ngClass]="{'is-invalid': pagoForm.get('metodo')?.invalid && pagoForm.get('metodo')?.touched}">
+                                            <option value="" disabled selected>Seleccione...</option>
+                                            <option value="Efectivo">Efectivo</option>
+                                            <option value="Tarjeta">Tarjeta de Crédito/Débito</option>
+                                            <option value="Transferencia">Transferencia Bancaria</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="mb-4">
+                                        <label class="form-label text-light opacity-75 small fw-bold">Fecha del Pago</label>
+                                        <input type="date" class="form-control bg-light text-dark fw-bold" formControlName="fecha">
+                                    </div>
+
+                                    <button type="submit" class="btn btn-success w-100 fw-bold shadow-sm">
+                                        Procesar Pago
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    } @else {
+                        <div class="alert alert-success bg-success bg-opacity-10 border-success text-success text-center shadow-sm">
+                            <i class="bi bi-check-circle-fill fs-1 d-block mb-2"></i>
+                            <strong>Reservación solvente.</strong><br> No se requieren más pagos.
+                        </div>
+                    }
+                </div>
+
+                <div class="col-lg-8">
+                    <div class="card bg-dark border-secondary shadow-sm h-100">
+                        <div class="card-header border-secondary fw-bold text-light bg-transparent d-flex justify-content-between align-items-center">
+                            <span><i class="bi bi-receipt me-2"></i> Historial de Transacciones</span>
+                            <span class="badge bg-secondary text-light">{{ pagos().length }} pagos registrados</span>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-dark table-hover mb-0 align-middle">
+                                    <thead>
+                                        <tr>
+                                            <th class="ps-4 text-light opacity-75">No. Recibo</th>
+                                            <th class="text-light opacity-75">Fecha</th>
+                                            <th class="text-light opacity-75">Método</th>
+                                            <th class="text-light opacity-75">Monto</th>
+                                            <th class="text-end pe-4 text-light opacity-75">Acción</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @for (pago of pagos(); track pago.historialId) {
+                                        <tr>
+                                            <td class="ps-4 fw-bold text-light opacity-75">#{{ pago.historialId }}</td>
+                                            <td class="text-light">{{ pago.fecha }}</td>
+                                            <td>
+                                                <span class="badge bg-secondary text-light">
+                                                    <i class="bi"
+                                                        [ngClass]="pago.metodo === 'Efectivo' ? 'bi-cash' : pago.metodo === 'Tarjeta' ? 'bi-credit-card' : 'bi-bank'"></i>
+                                                    {{ pago.metodo }}
+                                                </span>
+                                            </td>
+                                            <td class="text-success fw-bold">Q{{ pago.monto | number:'1.2-2' }}</td>
+                                            <td class="text-end pe-4">
+                                                <button class="btn btn-outline-info btn-sm fw-bold" (click)="generarRecibo(pago)"
+                                                    title="Imprimir Comprobante">
+                                                    <i class="bi bi-printer-fill"></i> PDF
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        } @empty {
+                                        <tr>
+                                            <td colspan="5" class="text-center py-5 text-light opacity-50">
+                                                <i class="bi bi-inbox fs-2 d-block mb-2"></i>
+                                                Aún no se han registrado pagos para este viaje.
+                                            </td>
+                                        </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        }
+    }
+</div>

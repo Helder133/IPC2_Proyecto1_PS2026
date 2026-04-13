@@ -2,6 +2,7 @@ package org.proyecto1.proyecto1.db;
 
 import org.proyecto1.proyecto1.db.config.CRUD;
 import org.proyecto1.proyecto1.db.config.DBConnection;
+import org.proyecto1.proyecto1.models.cliente.Cliente;
 import org.proyecto1.proyecto1.models.reservacion.ReservacionCliente;
 
 import java.sql.Connection;
@@ -20,6 +21,28 @@ public class ReservacionClienteDAO implements CRUD<ReservacionCliente> {
     private static final String GET_ALL = "SELECT * FROM reservacion_cliente";
     private static final String EXISTS = "SELECT * FROM reservacion_cliente WHERE reservacion_id = ? AND cliente_id = ?";
     private static final String GET_NUMBER_CLIENTES_REGISTRADOS = "SELECT COUNT(*) AS total_clientes FROM reservacion_cliente WHERE reservacion_id = ?";
+    private static final String GET_CLIENTES_DE_UNA_RESERVACION = "SELECT c.cliente_id, c.dpi_o_pasaporte, c.nombre, c.fecha, c.email, c.telefono, c.nacionalidad  FROM reservacion_cliente rc JOIN cliente c ON rc.cliente_id = c.cliente_id WHERE rc.reservacion_id = ?";
+
+    public List<Cliente> getClientesDeUnaReservacion(int reservacionId) throws SQLException {
+        Connection connection = DBConnection.getInstance().getConnection();
+        List<Cliente> clientes = new ArrayList<>();
+        try (PreparedStatement getClientesDeUnaReservacion = connection.prepareStatement(GET_CLIENTES_DE_UNA_RESERVACION)) {
+            getClientesDeUnaReservacion.setInt(1, reservacionId);
+            try (ResultSet resultSet = getClientesDeUnaReservacion.executeQuery()) {
+                while (resultSet.next()) {
+                    Cliente cliente = new Cliente(resultSet.getString("dpi_o_pasaporte"),
+                            resultSet.getString("nombre"),
+                            resultSet.getDate("fecha").toLocalDate(),
+                            resultSet.getString("email"),
+                            resultSet.getString("telefono"),
+                            resultSet.getString("nacionalidad"));
+                    cliente.setCliente_id(resultSet.getInt("cliente_id"));
+                    clientes.add(cliente);
+                }
+                return clientes;
+            }
+        }
+    }
 
     public int getNumberClientesRegistrados(int reservacionId, Connection connection) throws SQLException {
         try (PreparedStatement preparedStatement = connection.prepareStatement(GET_NUMBER_CLIENTES_REGISTRADOS)) {

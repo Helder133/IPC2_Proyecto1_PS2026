@@ -1,0 +1,49 @@
+<form [formGroup]="reservacionForm" (ngSubmit)="guardar()" class="p-4 bg-white bg-opacity-50 rounded shadow-sm border-top border-warning border-3">
+
+    <div class="row g-4">
+        <div class="col-md-12">
+            <label for="paqueteId" class="form-label fw-bold text-dark">Paquete Turístico</label>
+            <select id="paqueteId" class="form-select" formControlName="paqueteId"
+                [ngClass]="{'is-invalid': reservacionForm.get('paqueteId')?.invalid && reservacionForm.get('paqueteId')?.touched}">
+                <option value="" disabled selected>Seleccione el paquete a reservar...</option>
+                @for (paquete of listaPaquetes; track paquete.paqueteId) {
+                    @if (paquete.estado || reservacionEditar.paqueteId === paquete.paqueteId) {
+                        <option [value]="paquete.paqueteId">
+                            {{ paquete.nombre }} - Q{{ paquete.precioPublico }} (Max: {{ paquete.capacidadMaxima }} pers.)
+                        </option>
+                    }
+                }
+            </select>
+            <div class="invalid-feedback text-dark fw-bold">Debe seleccionar un paquete.</div>
+        </div>
+
+        <div class="col-md-4">
+            <label for="fechaViaje" class="form-label fw-bold text-dark">Fecha del Viaje</label>
+            <input type="date" id="fechaViaje" class="form-control" formControlName="fechaViaje"
+                [ngClass]="{'is-invalid': reservacionForm.get('fechaViaje')?.invalid && reservacionForm.get('fechaViaje')?.touched}">
+            <div class="invalid-feedback text-dark fw-bold">Seleccione la fecha de salida.</div>
+        </div>
+
+        <div class="col-md-4">
+            <label for="cantidadPersonas" class="form-label fw-bold text-dark">Total Viajeros</label>
+            <input type="number" id="cantidadPersonas" class="form-control" formControlName="cantidadPersonas" min="1"
+                [ngClass]="{'is-invalid': reservacionForm.get('cantidadPersonas')?.invalid && reservacionForm.get('cantidadPersonas')?.touched}">
+            <div class="invalid-feedback text-dark fw-bold">Debe ser al menos 1 persona.</div>
+        </div>
+
+        <div class="col-md-4">
+            <label for="fechaCreacion" class="form-label fw-bold text-dark">
+                Fecha de Registro <i class="bi bi-info-circle ms-1" title="Para simular reservaciones pasadas"></i>
+            </label>
+            <input type="date" id="fechaCreacion" class="form-control bg-light" formControlName="fechaCreacion">
+        </div>
+
+        <div class="col-12 text-end mt-4">
+            <button type="button" class="btn btn-dark px-4 me-2" (click)="onCancel.emit()">Cancelar</button>
+            <button type="submit" class="btn btn-warning px-4 fw-bold text-dark">
+                <i class="bi" [ngClass]="reservacionEditar ? 'bi-pencil-square' : 'bi-save'"></i>
+                {{ reservacionEditar ? 'Actualizar Reserva' : 'Guardar Reserva' }}
+            </button>
+        </div>
+    </div>
+</form>

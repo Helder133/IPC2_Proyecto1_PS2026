@@ -1,0 +1,47 @@
+<div class="container mt-4 text-light position-relative">
+
+    <div class="d-flex align-items-center mb-4">
+        <button class="btn btn-outline-light me-3" routerLink="/cliente">
+            <i class="bi bi-arrow-left"></i> Volver a Clientes
+        </button>
+        <div>
+            <h2 class="mb-0 fw-bold text-info"><i class="bi bi-clock-history me-2"></i> Historial de Viajes</h2>
+            @if (cliente()) {
+                <p class="text-light opacity-75 mt-1 mb-0">
+                    Cliente: <strong>{{ cliente().nombre }}</strong> (DPI: {{ cliente().dpi_o_pasaporte }})
+                </p>
+            }
+        </div>
+    </div>
+
+    @if (mensajeError()) {
+        <div class="alert alert-danger bg-danger text-white border-0 shadow-sm">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i> {{ mensajeError() }}
+        </div>
+    }
+
+    @if (cargando()) {
+        <div class="text-center py-5">
+            <div class="spinner-border text-info"></div>
+            <p class="mt-2">Cargando viajes...</p>
+        </div>
+    } @else {
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 mb-5">
+            @for (res of reservaciones(); track res.reservacionId) {
+                <div class="col">
+                    <app-reservacion-card-component 
+                        [reservacion]="res"
+                        [soloLectura]="true">
+                    </app-reservacion-card-component>
+                </div>
+            } @empty {
+                <div class="col-12 text-center py-5 rounded-3 border border-secondary" style="background-color: rgba(255,255,255,0.05);">
+                    <i class="bi bi-airplane text-secondary fs-1 d-block mb-3"></i>
+                    <h5 class="fw-bold">Sin viajes registrados</h5>
+                    <p class="opacity-75">Este cliente aún no ha participado en ninguna reservación.</p>
+                </div>
+            }
+        </div>
+    }
+
+</div>

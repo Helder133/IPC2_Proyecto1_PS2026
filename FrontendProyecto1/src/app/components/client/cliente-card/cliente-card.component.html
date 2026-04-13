@@ -1,42 +1,49 @@
-<div class="card h-100 shadow-sm border-0 bg-white">
-    <div class="card-header bg-white border-0 pt-4 pb-0 d-flex align-items-center">
+<div class="card h-100 bg-dark text-light border-primary shadow-sm">
+    <div class="card-body p-4 d-flex flex-column">
 
-        <div class="me-3">
-            <div class="bg-info text-dark rounded d-flex align-items-center justify-content-center"
-                style="width: 50px; height: 50px;">
-                <i class="bi fs-3"
-                    [ngClass]="cliente.nacionalidad.toLowerCase().includes('guatemalteca') ? 'bi-person-badge-fill' : 'bi-globe-americas'">
-                </i>
+        <div class="d-flex justify-content-between align-items-start mb-3">
+            <div class="d-flex align-items-center">
+                <div class="bg-primary bg-opacity-25 text-primary rounded-circle d-flex align-items-center justify-content-center me-3"
+                    style="width: 50px; height: 50px;">
+                    <i class="bi bi-person-fill fs-3"></i>
+                </div>
+                <div>
+                    <h5 class="card-title fw-bold text-white mb-0 text-truncate" style="max-width: 200px;">{{
+                        cliente.nombre }}</h5>
+                    <span class="text-muted badge bg-secondary">#{{ cliente.cliente_id }}</span>
+                </div>
             </div>
         </div>
 
-        <div>
-            <h6 class="card-title fw-bold text-dark mb-0 text-truncate" style="max-width: 200px;">{{ cliente.nombre }}
-            </h6>
-            <small class="text-muted">{{ cliente.dpi_o_pasaporte }}</small>
+        <div class="mb-2">
+            <i class="bi bi-person-vcard text-info me-2"></i>
+            <span class="text-light opacity-75 small">Doc:</span> <span class="fw-semibold">{{ cliente.dpi_o_pasaporte
+                }}</span>
         </div>
-    </div>
+        <div class="mb-2 text-truncate">
+            <i class="bi bi-envelope-at text-info me-2"></i>
+            <span class="text-light opacity-75 small">{{ cliente.email }}</span>
+        </div>
+        <div class="mb-3">
+            <i class="bi bi-telephone text-info me-2"></i>
+            <span class="text-light opacity-75 small">{{ cliente.telefono }}</span>
+        </div>
 
-    <div class="card-body px-4 py-3">
-        <ul class="list-unstyled mb-0 small text-secondary">
-            <li class="mb-2 d-flex align-items-center">
-                <i class="bi bi-telephone-fill text-primary me-2"></i> {{ cliente.telefono }}
-            </li>
-            <li class="mb-2 d-flex align-items-center text-truncate">
-                <i class="bi bi-envelope-at-fill text-primary me-2"></i> {{ cliente.email }}
-            </li>
-            <li class="d-flex align-items-center">
-                <i class="bi bi-flag-fill text-primary me-2"></i> {{ cliente.nacionalidad }}
-            </li>
-        </ul>
-    </div>
+        <div class="mt-auto border-top border-secondary pt-3 d-flex justify-content-between gap-2">
+            <a routerLink='/cliente/actualizar/{{ cliente.cliente_id }}'
+                class="btn btn-outline-primary btn-sm flex-grow-1">
+                <i class="bi bi-pencil-square me-1"></i> Editar
+            </a>
+            <button class="btn btn-outline-info btn-sm w-100 fw-bold mt-2"
+                routerLink='/reservacion/historial/cliente/{{cliente.cliente_id}}'>
+                <i class="bi bi-clock-history me-1"></i> Ver Historial de Viajes
+            </button>
+            <!--
+            <button class="btn btn-outline-danger btn-sm flex-grow-1" (click)="onDelete.emit(cliente)">
+                <i class="bi bi-trash-fill me-1"></i> Eliminar
+            </button>
+            -->
+        </div>
 
-    <div class="card-footer bg-light border-0 py-3 d-flex justify-content-end gap-2">
-        <button class="btn btn-outline-dark btn-sm rounded-pill" (click)="onEdit.emit(cliente)">
-            <i class="bi bi-pencil-square"></i>
-        </button>
-        <button class="btn btn-outline-danger btn-sm rounded-pill" (click)="onDelete.emit(cliente.cliente_id)">
-            <i class="bi bi-trash-fill"></i>
-        </button>
     </div>
 </div>
